@@ -18,7 +18,7 @@ class DashboardController extends Controller
         $totalSavers      = Saver::where('status', 'active')->count();
         $totalDeposits    = (int) Transaction::where('transaction_type', 'deposit')->sum('amount');
         $totalWithdrawals = (int) Transaction::where('transaction_type', 'withdrawal')->sum('amount');
-        $totalStudentSavings = (int) Saver::sum('balance');
+        $totalStudentSavings = (int) \App\Models\Account::sum('balance');
 
         $pendingClosings  = DailyClosing::whereIn('status', ['submitted', 'discrepancy'])->count();
 
