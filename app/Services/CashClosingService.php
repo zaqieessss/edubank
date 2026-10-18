@@ -59,6 +59,8 @@ class CashClosingService
             'system_balance'    => $systemBalance,
             'deposit_count'     => $depositCount,
             'withdrawal_count'  => $withdrawalCount,
+            'transaction_count' => $depositCount + $withdrawalCount,
+            'closing_cash'      => $systemBalance,
         ];
     }
 
