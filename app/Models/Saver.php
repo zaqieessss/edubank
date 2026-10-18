@@ -22,7 +22,6 @@ class Saver extends Model
         'major',
         'cohort',
         'security_pin',
-        'balance',
         'qr_code_path',
         'joined_date',
         'status',
@@ -36,8 +35,12 @@ class Saver extends Model
     {
         return [
             'joined_date' => 'date',
-            'balance' => 'integer',
         ];
+    }
+
+    public function getBalanceAttribute(): int
+    {
+        return $this->account?->balance ?? 0;
     }
 
     public function member(): BelongsTo

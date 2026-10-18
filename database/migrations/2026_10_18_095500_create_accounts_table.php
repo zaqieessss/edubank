@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('account_number', 30)->unique(); // e.g. RPL-2026-0001
             $table->string('account_type', 30)->default('student_savings'); // regular, student_savings, syariah
             $table->bigInteger('balance')->default(10000); // Saldo berjalan
-            $table->bigInteger('minimum_balance')->default(10000); // Batas saldo mengendap
             $table->enum('status', ['active', 'dormant', 'frozen', 'closed'])->default('active');
             $table->date('opened_date');
             $table->date('closed_date')->nullable();

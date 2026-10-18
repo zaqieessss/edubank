@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('major', 20);
             $table->string('cohort', 4);
             $table->string('security_pin'); // Hashed 6-digit PIN
-            $table->bigInteger('balance')->default(10000); // Minimum balance / initial deposit Rp 10.000
             $table->string('qr_code_path')->nullable();
             $table->date('joined_date');
             $table->enum('status', ['active', 'inactive', 'blocked'])->default('active');

@@ -16,7 +16,6 @@ class Account extends Model
         'account_number',
         'account_type',
         'balance',
-        'minimum_balance',
         'status',
         'opened_date',
         'closed_date',
@@ -27,10 +26,9 @@ class Account extends Model
     protected function casts(): array
     {
         return [
-            'balance'         => 'integer',
-            'minimum_balance' => 'integer',
-            'opened_date'     => 'date',
-            'closed_date'     => 'date',
+            'balance'     => 'integer',
+            'opened_date' => 'date',
+            'closed_date' => 'date',
         ];
     }
 
@@ -56,6 +54,6 @@ class Account extends Model
 
     public function getMaxWithdrawableAttribute(): int
     {
-        return max(0, $this->balance - $this->minimum_balance);
+        return max(0, $this->balance - 10000);
     }
 }

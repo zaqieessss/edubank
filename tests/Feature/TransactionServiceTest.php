@@ -74,9 +74,17 @@ class TransactionServiceTest extends TestCase
             'major'             => 'RPL',
             'cohort'            => '2026',
             'security_pin'      => Hash::make('123456'),
-            'balance'           => 50000, // Initial balance Rp 50.000
             'joined_date'       => now()->toDateString(),
             'status'            => 'active',
+        ]);
+
+        \App\Models\Account::create([
+            'saver_id'        => $this->saver->id,
+            'account_number'  => $this->saver->account_number,
+            'account_type'    => 'student_savings',
+            'balance'         => 50000,
+            'status'          => 'active',
+            'opened_date'     => now()->toDateString(),
         ]);
     }
 
