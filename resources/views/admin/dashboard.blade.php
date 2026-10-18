@@ -4,29 +4,38 @@
 @section('page_title', 'Dashboard')
 
 @section('content')
-<div class="space-y-6 max-w-6xl mx-auto py-2">
+<div class="space-y-5 max-w-6xl mx-auto py-1">
 
     <!-- ========================================================================= -->
-    <!-- 1. GREETING & PRIMARY ACTIONS (Minimal, Bersih & Lega)                     -->
+    <!-- 1. WELCOME CARD (Minimalis, Simpel & Elegan)                               -->
     <!-- ========================================================================= -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
-        <div>
-            <h2 class="text-xl font-bold text-slate-800 tracking-tight">
+    <div class="relative w-full rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white p-6 md:p-7 shadow-sm border border-slate-800/60 overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <!-- Subtle Ambient Glow -->
+        <div class="absolute -left-10 -top-10 w-44 h-44 bg-blue-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 space-y-1.5">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[10px] font-bold text-slate-300 uppercase tracking-wider">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span>Bank Mini SMKN 1 Bantul &bull; TA 2026/2027</span>
+            </div>
+            <h2 class="text-xl md:text-2xl font-bold tracking-tight text-white">
                 Selamat Datang, {{ Auth::user()->name ?? 'Administrator' }}
             </h2>
-            <p class="text-xs text-slate-400 mt-1">
-                Ringkasan operasional dan keuangan Bank Mini SMKN 1 Bantul hari ini.
+            <p class="text-xs text-slate-300 max-w-xl leading-relaxed">
+                Pusat kendali operasional perbankan mini sekolah. Pantau pertumbuhan tabungan siswa dan mutasi kas secara real-time.
             </p>
         </div>
 
-        <div class="flex items-center gap-2.5">
+        <!-- Minimalist Action Buttons -->
+        <div class="relative z-10 flex items-center gap-2.5 shrink-0">
             <a href="{{ route('admin.savers.create') }}" 
-               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition-all hover:shadow">
+               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm transition-all hover:shadow hover:scale-[1.01] active:scale-[0.99]">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                <span>Buka Rekening Baru</span>
+                <span>Buka Rekening</span>
             </a>
             <a href="{{ route('admin.members.index') }}" 
-               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold shadow-2xs transition-colors">
+               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/15 text-xs font-semibold backdrop-blur-md transition-all">
                 <span>Data Siswa</span>
             </a>
         </div>
@@ -46,69 +55,69 @@
     @endif
 
     <!-- ========================================================================= -->
-    <!-- 2. TIGA KARTU KEUANGAN UTAMA (Banyak Whitespace, Sangat Bersih)            -->
+    <!-- 2. TIGA KARTU INFORMASI UTAMA (Jumlah Nasabah, Total Simpanan, Mutasi)    -->
     <!-- ========================================================================= -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         
-        <!-- Kartu 1: Total Simpanan Siswa -->
+        <!-- Kartu 1: Jumlah Nasabah -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between min-h-[140px]">
+            <span class="text-xs font-semibold text-slate-400 tracking-wide">
+                Jumlah Nasabah
+            </span>
+            <div class="my-auto py-2">
+                <p class="text-3xl font-extrabold text-slate-900 font-mono tracking-tight">
+                    {{ number_format($totalSavers, 0, ',', '.') }}
+                </p>
+            </div>
+            <span class="text-[11px] text-slate-400 font-medium">
+                Siswa aktif ber-rekening dari {{ $totalMembers }} total murid
+            </span>
+        </div>
+
+        <!-- Kartu 2: Total Simpanan Siswa -->
         <div class="bg-white rounded-3xl p-6 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between min-h-[140px]">
             <span class="text-xs font-semibold text-slate-400 tracking-wide">
                 Total Simpanan Siswa
             </span>
             <div class="my-auto py-2">
-                <p class="text-3xl font-extrabold text-slate-900 font-mono tracking-tight">
+                <p class="text-3xl font-extrabold text-blue-700 font-mono tracking-tight">
                     Rp {{ number_format($totalStudentSavings, 0, ',', '.') }}
                 </p>
             </div>
             <span class="text-[11px] text-slate-400 font-medium">
-                {{ $totalSavers }} nasabah aktif terdaftar
+                Saldo simpanan tabungan siswa
             </span>
         </div>
 
-        <!-- Kartu 2: Kas di Brankas Utama -->
+        <!-- Kartu 3: Transaksi Masuk & Keluar Hari Ini -->
         <div class="bg-white rounded-3xl p-6 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between min-h-[140px]">
             <span class="text-xs font-semibold text-slate-400 tracking-wide">
-                Kas di Brankas Utama
-            </span>
-            <div class="my-auto py-2">
-                <p class="text-3xl font-extrabold text-slate-900 font-mono tracking-tight">
-                    Rp {{ number_format($vaultBalance, 0, ',', '.') }}
-                </p>
-            </div>
-            <span class="text-[11px] text-slate-400 font-medium">
-                Fisik terverifikasi di brankas sekolah
-            </span>
-        </div>
-
-        <!-- Kartu 3: Total Transaksi Tunai -->
-        <div class="bg-white rounded-3xl p-6 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between min-h-[140px]">
-            <span class="text-xs font-semibold text-slate-400 tracking-wide">
-                Mutasi Kas Masuk & Keluar
+                Transaksi Masuk & Keluar Hari Ini
             </span>
             <div class="my-auto py-2 flex items-baseline gap-4">
                 <div>
-                    <span class="text-[10px] text-emerald-600 font-bold block uppercase">Setoran</span>
+                    <span class="text-[10px] text-emerald-600 font-bold block uppercase">Setoran Masuk</span>
                     <p class="text-xl font-extrabold text-emerald-700 font-mono">
                         +Rp {{ number_format($totalDeposits, 0, ',', '.') }}
                     </p>
                 </div>
                 <div class="h-6 w-px bg-slate-200"></div>
                 <div>
-                    <span class="text-[10px] text-rose-500 font-bold block uppercase">Penarikan</span>
+                    <span class="text-[10px] text-rose-500 font-bold block uppercase">Penarikan Keluar</span>
                     <p class="text-xl font-extrabold text-slate-800 font-mono">
                         -Rp {{ number_format($totalWithdrawals, 0, ',', '.') }}
                     </p>
                 </div>
             </div>
             <span class="text-[11px] text-slate-400 font-medium">
-                Buku kas loket teller
+                Buku kas loket teller hari ini
             </span>
         </div>
 
     </div>
 
     <!-- ========================================================================= -->
-    <!-- 3. SATU TABEL UTAMA TRANSAKSI TERAKHIR (Spacious & Tenang di Mata)        -->
+    <!-- 3. TABEL TRANSAKSI TERAKHIR (Bersih, Renggang & Tenang di Mata)           -->
     <!-- ========================================================================= -->
     <div class="bg-white rounded-3xl p-6 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] space-y-4">
         
