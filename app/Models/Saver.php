@@ -50,6 +50,11 @@ class Saver extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function account(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Account::class);
+    }
+
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class)->orderBy('transaction_date', 'desc');

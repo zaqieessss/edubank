@@ -106,6 +106,18 @@ class AccountService
                 'status' => 'active',
             ]);
 
+            // 4b. Create Account Record
+            $account = \App\Models\Account::create([
+                'saver_id'        => $saver->id,
+                'account_number'  => $accountNumber,
+                'account_type'    => 'student_savings',
+                'balance'         => $initialDeposit,
+                'minimum_balance' => 10000,
+                'status'          => 'active',
+                'opened_date'     => now()->toDateString(),
+                'qr_code_path'    => $qrCodePath,
+            ]);
+
             // 5. Update Member Status
             $member->update(['registration_status' => 'registered']);
 
@@ -113,13 +125,14 @@ class AccountService
             $transactionCode = 'TRX-' . date('Ymd') . '-' . str_pad((string) (Transaction::count() + 1), 4, '0', STR_PAD_LEFT);
             $transaction = Transaction::create([
                 'transaction_code' => $transactionCode,
-                'saver_id' => $saver->id,
-                'user_id' => $processedByUserId,
+                'saver_id'         => $saver->id,
+                'account_id'       => $account->id,
+                'user_id'          => $processedByUserId,
                 'transaction_type' => 'deposit',
-                'amount' => $initialDeposit,
-                'balance_before' => 0,
-                'balance_after' => $initialDeposit,
-                'description' => 'Setoran Awal Buka Rekening Baru',
+                'amount'           => $initialDeposit,
+                'balance_before'   => 0,
+                'balance_after'    => $initialDeposit,
+                'description'      => 'Setoran Awal Buka Rekening Baru',
                 'transaction_date' => now(),
             ]);
 

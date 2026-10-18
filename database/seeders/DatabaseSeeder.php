@@ -132,16 +132,28 @@ class DatabaseSeeder extends Seeder
             'status' => 'active',
         ]);
 
+        // 4b. Create Account record for saver1
+        $account1 = \App\Models\Account::create([
+            'saver_id'        => $saver1->id,
+            'account_number'  => $saver1->account_number,
+            'account_type'    => 'student_savings',
+            'balance'         => 10000,
+            'minimum_balance' => 10000,
+            'status'          => 'active',
+            'opened_date'     => now()->toDateString(),
+        ]);
+
         // 5. Initial Deposit Transaction (Rp 10.000)
         $transaction = Transaction::create([
             'transaction_code' => 'TRX-' . date('Ymd') . '-0001',
-            'saver_id' => $saver1->id,
-            'user_id' => $admin->id,
+            'saver_id'         => $saver1->id,
+            'account_id'       => $account1->id,
+            'user_id'          => $admin->id,
             'transaction_type' => 'deposit',
-            'amount' => 10000,
-            'balance_before' => 0,
-            'balance_after' => 10000,
-            'description' => 'Initial Account Opening Deposit',
+            'amount'           => 10000,
+            'balance_before'   => 0,
+            'balance_after'    => 10000,
+            'description'      => 'Initial Account Opening Deposit',
             'transaction_date' => now(),
         ]);
 
@@ -149,21 +161,24 @@ class DatabaseSeeder extends Seeder
         // Debit: Kas Teller (101)
         AccountingJournal::create([
             'transaction_id' => $transaction->id,
-            'account_code' => '101',
-            'account_name' => 'Cash at Teller',
-            'position' => 'debit',
-            'amount' => 10000,
-            'entry_date' => now(),
+            'account_code'   => '101',
+            'account_name'   => 'Cash at Teller',
+            'position'       => 'debit',
+            'amount'         => 10000,
+            'entry_date'     => now(),
         ]);
 
         // Credit: Simpanan Nasabah (201)
         AccountingJournal::create([
             'transaction_id' => $transaction->id,
-            'account_code' => '201',
-            'account_name' => 'Student Savings Liability',
-            'position' => 'credit',
-            'amount' => 10000,
-            'entry_date' => now(),
+            'account_code'   => '201',
+            'account_name'   => 'Student Savings Liability',
+            'position'       => 'credit',
+            'amount'         => 10000,
+            'entry_date'     => now(),
         ]);
+
+        // 7. Seed System Settings
+        $this->call(SettingSeeder::class);
     }
 }

@@ -50,13 +50,25 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Bank Account Opening (Savers)
     Route::resource('savers', AdminSaverController::class)->only(['index', 'create', 'store', 'show']);
 
-    // Daily Closings & Vault Transfer Approval
+    // Student Bank Accounts (Rekening Tabungan Siswa)
+    Route::get('/accounts', [\App\Http\Controllers\Admin\AccountController::class, 'index'])->name('accounts.index');
+    Route::get('/accounts/{account}', [\App\Http\Controllers\Admin\AccountController::class, 'show'])->name('accounts.show');
+    Route::post('/accounts/{account}/status', [\App\Http\Controllers\Admin\AccountController::class, 'updateStatus'])->name('accounts.status');
+
+    // System Users Management (users)
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except(['create', 'show', 'edit']);
+
+    // Daily Closings & Vault Transfer Approval (Daily Report)
     Route::get('/daily-closings', [AdminClosingController::class, 'index'])->name('daily-closings.index');
     Route::get('/daily-closings/{dailyClosing}', [AdminClosingController::class, 'show'])->name('daily-closings.show');
     Route::post('/daily-closings/{dailyClosing}/approve', [AdminClosingController::class, 'approve'])->name('daily-closings.approve');
 
-    // Double-Entry Accounting Journal Audit
+    // Double-Entry Accounting Journal Audit (Journal)
     Route::get('/accounting-journals', [AdminJournalController::class, 'index'])->name('accounting-journals.index');
+
+    // System Settings (Setting)
+    Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
 });
 
 /*

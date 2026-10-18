@@ -14,6 +14,7 @@ class Transaction extends Model
     protected $fillable = [
         'transaction_code',
         'saver_id',
+        'account_id',
         'user_id',
         'transaction_type',
         'amount',
@@ -36,6 +37,11 @@ class Transaction extends Model
     public function saver(): BelongsTo
     {
         return $this->belongsTo(Saver::class);
+    }
+
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(Account::class);
     }
 
     public function user(): BelongsTo

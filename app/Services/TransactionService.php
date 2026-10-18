@@ -51,17 +51,24 @@ class TransactionService
             // 1. Update Saver Balance
             $lockedSaver->update(['balance' => $balanceAfter]);
 
+            // 1b. Update Account Record if exists
+            $account = \App\Models\Account::where('saver_id', $lockedSaver->id)->first();
+            if ($account) {
+                $account->update(['balance' => $balanceAfter]);
+            }
+
             // 2. Record Transaction
             $transactionCode = 'TRX-' . date('Ymd') . '-' . str_pad((string) (Transaction::count() + 1), 4, '0', STR_PAD_LEFT);
             $transaction = Transaction::create([
                 'transaction_code' => $transactionCode,
-                'saver_id' => $lockedSaver->id,
-                'user_id' => $tellerId,
+                'saver_id'         => $lockedSaver->id,
+                'account_id'       => $account?->id,
+                'user_id'          => $tellerId,
                 'transaction_type' => 'deposit',
-                'amount' => $amount,
-                'balance_before' => $balanceBefore,
-                'balance_after' => $balanceAfter,
-                'description' => $description ?? 'Setoran Tunai di Loket Teller',
+                'amount'           => $amount,
+                'balance_before'   => $balanceBefore,
+                'balance_after'    => $balanceAfter,
+                'description'      => $description ?? 'Setoran Tunai di Loket Teller',
                 'transaction_date' => now(),
             ]);
 
@@ -138,17 +145,24 @@ class TransactionService
             // 1. Update Saver Balance
             $lockedSaver->update(['balance' => $balanceAfter]);
 
+            // 1b. Update Account Record if exists
+            $account = \App\Models\Account::where('saver_id', $lockedSaver->id)->first();
+            if ($account) {
+                $account->update(['balance' => $balanceAfter]);
+            }
+
             // 2. Record Transaction
             $transactionCode = 'TRX-' . date('Ymd') . '-' . str_pad((string) (Transaction::count() + 1), 4, '0', STR_PAD_LEFT);
             $transaction = Transaction::create([
                 'transaction_code' => $transactionCode,
-                'saver_id' => $lockedSaver->id,
-                'user_id' => $tellerId,
+                'saver_id'         => $lockedSaver->id,
+                'account_id'       => $account?->id,
+                'user_id'          => $tellerId,
                 'transaction_type' => 'withdrawal',
-                'amount' => $amount,
-                'balance_before' => $balanceBefore,
-                'balance_after' => $balanceAfter,
-                'description' => $description ?? 'Penarikan Tunai di Loket Teller',
+                'amount'           => $amount,
+                'balance_before'   => $balanceBefore,
+                'balance_after'    => $balanceAfter,
+                'description'      => $description ?? 'Penarikan Tunai di Loket Teller',
                 'transaction_date' => now(),
             ]);
 
