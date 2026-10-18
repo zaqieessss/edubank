@@ -14,11 +14,7 @@
         <div class="absolute -left-10 -top-10 w-44 h-44 bg-blue-500/15 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="relative z-10 space-y-1.5">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[10px] font-bold text-slate-300 uppercase tracking-wider">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span>Bank Mini SMKN 1 Bantul &bull; TA 2026/2027</span>
-            </div>
+        <div class="relative z-10 space-y-1">
             <h2 class="text-xl md:text-2xl font-bold tracking-tight text-white">
                 Selamat Datang, {{ Auth::user()->name ?? 'Administrator' }}
             </h2>

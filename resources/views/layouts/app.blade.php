@@ -245,21 +245,11 @@
             <!-- FLOATING TOPBAR PILL (Sesuai Referensi Gambar) -->
             <header class="h-14 bg-white/95 backdrop-blur-md rounded-[22px] border border-slate-200/70 shadow-sm px-4 flex items-center justify-between shrink-0">
                 
-                <!-- Kiri: Breadcrumb / Page Title & Search Pill -->
-                <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-semibold text-slate-400">Edubank</span>
-                        <span class="text-slate-300">/</span>
-                        <h1 class="text-xs font-bold text-slate-800 uppercase tracking-wider">@yield('page_title', 'Dashboard')</h1>
-                    </div>
-
-                    <!-- Compact Search Pill -->
-                    <div class="hidden md:flex items-center bg-slate-100/80 rounded-full px-3 py-1.5 text-xs text-slate-500 border border-slate-200/50 w-64 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:bg-white transition-all">
-                        <svg class="w-3.5 h-3.5 text-slate-400 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        <input type="text" placeholder="Cari siswa, rekening, atau transaksi..." class="bg-transparent border-none outline-none text-xs w-full text-slate-700 placeholder-slate-400 focus:ring-0 p-0">
-                    </div>
+                <!-- Kiri: Breadcrumb / Page Title -->
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold text-slate-400">Edubank</span>
+                    <span class="text-slate-300">/</span>
+                    <h1 class="text-xs font-bold text-slate-800 uppercase tracking-wider">@yield('page_title', 'Dashboard')</h1>
                 </div>
 
                 <!-- Kanan: Quick Date, Badges & Profile Pill -->
