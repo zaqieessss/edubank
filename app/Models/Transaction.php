@@ -49,6 +49,11 @@ class Transaction extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function getReceiptNumberAttribute(): string
+    {
+        return $this->transaction_code;
+    }
+
     public function journals(): HasMany
     {
         return $this->hasMany(AccountingJournal::class);
