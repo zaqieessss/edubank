@@ -180,5 +180,22 @@ class DatabaseSeeder extends Seeder
 
         // 7. Seed System Settings
         $this->call(SettingSeeder::class);
+
+        // 8. Sample Daily Closing
+        \App\Models\DailyClosing::firstOrCreate(
+            ['closing_date' => now()->toDateString(), 'teller_id' => $teller->id],
+            [
+                'admin_id'          => null,
+                'opening_balance'   => 1000000,
+                'total_deposits'    => 2500000,
+                'total_withdrawals' => 500000,
+                'system_balance'    => 3000000,
+                'physical_cash'     => 3000000,
+                'difference'        => 0,
+                'status'            => 'submitted',
+                'vault_status'      => 'with_teller',
+                'notes'             => 'Penutupan kas operasional harian teller loket 1. Fisik uang seimbang.',
+            ]
+        );
     }
 }
