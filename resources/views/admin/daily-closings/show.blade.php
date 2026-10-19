@@ -4,7 +4,7 @@
 @section('page_title', 'Periksa Closing Kas Harian')
 
 @section('content')
-<div class="h-full flex flex-col justify-between gap-4 pb-0.5" x-data="{ showRejectModal: false }">
+<div class="h-full flex flex-col justify-between gap-4 pb-0.5">
 
     <!-- Top Navigation & Summary Card -->
     <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -156,8 +156,8 @@
                 <div class="flex items-center gap-3 shrink-0">
                     <!-- Tombol Reject -->
                     <button type="button" 
-                            @click="showRejectModal = true" 
-                            class="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200/80 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5">
+                            onclick="openRejectModal()" 
+                            class="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200/80 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                         <span>Tolak Laporan</span>
                     </button>
@@ -165,7 +165,7 @@
                     <!-- Tombol Approve -->
                     <form method="POST" action="{{ route('admin.daily-closings.approve', $dailyClosing->id) }}" onsubmit="return confirm('Apakah Anda yakin telah menerima fisik uang kas sebesar Rp {{ number_format($dailyClosing->physical_cash, 0, ',', '.') }} untuk dimasukkan ke Brankas Utama?')">
                         @csrf
-                        <button type="submit" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-xs flex items-center gap-1.5">
+                        <button type="submit" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                             <span>Verifikasi & Masukkan ke Brankas</span>
                         </button>
@@ -185,29 +185,21 @@
         </div>
     </div>
 
-    <!-- Modal Reject Laporan -->
-    <div x-show="showRejectModal" 
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0"
-         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs"
-         style="display: none;"
-         @keydown.escape.window="showRejectModal = false">
+    <!-- Modal Reject Laporan (Pure Vanilla JavaScript Driven) -->
+    <div id="rejectModal" 
+         class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs"
+         onclick="if(event.target === this) closeRejectModal()">
         
-        <div class="bg-white rounded-[24px] max-w-lg w-full p-6 border border-slate-200/80 shadow-2xl space-y-4"
-             @click.away="showRejectModal = false">
+        <div class="bg-white rounded-[24px] max-w-lg w-full p-6 border border-slate-200/80 shadow-2xl space-y-4 relative">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                    <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     </div>
                     <h3 class="text-sm font-bold text-slate-800">Tolak Laporan Closing Kas</h3>
                 </div>
-                <button type="button" @click="showRejectModal = false" class="text-slate-400 hover:text-slate-600">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                <button type="button" onclick="closeRejectModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm">
+                    &times;
                 </button>
             </div>
 
@@ -220,6 +212,7 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1.5">Alasan Penolakan <span class="text-rose-500">*</span></label>
                     <textarea name="rejection_reason" 
+                              id="rejectionReasonInput"
                               rows="4" 
                               required
                               placeholder="Contoh: Terdapat selisih fisik Rp 50.000 pada pecahan Rp 50.000. Mohon hitung ulang fisik kas di laci teller..."
@@ -227,10 +220,10 @@
                 </div>
 
                 <div class="flex items-center justify-end gap-2 pt-2">
-                    <button type="button" @click="showRejectModal = false" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition-all">
+                    <button type="button" onclick="closeRejectModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition-all cursor-pointer">
                         Batal
                     </button>
-                    <button type="submit" class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold transition-all shadow-xs">
+                    <button type="submit" class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">
                         Konfirmasi Tolak
                     </button>
                 </div>
@@ -238,4 +231,32 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    function openRejectModal() {
+        const modal = document.getElementById('rejectModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            const textarea = document.getElementById('rejectionReasonInput');
+            if (textarea) setTimeout(() => textarea.focus(), 50);
+        }
+    }
+
+    function closeRejectModal() {
+        const modal = document.getElementById('rejectModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeRejectModal();
+        }
+    });
+</script>
+@endpush
 @endsection

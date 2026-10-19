@@ -23,7 +23,7 @@ class DailyClosingController extends Controller
             $query->where('status', $request->status);
         }
 
-        $closings = $query->orderBy('closing_date', 'desc')
+        $closings = $query->orderBy('id', 'desc')
             ->paginate(15)
             ->withQueryString();
 

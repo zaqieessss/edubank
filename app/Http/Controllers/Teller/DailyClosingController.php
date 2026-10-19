@@ -19,7 +19,7 @@ class DailyClosingController extends Controller
     {
         $tellerId = Auth::id();
         $closings = DailyClosing::where('teller_id', $tellerId)
-            ->orderBy('closing_date', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(10);
 
         return view('teller.daily-closings.index', compact('closings'));
