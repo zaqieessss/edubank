@@ -92,16 +92,33 @@ class MemberService
             throw new Exception("File CSV tidak ditemukan: {$filePath}");
         }
 
-        $file = fopen($filePath, 'r');
-        $header = fgetcsv($file);
+        $content = file_get_contents($filePath);
+        // Strip UTF-8 BOM if present (added by Excel)
+        $bom = pack('H*', 'EFBBBF');
+        $content = preg_replace("/^$bom/", '', $content);
+
+        // Auto-detect delimiter: count commas vs semicolons in the first line
+        $firstLine = strtok($content, "\r\n");
+        $commaCount = substr_count($firstLine, ',');
+        $semicolonCount = substr_count($firstLine, ';');
+        $delimiter = ($semicolonCount > $commaCount) ? ';' : ',';
+
+        $file = fopen('php://memory', 'r+');
+        fwrite($file, $content);
+        rewind($file);
+
+        $header = fgetcsv($file, 0, $delimiter);
 
         if (!$header) {
             fclose($file);
             throw new Exception('File CSV kosong atau tidak valid.');
         }
 
-        // Normalize header names (lowercase & trimmed)
-        $headerMap = array_map(fn($col) => strtolower(trim($col)), $header);
+        // Normalize header names (lowercase, strip BOM/spaces)
+        $headerMap = array_map(function ($col) {
+            $cleaned = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $col);
+            return strtolower(trim($cleaned));
+        }, $header);
 
         $imported = 0;
         $skipped  = 0;
@@ -112,7 +129,7 @@ class MemberService
 
         DB::beginTransaction();
         try {
-            while (($row = fgetcsv($file)) !== false) {
+            while (($row = fgetcsv($file, 0, $delimiter)) !== false) {
                 $rowNumber++;
 
                 if (count($row) < count($headerMap) || empty(array_filter($row))) {

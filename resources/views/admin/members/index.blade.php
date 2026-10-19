@@ -262,24 +262,34 @@
 </div>
 
 <!-- ========================================================================= -->
-<!-- MODAL: Import CSV                                                         -->
 <!-- ========================================================================= -->
-<div id="importModal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+<!-- MODAL: Import CSV / Excel                                                 -->
+<!-- ========================================================================= -->
+<div id="importModal" 
+     class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs"
+     onclick="if(event.target === this) document.getElementById('importModal').classList.add('hidden')">
+    <div class="bg-white rounded-[24px] max-w-md w-full p-6 border border-slate-200/80 shadow-2xl space-y-4 relative">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-            <h3 class="text-sm font-bold text-slate-800">Import Data Siswa (CSV)</h3>
-            <button onclick="document.getElementById('importModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                </div>
+                <h3 class="text-sm font-bold text-slate-800">Import Data Siswa (CSV)</h3>
+            </div>
+            <button type="button" onclick="document.getElementById('importModal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm">
+                &times;
+            </button>
         </div>
-        <form method="POST" action="{{ route('admin.members.import') }}" enctype="multipart/form-data" class="mt-4 space-y-4">
+        <form method="POST" action="{{ route('admin.members.import') }}" enctype="multipart/form-data" class="space-y-4">
             @csrf
             <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Pilih File CSV Siswa</label>
-                <input type="file" name="csv_file" accept=".csv,text/csv" required class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer border border-slate-200 rounded-xl p-1">
-                <p class="text-[11px] text-slate-400 mt-1">Gunakan template CSV resmi. Header: student_id_number, full_name, grade_level, class_name, major, cohort, gender, email, phone_number, address.</p>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Pilih File CSV / Excel Siswa</label>
+                <input type="file" name="csv_file" accept=".csv,text/csv,.txt" required class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer border border-slate-200 rounded-xl p-1">
+                <p class="text-[11px] text-slate-400 mt-1">Header kolom: <code class="font-mono text-slate-700">student_id_number, full_name, grade_level, class_name, major, cohort, gender, email, phone_number, address</code>.</p>
             </div>
-            <div class="flex items-center justify-end gap-2 pt-2">
-                <button type="button" onclick="document.getElementById('importModal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200">Batal</button>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700">Mulai Import</button>
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                <button type="button" onclick="document.getElementById('importModal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-all cursor-pointer">Batal</button>
+                <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">Mulai Import</button>
             </div>
         </form>
     </div>
@@ -288,13 +298,22 @@
 <!-- ========================================================================= -->
 <!-- MODAL: Naik Kelas Massal                                                  -->
 <!-- ========================================================================= -->
-<div id="promoteModal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+<div id="promoteModal" 
+     class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs"
+     onclick="if(event.target === this) document.getElementById('promoteModal').classList.add('hidden')">
+    <div class="bg-white rounded-[24px] max-w-md w-full p-6 border border-slate-200/80 shadow-2xl space-y-4 relative">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-            <h3 class="text-sm font-bold text-slate-800">Proses Kenaikan Kelas Massal</h3>
-            <button onclick="document.getElementById('promoteModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                </div>
+                <h3 class="text-sm font-bold text-slate-800">Proses Kenaikan Kelas Massal</h3>
+            </div>
+            <button type="button" onclick="document.getElementById('promoteModal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm">
+                &times;
+            </button>
         </div>
-        <form method="POST" action="{{ route('admin.members.promote') }}" class="mt-4 space-y-4">
+        <form method="POST" action="{{ route('admin.members.promote') }}" class="space-y-4">
             @csrf
             <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 text-xs text-amber-800 leading-relaxed">
                 <p class="font-bold mb-1">Perhatian Perubahan Massal:</p>
@@ -304,9 +323,9 @@
                     <li>Siswa Kelas 12 otomatis lulus menjadi status <strong>Alumni</strong></li>
                 </ul>
             </div>
-            <div class="flex items-center justify-end gap-2 pt-2">
-                <button type="button" onclick="document.getElementById('promoteModal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200">Batal</button>
-                <button type="submit" class="px-4 py-2 bg-amber-600 text-white rounded-xl text-xs font-bold hover:bg-amber-700 shadow-sm">Eksekusi Naik Kelas</button>
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                <button type="button" onclick="document.getElementById('promoteModal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-all cursor-pointer">Batal</button>
+                <button type="submit" class="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">Eksekusi Naik Kelas</button>
             </div>
         </form>
     </div>
