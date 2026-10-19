@@ -6,13 +6,25 @@
 @section('content')
 <div class="max-w-3xl mx-auto space-y-4 pb-8">
 
-    <!-- Back Button -->
-    <div class="flex items-center justify-between">
-        <a href="{{ route('teller.daily-closings.index') }}" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            <span>Kembali ke Riwayat Closing</span>
-        </a>
-        <span class="text-xs text-slate-400 font-mono">Tutup Buku Kas Harian</span>
+    <!-- Top Navigation Card (Konsisten & Rapi Terbungkus Card) -->
+    <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+            <a href="{{ route('teller.daily-closings.index') }}" 
+               class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors shrink-0"
+               title="Kembali ke Riwayat Closing">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            </a>
+            <div>
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Formulir Rekonsiliasi</span>
+                <h1 class="text-base font-extrabold text-slate-900 mt-0.5">
+                    Tutup Kas Harian (Daily Closing)
+                </h1>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400 font-mono">{{ \Carbon\Carbon::parse($summary['date'])->translatedFormat('d F Y') }}</span>
+        </div>
     </div>
 
     @if($todayClosing)

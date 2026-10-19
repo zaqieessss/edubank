@@ -21,7 +21,7 @@ class DashboardController extends Controller
 
         $recentTransactions = Transaction::with('saver')
             ->where('user_id', $tellerId)
-            ->latest('transaction_date')
+            ->orderBy('id', 'desc')
             ->take(8)
             ->get();
 
