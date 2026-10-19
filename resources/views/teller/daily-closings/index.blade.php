@@ -104,6 +104,16 @@
                                         <svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                                         Disetujui Masuk Brankas
                                     </span>
+                                @elseif($c->status === 'rejected')
+                                    <div class="inline-flex flex-col items-center gap-1">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                            Ditolak Admin
+                                        </span>
+                                        <a href="{{ route('teller.daily-closings.create') }}" class="text-[10px] text-blue-600 hover:text-blue-800 font-semibold underline">
+                                            Ajukan Ulang &rarr;
+                                        </a>
+                                    </div>
                                 @else
                                     <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
                                         <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
@@ -111,8 +121,15 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="py-2.5 px-3 text-slate-500 text-[11px] italic">
-                                {{ $c->notes ? Str::limit($c->notes, 40) : '-' }}
+                            <td class="py-2.5 px-3 text-slate-500 text-[11px]">
+                                @if($c->status === 'rejected' && $c->rejection_reason)
+                                    <div class="p-2 rounded-lg bg-rose-50/80 border border-rose-200/60 text-rose-800 text-[11px] font-medium leading-relaxed">
+                                        <strong class="font-bold text-rose-900 block text-[10px] uppercase tracking-wider">Alasan Penolakan:</strong>
+                                        {{ $c->rejection_reason }}
+                                    </div>
+                                @else
+                                    <span class="italic text-slate-500">{{ $c->notes ? Str::limit($c->notes, 40) : '-' }}</span>
+                                @endif
                             </td>
                         </tr>
                     @empty

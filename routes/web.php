@@ -63,6 +63,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/daily-closings', [AdminClosingController::class, 'index'])->name('daily-closings.index');
     Route::get('/daily-closings/{dailyClosing}', [AdminClosingController::class, 'show'])->name('daily-closings.show');
     Route::post('/daily-closings/{dailyClosing}/approve', [AdminClosingController::class, 'approve'])->name('daily-closings.approve');
+    Route::post('/daily-closings/{dailyClosing}/reject', [AdminClosingController::class, 'reject'])->name('daily-closings.reject');
 
     // Double-Entry Accounting Journal Audit (Journal)
     Route::get('/accounting-journals', [AdminJournalController::class, 'index'])->name('accounting-journals.index');

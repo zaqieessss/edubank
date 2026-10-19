@@ -64,6 +64,7 @@
                         <option value="">Semua Status</option>
                         <option value="submitted" {{ request('status') == 'submitted' ? 'selected' : '' }}>Menunggu Verifikasi</option>
                         <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Telah Disetujui</option>
+                        <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Ditolak</option>
                     </select>
 
                     @if(request()->filled('status'))
@@ -125,6 +126,11 @@
                                         <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
                                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                             Disetujui
+                                        </span>
+                                    @elseif($c->status === 'rejected')
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                            Ditolak
                                         </span>
                                     @else
                                         <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/80">

@@ -186,4 +186,77 @@ class FrontendViewsTest extends TestCase
         $this->get(route('saver.dashboard'))->assertStatus(200);
         $this->get(route('saver.mutation'))->assertStatus(200);
     }
+
+    public function test_daily_closing_flow_with_approval_and_rejection(): void
+    {
+        $admin = User::factory()->create([
+            'role'   => 'admin',
+            'status' => 'active',
+        ]);
+
+        $teller = User::factory()->create([
+            'role'   => 'teller',
+            'status' => 'active',
+        ]);
+
+        $closing = \App\Models\DailyClosing::create([
+            'teller_id'         => $teller->id,
+            'closing_date'      => now()->toDateString(),
+            'opening_balance'   => 0,
+            'total_deposits'    => 50000,
+            'total_withdrawals' => 0,
+            'system_balance'    => 50000,
+            'physical_cash'     => 50000,
+            'difference'        => 0,
+            'status'            => 'submitted',
+            'vault_status'      => 'with_teller',
+            'notes'             => 'Catatan closing teller',
+        ]);
+
+        // 1. Admin can view show page
+        $this->actingAs($admin);
+        $response = $this->get(route('admin.daily-closings.show', $closing->id));
+        $response->assertStatus(200);
+        $response->assertSee('Tolak Laporan');
+        $response->assertSee('Verifikasi & Masukkan ke Brankas', false);
+
+        // 2. Admin rejects closing with reason
+        $rejectResponse = $this->post(route('admin.daily-closings.reject', $closing->id), [
+            'rejection_reason' => 'Uang fisik kurang Rp 10.000, mohon hitung ulang.',
+        ]);
+        $rejectResponse->assertRedirect();
+        $closing->refresh();
+        $this->assertEquals('rejected', $closing->status);
+        $this->assertEquals('Uang fisik kurang Rp 10.000, mohon hitung ulang.', $closing->rejection_reason);
+
+        // 3. Teller can view rejection in index and create page
+        $this->actingAs($teller);
+        $tellerIndex = $this->get(route('teller.daily-closings.index'));
+        $tellerIndex->assertStatus(200);
+        $tellerIndex->assertSee('Ditolak Admin');
+        $tellerIndex->assertSee('Uang fisik kurang Rp 10.000, mohon hitung ulang.');
+
+        $tellerCreate = $this->get(route('teller.daily-closings.create'));
+        $tellerCreate->assertStatus(200);
+        $tellerCreate->assertSee('Laporan Tutup Kas Anda Ditolak oleh Admin');
+        $tellerCreate->assertSee('Uang fisik kurang Rp 10.000, mohon hitung ulang.');
+
+        // 4. Teller can re-submit
+        $resubmit = $this->post(route('teller.daily-closings.store'), [
+            'physical_cash' => 0,
+            'notes'         => 'Sudah dihitung ulang pas Rp 0.',
+        ]);
+        $resubmit->assertRedirect(route('teller.daily-closings.index'));
+        $closing->refresh();
+        $this->assertEquals('submitted', $closing->status);
+        $this->assertNull($closing->rejection_reason);
+
+        // 5. Admin approves closing
+        $this->actingAs($admin);
+        $approveResponse = $this->post(route('admin.daily-closings.approve', $closing->id));
+        $approveResponse->assertRedirect();
+        $closing->refresh();
+        $this->assertEquals('approved', $closing->status);
+        $this->assertEquals('transferred_to_vault', $closing->vault_status);
+    }
 }

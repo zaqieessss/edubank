@@ -16,16 +16,46 @@
     </div>
 
     @if($todayClosing)
-        <!-- Warning Banner: Already Closed Today -->
-        <div class="bg-amber-50 border border-amber-200 rounded-3xl p-5 text-amber-800 space-y-2">
-            <div class="flex items-center gap-2 text-sm font-bold">
-                <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                <span>Anda Sudah Mengajukan Tutup Kas Hari Ini</span>
+        @if($todayClosing->status === 'rejected')
+            <!-- Warning Banner: Rejected by Admin -->
+            <div class="bg-rose-50 border border-rose-200 rounded-3xl p-5 text-rose-800 space-y-3">
+                <div class="flex items-center gap-2 text-sm font-bold text-rose-700">
+                    <svg class="w-5 h-5 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <span>Laporan Tutup Kas Anda Ditolak oleh Admin</span>
+                </div>
+                <div class="text-xs leading-relaxed space-y-2">
+                    <div class="p-3 bg-white rounded-xl border border-rose-200 text-rose-900 font-medium">
+                        <strong class="block text-[10px] uppercase font-bold text-rose-500 mb-0.5 tracking-wider">Catatan Alasan Penolakan:</strong>
+                        {{ $todayClosing->rejection_reason ?? 'Mohon periksa kembali kesesuaian fisik uang di laci loket Anda.' }}
+                    </div>
+                    <p class="text-rose-700 font-medium">
+                        Silakan hitung kembali fisik uang di laci kas Anda, perbarui nominal uang fisik pada form di bawah ini, dan klik <strong>Ajukan Penutupan Kas Harian</strong> untuk mengirimkan revisi ke Admin.
+                    </p>
+                </div>
             </div>
-            <p class="text-xs leading-relaxed">
-                Laporan penutupan kas untuk tanggal <strong>{{ \Carbon\Carbon::parse($summary['date'])->translatedFormat('d F Y') }}</strong> sudah berhasil diajukan dengan status <strong>{{ ucfirst($todayClosing->status) }}</strong> (Kas Fisik: Rp {{ number_format($todayClosing->physical_cash, 0, ',', '.') }}). Laporan sedang menunggu verifikasi serah terima brankas oleh Supervisor / Administrator.
-            </p>
-        </div>
+        @elseif($todayClosing->status === 'approved')
+            <!-- Success Banner: Approved -->
+            <div class="bg-emerald-50 border border-emerald-200 rounded-3xl p-5 text-emerald-800 space-y-2">
+                <div class="flex items-center gap-2 text-sm font-bold text-emerald-700">
+                    <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>Laporan Tutup Kas Telah Disetujui</span>
+                </div>
+                <p class="text-xs leading-relaxed">
+                    Laporan kas untuk hari ini (Rp {{ number_format($todayClosing->physical_cash, 0, ',', '.') }}) telah diverifikasi dan dana telah diserahterimakan ke brankas utama. Buku harian telah ditutup.
+                </p>
+            </div>
+        @else
+            <!-- Warning Banner: Already Closed Today & Waiting -->
+            <div class="bg-amber-50 border border-amber-200 rounded-3xl p-5 text-amber-800 space-y-2">
+                <div class="flex items-center gap-2 text-sm font-bold">
+                    <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <span>Pengajuan Tutup Kas Sedang Menunggu Verifikasi</span>
+                </div>
+                <p class="text-xs leading-relaxed">
+                    Laporan penutupan kas untuk tanggal <strong>{{ \Carbon\Carbon::parse($summary['date'])->translatedFormat('d F Y') }}</strong> sudah diajukan (Kas Fisik: Rp {{ number_format($todayClosing->physical_cash, 0, ',', '.') }}). Laporan sedang menunggu verifikasi serah terima brankas oleh Administrator.
+                </p>
+            </div>
+        @endif
     @endif
 
     <!-- Main Reconciliation Bento Form -->

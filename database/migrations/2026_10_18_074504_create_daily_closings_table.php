@@ -22,7 +22,7 @@ return new class extends Migration
             $table->bigInteger('system_balance')->default(0); // opening + deposits - withdrawals
             $table->bigInteger('physical_cash')->default(0); // Input fisik uang teller
             $table->bigInteger('difference')->default(0); // physical_cash - system_balance
-            $table->enum('status', ['draft', 'submitted', 'approved', 'discrepancy'])->default('draft');
+            $table->enum('status', ['draft', 'submitted', 'approved', 'discrepancy', 'rejected'])->default('draft');
             $table->enum('vault_status', ['with_teller', 'transferred_to_vault'])->default('with_teller');
             $table->text('notes')->nullable();
             $table->timestamps();

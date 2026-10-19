@@ -31,7 +31,7 @@ class DailyClosingController extends Controller
         $summary = $this->cashClosingService->getDailySummary($tellerId);
 
         $todayClosing = DailyClosing::where('teller_id', $tellerId)
-            ->where('closing_date', $summary['date'])
+            ->whereDate('closing_date', $summary['date'])
             ->first();
 
         return view('teller.daily-closings.create', compact('summary', 'todayClosing'));

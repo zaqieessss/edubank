@@ -47,4 +47,21 @@ class DailyClosingController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
+
+    public function reject(Request $request, DailyClosing $dailyClosing)
+    {
+        $validated = $request->validate([
+            'rejection_reason' => ['required', 'string', 'max:1000'],
+        ], [
+            'rejection_reason.required' => 'Alasan penolakan laporan closing wajib diisi agar teller mengetahui koreksi yang diperlukan.',
+        ]);
+
+        try {
+            $this->cashClosingService->rejectClosing($dailyClosing, Auth::id(), $validated['rejection_reason']);
+
+            return back()->with('success', 'Laporan penutupan kas berhasil ditolak. Catatan alasan penolakan telah diteruskan ke petugas teller.');
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
 }

@@ -80,23 +80,31 @@ class CashClosingService
         $status = ($difference === 0) ? 'submitted' : 'discrepancy';
 
         return DB::transaction(function () use ($tellerId, $summary, $physicalCash, $difference, $status, $notes) {
-            $closing = DailyClosing::updateOrCreate(
-                [
+            $closing = DailyClosing::where('teller_id', $tellerId)
+                ->whereDate('closing_date', $summary['date'])
+                ->first();
+
+            $data = [
+                'opening_balance'   => $summary['opening_balance'],
+                'total_deposits'    => $summary['total_deposits'],
+                'total_withdrawals' => $summary['total_withdrawals'],
+                'system_balance'    => $summary['system_balance'],
+                'physical_cash'     => $physicalCash,
+                'difference'        => $difference,
+                'status'            => $status,
+                'vault_status'      => 'with_teller',
+                'notes'             => $notes,
+                'rejection_reason'  => null,
+            ];
+
+            if ($closing) {
+                $closing->update($data);
+            } else {
+                $closing = DailyClosing::create(array_merge([
                     'teller_id'    => $tellerId,
                     'closing_date' => $summary['date'],
-                ],
-                [
-                    'opening_balance'   => $summary['opening_balance'],
-                    'total_deposits'    => $summary['total_deposits'],
-                    'total_withdrawals' => $summary['total_withdrawals'],
-                    'system_balance'    => $summary['system_balance'],
-                    'physical_cash'     => $physicalCash,
-                    'difference'        => $difference,
-                    'status'            => $status,
-                    'vault_status'      => 'with_teller',
-                    'notes'             => $notes,
-                ]
-            );
+                ], $data));
+            }
 
             return $closing;
         });
@@ -121,6 +129,28 @@ class CashClosingService
                 'admin_id'     => $adminId,
                 'status'       => 'approved',
                 'vault_status' => 'transferred_to_vault',
+            ]);
+
+            return $closing;
+        });
+    }
+
+    /**
+     * Admin/Supervisor rejects closing with a reason.
+     *
+     * @param DailyClosing $closing
+     * @param int $adminId
+     * @param string $reason
+     * @return DailyClosing
+     */
+    public function rejectClosing(DailyClosing $closing, int $adminId, string $reason): DailyClosing
+    {
+        return DB::transaction(function () use ($closing, $adminId, $reason) {
+            $closing->update([
+                'admin_id'         => $adminId,
+                'status'           => 'rejected',
+                'rejection_reason' => $reason,
+                'vault_status'     => 'with_teller',
             ]);
 
             return $closing;

@@ -23,6 +23,7 @@ class DailyClosing extends Model
         'status',
         'vault_status',
         'notes',
+        'rejection_reason',
     ];
 
     protected function casts(): array
