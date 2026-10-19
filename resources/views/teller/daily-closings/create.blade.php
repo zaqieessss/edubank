@@ -118,10 +118,10 @@
                                    data-currency="true"
                                    name="physical_cash" 
                                    id="physicalCashInput" 
-                                   value="{{ old('physical_cash', $summary['closing_cash']) }}" 
-                                   required 
+                                   value="{{ old('physical_cash', $todayClosing?->physical_cash ?? $summary['closing_cash']) }}" 
+                                   {{ $todayClosing && $todayClosing->status === 'approved' ? 'disabled' : 'required' }} 
                                    oninput="calculateDifference()" 
-                                   class="w-full bg-slate-50 border border-slate-200/80 rounded-2xl pl-12 pr-4 py-3 text-lg font-mono font-extrabold text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
+                                   class="w-full bg-slate-50 border border-slate-200/80 rounded-2xl pl-12 pr-4 py-3 text-lg font-mono font-extrabold text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60 disabled:bg-slate-100">
                         </div>
                         <p class="text-[11px] text-slate-400 mt-1">Hitung seluruh lembaran uang tunai dan koin di laci meja teller Anda saat ini.</p>
                         @error('physical_cash')
@@ -154,19 +154,22 @@
                     <textarea name="notes" 
                               id="closingNotes" 
                               rows="2" 
+                              {{ $todayClosing && $todayClosing->status === 'approved' ? 'disabled' : '' }}
                               placeholder="Tuliskan catatan kondisi fisik uang, pecahan, atau keterangan selisih jika ada..." 
-                              class="w-full bg-slate-50 border border-slate-200/80 rounded-2xl px-4 py-2.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20"></textarea>
+                              class="w-full bg-slate-50 border border-slate-200/80 rounded-2xl px-4 py-2.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60 disabled:bg-slate-100">{{ old('notes', $todayClosing?->notes) }}</textarea>
                 </div>
 
                 <!-- Submit Button -->
                 <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-3">
                     <a href="{{ route('teller.daily-closings.index') }}" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-colors">
-                        Batal
+                        {{ $todayClosing && $todayClosing->status === 'approved' ? 'Kembali' : 'Batal' }}
                     </a>
-                    <button type="submit" class="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-md shadow-slate-900/20 transition-all hover:shadow-lg flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                        <span>Ajukan Penutupan Kas Harian</span>
-                    </button>
+                    @if(!$todayClosing || $todayClosing->status !== 'approved')
+                        <button type="submit" class="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-md shadow-slate-900/20 transition-all hover:shadow-lg flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span>{{ $todayClosing && $todayClosing->status === 'rejected' ? 'Kirim Revisi Penutupan Kas' : 'Ajukan Penutupan Kas Harian' }}</span>
+                        </button>
+                    @endif
                 </div>
             </form>
         </div>
