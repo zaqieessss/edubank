@@ -27,31 +27,25 @@
 @endpush
 
 @section('content')
-<div class="space-y-4 pb-8">
+<div class="h-full flex flex-col justify-between gap-4 pb-0.5">
 
-    <!-- Top Action Toolbar -->
-    <div class="flex items-center justify-between no-print">
+    <!-- Top Action Toolbar (Kembali & Navigasi Cepat) -->
+    <div class="flex items-center justify-between no-print shrink-0">
         <a href="{{ route('admin.savers.index') }}" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
             <span>Kembali ke Daftar Nasabah</span>
         </a>
-        <div class="flex items-center gap-2">
-            <button onclick="window.print()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl text-xs font-bold shadow-sm transition-all hover:shadow">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                <span>Cetak Kartu Tabungan Siswa</span>
-            </button>
-        </div>
     </div>
 
-    <!-- Bento Grid Layout: 2 Columns (Left: Digital Card & Account Specs, Right: Balance & Mutations) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+    <!-- Bento Grid Layout: 2 Kolom Seimbang -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 flex-1 min-h-0">
         
-        <!-- Kolom Kiri: DIGITAL STUDENT SAVINGS CARD (Card Holographic Modern) -->
-        <div class="lg:col-span-5 space-y-4">
+        <!-- KOLOM KIRI: Kartu Digital Siswa & Informasi Akun -->
+        <div class="lg:col-span-5 flex flex-col justify-between gap-4">
             
-            <!-- THE PRINTABLE DIGITAL SMART CARD -->
-            <div class="card-printable relative w-full aspect-[1.586/1] rounded-[24px] bg-gradient-to-tr from-slate-950 via-slate-900 to-indigo-950 p-5 text-white shadow-xl shadow-slate-900/15 overflow-hidden flex flex-col justify-between border border-slate-700/60">
-                <!-- Glossy Texture / Overlay -->
+            <!-- 1. KARTU DIGITAL SMART CARD EDUBANK (Klik QR untuk perbesar) -->
+            <div class="card-printable relative w-full aspect-[1.586/1] rounded-[24px] bg-gradient-to-tr from-slate-950 via-slate-900 to-indigo-950 p-5 text-white shadow-xl shadow-slate-900/15 overflow-hidden flex flex-col justify-between border border-slate-700/60 shrink-0">
+                <!-- Glossy Texture / Ambient Glow -->
                 <div class="absolute -right-16 -top-16 w-56 h-56 bg-gradient-to-br from-blue-500/20 to-transparent rounded-full blur-2xl pointer-events-none"></div>
                 <div class="absolute -left-16 -bottom-16 w-56 h-56 bg-gradient-to-tr from-indigo-500/20 to-transparent rounded-full blur-2xl pointer-events-none"></div>
 
@@ -74,15 +68,15 @@
                     </div>
                 </div>
 
-                <!-- Account Number (Large Monospace) -->
-                <div class="relative z-10 my-auto text-center py-2">
+                <!-- Account Number (Monospace) -->
+                <div class="relative z-10 my-auto text-center py-1">
                     <p class="text-[9px] uppercase tracking-widest text-slate-400 font-semibold mb-0.5">Nomor Rekening Tabungan</p>
                     <p class="text-lg sm:text-xl font-mono font-bold tracking-widest text-blue-300 drop-shadow-sm">
                         {{ $saver->account_number }}
                     </p>
                 </div>
 
-                <!-- Card Footer (Student Details & QR Code) -->
+                <!-- Card Footer (Data Siswa & QR Code Interaktif) -->
                 <div class="relative z-10 flex items-end justify-between border-t border-slate-800/80 pt-3">
                     <div>
                         <p class="text-sm font-bold text-white uppercase tracking-tight">{{ $saver->full_name }}</p>
@@ -90,137 +84,242 @@
                         <p class="text-[9px] text-slate-400 font-medium mt-0.5">{{ $saver->major }} &bull; Angkatan {{ $saver->cohort }}</p>
                     </div>
 
-                    <!-- Clean QR Code with crisp border -->
-                    <div class="w-16 h-16 bg-white p-1 rounded-xl shadow-md shrink-0 flex items-center justify-center">
+                    <!-- Clean QR Code with Click-to-Zoom Button -->
+                    <button type="button" 
+                            onclick="openQrModal()"
+                            class="group relative w-16 h-16 bg-white p-1 rounded-xl shadow-md shrink-0 flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all" 
+                            title="Klik untuk memperbesar QR Code">
                         <img src="{{ $qrCodeDataUri }}" alt="QR Code Rekening" class="w-full h-full object-contain">
-                    </div>
+                        <div class="absolute inset-0 bg-slate-900/15 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <svg class="w-4 h-4 text-slate-900 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/></svg>
+                        </div>
+                    </button>
                 </div>
             </div>
 
-            <!-- Bento Account Metadata -->
-            <div class="bg-white rounded-[24px] p-4 border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] space-y-3 text-xs">
-                <h5 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Informasi Akun & Login</h5>
-                
-                <div class="flex items-center justify-between py-1.5 border-b border-slate-100">
-                    <span class="text-slate-500">Email Akun Login:</span>
-                    <span class="font-mono font-bold text-slate-800">{{ $saver->user?->email ?? '-' }}</span>
+            <!-- 2. INFORMASI AKUN & STATUS KELOLAAN -->
+            <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between text-xs min-h-[200px]">
+                <div>
+                    <h5 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">Informasi Akun</h5>
+                    
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between py-1.5 border-b border-slate-100">
+                            <span class="text-slate-500">Status Nasabah:</span>
+                            @if($saver->status === 'active')
+                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    Aktif
+                                </span>
+                            @else
+                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                    Nonaktif / Rekening Dibekukan
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="flex items-center justify-between py-1.5 border-b border-slate-100">
+                            <span class="text-slate-500">Email Login Siswa:</span>
+                            <span class="font-mono font-semibold text-slate-800">{{ $saver->user?->email ?? '-' }}</span>
+                        </div>
+
+                        <div class="flex items-center justify-between py-1.5 border-b border-slate-100">
+                            <span class="text-slate-500">Nomor Induk Siswa:</span>
+                            <span class="font-mono font-semibold text-slate-800">{{ $saver->student_id_number }}</span>
+                        </div>
+
+                        <div class="flex items-center justify-between py-1.5">
+                            <span class="text-slate-500">Tanggal Pembukaan:</span>
+                            <span class="font-semibold text-slate-700">{{ $saver->created_at->format('d M Y') }}</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center justify-between py-1.5 border-b border-slate-100">
-                    <span class="text-slate-500">Nomor Induk Siswa (NIS):</span>
-                    <span class="font-mono font-bold text-slate-800">{{ $saver->student_id_number }}</span>
-                </div>
-                <div class="flex items-center justify-between py-1.5 border-b border-slate-100">
-                    <span class="text-slate-500">Status Rekening:</span>
-                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                        {{ ucfirst($saver->account?->status ?? 'active') }}
-                    </span>
-                </div>
-                <div class="flex items-center justify-between py-1.5">
-                    <span class="text-slate-500">Tanggal Buka Rekening:</span>
-                    <span class="font-medium text-slate-700">{{ $saver->created_at->translatedFormat('d F Y, H:i') }}</span>
+
+                <!-- Tombol Aksi di Bawah Informasi -->
+                <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+                    <button type="button" onclick="openQrModal()" class="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                        <span>Tampilkan QR Besar</span>
+                    </button>
+
+                    <button type="button" onclick="window.print()" class="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 font-semibold transition-colors">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                        <span>Cetak Kartu</span>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Kolom Kanan: Balance Overview & Transaction Ledger -->
-        <div class="lg:col-span-7 space-y-4">
+        <!-- KOLOM KANAN: Single Balance Card & Riwayat Mutasi Sepanjang Sidebar -->
+        <div class="lg:col-span-7 flex flex-col justify-between gap-4 h-full min-h-0">
             
-            <!-- Balance Bento Stats (3 Cards) -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <!-- Total Balance -->
-                <div class="bg-white rounded-[22px] p-4 border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)]">
-                    <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Saldo Simpanan</p>
-                    <h3 class="text-lg font-extrabold text-blue-700 mt-1 font-mono">
-                        Rp {{ number_format($saver->balance, 0, ',', '.') }}
-                    </h3>
-                    <span class="text-[10px] text-slate-500">Tercatat di pembukuan</span>
-                </div>
-
-                <!-- Saldo Minimum Mengendap -->
-                <div class="bg-white rounded-[22px] p-4 border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)]">
-                    <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Saldo Mengendap</p>
-                    <h3 class="text-lg font-extrabold text-slate-800 mt-1 font-mono">
-                        Rp 10.000
-                    </h3>
-                    <span class="text-[10px] text-indigo-600 font-semibold">Aturan holding minimum</span>
-                </div>
-
-                <!-- Saldo Yang Bisa Ditarik -->
-                <div class="bg-white rounded-[22px] p-4 border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)]">
-                    <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Dapat Ditarik Tunai</p>
-                    <h3 class="text-lg font-extrabold text-emerald-600 mt-1 font-mono">
-                        Rp {{ number_format(max(0, $saver->balance - 10000), 0, ',', '.') }}
-                    </h3>
-                    <span class="text-[10px] text-emerald-600 font-medium">Batas penarikan saat ini</span>
-                </div>
-            </div>
-
-            <!-- Recent Transaction History Bento Table -->
-            <div class="bg-white rounded-[26px] p-4 border border-slate-200/80 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] space-y-3">
-                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Riwayat Mutasi Transaksi Siswa</h4>
-                        <p class="text-[10px] text-slate-400">Buku kas simpanan & penarikan digital</p>
+            <!-- 1. SINGLE BALANCE CARD (Sesuai Permintaan: Hanya card saldo) -->
+            <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-semibold text-slate-400 tracking-wide">Total Saldo Simpanan Siswa</span>
+                    <div class="mt-1 flex items-baseline gap-2">
+                        <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 font-mono">
+                            Rp {{ number_format($saver->balance, 0, ',', '.') }}
+                        </span>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-100">
-                    <table class="w-full text-left text-xs">
-                        <thead>
-                            <tr class="bg-slate-50/80 text-[10px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200/60">
-                                <th class="py-2 px-3">No. Kwitansi</th>
-                                <th class="py-2 px-3">Waktu</th>
-                                <th class="py-2 px-3">Jenis</th>
-                                <th class="py-2 px-3 text-right">Nominal</th>
-                                <th class="py-2 px-3 text-right">Saldo Setelahnya</th>
-                                <th class="py-2 px-3">Petugas</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            @forelse($saver->transactions as $t)
-                                <tr class="hover:bg-slate-50/70 transition-colors">
-                                    <td class="py-2 px-3 font-mono font-bold text-slate-700 text-[11px]">
-                                        {{ $t->receipt_number }}
-                                    </td>
-                                    <td class="py-2 px-3 text-slate-500 text-[10px]">
-                                        {{ $t->transaction_date->format('d/m/Y H:i') }}
-                                    </td>
-                                    <td class="py-2 px-3">
-                                        @if($t->transaction_type === 'deposit')
-                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-50 text-emerald-700">
-                                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
-                                                Setoran
-                                            </span>
-                                        @else
-                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-50 text-rose-700">
-                                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-                                                Penarikan
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="py-2 px-3 text-right font-mono font-bold text-[11px] {{ $t->transaction_type === 'deposit' ? 'text-emerald-600' : 'text-rose-600' }}">
-                                        {{ $t->transaction_type === 'deposit' ? '+' : '-' }} Rp {{ number_format($t->amount, 0, ',', '.') }}
-                                    </td>
-                                    <td class="py-2 px-3 text-right font-mono font-bold text-slate-800 text-[11px]">
-                                        Rp {{ number_format($t->balance_after, 0, ',', '.') }}
-                                    </td>
-                                    <td class="py-2 px-3 text-slate-500 text-[10px]">
-                                        {{ $t->user?->name ?? 'System' }}
-                                    </td>
+                <!-- Tombol Nonaktifkan / Aktifkan Nasabah -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <form method="POST" action="{{ route('admin.savers.toggle-status', $saver->id) }}" onsubmit="return confirm('{{ $saver->status === 'active' ? 'Apakah Anda yakin ingin menonaktifkan nasabah ini? Rekening siswa otomatis akan dibekukan.' : 'Aktifkan kembali nasabah dan rekening tabungan siswa ini?' }}')">
+                        @csrf
+                        @if($saver->status === 'active')
+                            <button type="submit" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200/80 text-xs font-bold transition-all shadow-xs" title="Nonaktifkan nasabah dan bekukan rekening">
+                                <svg class="w-3.5 h-3.5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                                <span>Nonaktifkan Nasabah</span>
+                            </button>
+                        @else
+                            <button type="submit" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 text-xs font-bold transition-all shadow-xs" title="Aktifkan kembali nasabah dan rekening">
+                                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span>Aktifkan Kembali</span>
+                            </button>
+                        @endif
+                    </form>
+                </div>
+            </div>
+
+            <!-- 2. RIWAYAT MUTASI TRANSAKSI (Memanjang Sejajar Bawah Sidebar) -->
+            <div class="bg-white rounded-[24px] p-5 md:p-6 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between min-h-[360px]">
+                
+                <div class="flex-1 flex flex-col min-h-0">
+                    <!-- Table Title -->
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 shrink-0">
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Riwayat Mutasi Transaksi</h4>
+                    </div>
+
+                    <!-- Scrollable Table -->
+                    <div class="flex-1 overflow-x-auto mt-2">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="border-b border-slate-100 text-[11px] font-semibold text-slate-400">
+                                    <th class="py-2.5 px-3 font-medium">No. Kwitansi</th>
+                                    <th class="py-2.5 px-3 font-medium">Waktu</th>
+                                    <th class="py-2.5 px-3 font-medium">Jenis</th>
+                                    <th class="py-2.5 px-3 font-medium text-right">Nominal</th>
+                                    <th class="py-2.5 px-3 font-medium text-right">Saldo Setelahnya</th>
+                                    <th class="py-2.5 px-3 font-medium">Teller</th>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="py-6 text-center text-slate-400">
-                                        Belum ada riwayat transaksi pada rekening ini.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody class="divide-y divide-slate-50">
+                                @forelse($transactions as $t)
+                                    <tr class="hover:bg-slate-50/60 transition-colors">
+                                        <td class="py-2.5 px-3 font-mono font-semibold text-slate-700 text-xs">
+                                            {{ $t->receipt_number }}
+                                        </td>
+                                        <td class="py-2.5 px-3 text-slate-500 font-mono text-[11px]">
+                                            {{ $t->transaction_date ? $t->transaction_date->format('d/m/Y H:i') : '-' }}
+                                        </td>
+                                        <td class="py-2.5 px-3">
+                                            @if($t->transaction_type === 'deposit')
+                                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                                                    Setoran
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">
+                                                    Penarikan
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="py-2.5 px-3 text-right font-mono font-bold text-xs {{ $t->transaction_type === 'deposit' ? 'text-emerald-600' : 'text-rose-600' }}">
+                                            {{ $t->transaction_type === 'deposit' ? '+' : '-' }} Rp {{ number_format($t->amount, 0, ',', '.') }}
+                                        </td>
+                                        <td class="py-2.5 px-3 text-right font-mono font-bold text-slate-800 text-xs">
+                                            Rp {{ number_format($t->balance_after, 0, ',', '.') }}
+                                        </td>
+                                        <td class="py-2.5 px-3 text-slate-600 text-xs">
+                                            {{ $t->user?->name ?? 'System' }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="py-16 text-center text-slate-400">
+                                            <div class="flex flex-col items-center justify-center gap-1.5">
+                                                <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                                                <span class="text-xs font-medium">Belum ada riwayat transaksi pada rekening ini</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination Footer (Pinned at bottom) -->
+                <div class="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 shrink-0">
+                    <div>
+                        Menampilkan <span class="font-bold text-slate-800">{{ $transactions->firstItem() ?? 0 }}</span> - <span class="font-bold text-slate-800">{{ $transactions->lastItem() ?? 0 }}</span> dari <span class="font-bold text-slate-800">{{ $transactions->total() }}</span> transaksi
+                    </div>
+                    <div>
+                        {{ $transactions->links() }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- ========================================================================= -->
+<!-- MODAL: QR Code Rekening Ukuran Besar & Elegan                             -->
+<!-- ========================================================================= -->
+<div id="qrModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4" onclick="if(event.target === this) closeQrModal()">
+    <div class="bg-white rounded-[28px] max-w-sm w-full p-6 shadow-2xl border border-slate-200/80 text-center animate-fade-in relative">
+        <button onclick="closeQrModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm">&times;</button>
+        
+        <!-- Header Identitas Bank Mini -->
+        <div class="flex items-center justify-center gap-2 mb-4">
+            <div class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+            </div>
+            <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Edubank SMKN 1 Bantul</span>
+        </div>
+
+        <!-- Big QR Code Frame -->
+        <div class="w-64 h-64 mx-auto p-4 bg-white rounded-2xl border border-slate-200/80 shadow-inner flex items-center justify-center">
+            <img src="{{ $qrCodeDataUri }}" alt="QR Code Rekening" class="w-full h-full object-contain">
+        </div>
+
+        <!-- Student & Account Details -->
+        <div class="mt-4 space-y-0.5">
+            <p class="text-base font-bold text-slate-900 uppercase tracking-tight">{{ $saver->full_name }}</p>
+            <p class="text-sm font-mono font-bold text-blue-600">{{ $saver->account_number }}</p>
+            <p class="text-xs text-slate-500 font-medium">{{ $saver->class_name }} &bull; NIS: {{ $saver->student_id_number }}</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-2 mt-5">
+            <button type="button" onclick="window.print()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                <span>Cetak Kartu</span>
+            </button>
+            <button type="button" onclick="closeQrModal()" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    function openQrModal() {
+        document.getElementById('qrModal').classList.remove('hidden');
+    }
+
+    function closeQrModal() {
+        document.getElementById('qrModal').classList.add('hidden');
+    }
+
+    // Keyboard ESC to close modal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeQrModal();
+        }
+    });
+</script>
+@endpush
 @endsection

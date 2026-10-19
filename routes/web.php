@@ -48,6 +48,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('members', AdminMemberController::class)->except(['create', 'show']);
 
     // Bank Account Opening (Savers)
+    Route::post('/savers/{saver}/toggle-status', [AdminSaverController::class, 'toggleStatus'])->name('savers.toggle-status');
     Route::resource('savers', AdminSaverController::class)->only(['index', 'create', 'store', 'show']);
 
     // Student Bank Accounts (Rekening Tabungan Siswa)

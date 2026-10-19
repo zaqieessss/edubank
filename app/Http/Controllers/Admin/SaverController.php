@@ -85,11 +85,31 @@ class SaverController extends Controller
 
     public function show(Saver $saver)
     {
-        $saver->load(['member', 'user', 'transactions.user']);
+        $saver->load(['member', 'user', 'account']);
+        $transactions = $saver->transactions()->with('user')->paginate(10)->withQueryString();
 
         // Generate data URI for digital card display and printing
         $qrCodeDataUri = $this->qrCodeService->generateDataUri($saver->account_number);
 
-        return view('admin.savers.show', compact('saver', 'qrCodeDataUri'));
+        return view('admin.savers.show', compact('saver', 'transactions', 'qrCodeDataUri'));
+    }
+
+    public function toggleStatus(Saver $saver)
+    {
+        $isCurrentlyActive = $saver->status === 'active';
+        $newSaverStatus = $isCurrentlyActive ? 'inactive' : 'active';
+        $newAccountStatus = $isCurrentlyActive ? 'frozen' : 'active';
+
+        $saver->update(['status' => $newSaverStatus]);
+
+        if ($saver->account) {
+            $saver->account->update(['status' => $newAccountStatus]);
+        }
+
+        $msg = $isCurrentlyActive
+            ? "Nasabah {$saver->full_name} dan rekening {$saver->account_number} berhasil dinonaktifkan."
+            : "Nasabah {$saver->full_name} dan rekening {$saver->account_number} berhasil diaktifkan kembali.";
+
+        return back()->with('success', $msg);
     }
 }
