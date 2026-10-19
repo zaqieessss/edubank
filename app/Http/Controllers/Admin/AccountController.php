@@ -27,9 +27,9 @@ class AccountController extends Controller
             });
         }
 
-        if ($request->filled('cohort')) {
+        if ($request->filled('major')) {
             $query->whereHas('saver', function ($q) use ($request) {
-                $q->where('cohort', $request->cohort);
+                $q->where('major', $request->major);
             });
         }
 
@@ -47,9 +47,9 @@ class AccountController extends Controller
 
         $accounts = $query->orderBy('account_number', 'desc')->paginate(15)->withQueryString();
 
-        $cohorts = \App\Models\Saver::distinct()->orderBy('cohort', 'desc')->pluck('cohort');
+        $majors = \App\Enums\Major::cases();
 
-        return view('admin.accounts.index', compact('accounts', 'cohorts'));
+        return view('admin.accounts.index', compact('accounts', 'majors'));
     }
 
     public function show(Account $account)

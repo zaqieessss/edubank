@@ -71,11 +71,11 @@
                         <option value="alumni" {{ request('grade_level') == 'alumni' ? 'selected' : '' }}>Alumni</option>
                     </select>
 
-                    <!-- Filter Angkatan -->
-                    <select name="cohort" onchange="this.form.submit()" class="bg-slate-50 border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-xs text-slate-700 outline-none focus:bg-white">
-                        <option value="">Semua Angkatan</option>
-                        @foreach($cohorts as $c)
-                            <option value="{{ $c }}" {{ request('cohort') == $c ? 'selected' : '' }}>Angkatan {{ $c }}</option>
+                    <!-- Filter Jurusan -->
+                    <select name="major" onchange="this.form.submit()" class="bg-slate-50 border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-xs text-slate-700 outline-none focus:bg-white">
+                        <option value="">Semua Jurusan</option>
+                        @foreach($majors as $m)
+                            <option value="{{ $m->value }}" {{ request('major') == $m->value ? 'selected' : '' }}>{{ $m->value }}</option>
                         @endforeach
                     </select>
 
@@ -86,7 +86,7 @@
                         <option value="frozen" {{ request('status') == 'frozen' ? 'selected' : '' }}>Dibekukan</option>
                     </select>
 
-                    @if(request()->anyFilled(['search', 'grade_level', 'cohort', 'status']))
+                    @if(request()->anyFilled(['search', 'grade_level', 'major', 'status']))
                         <a href="{{ route('admin.accounts.index') }}" class="text-[11px] text-rose-500 hover:text-rose-700 font-semibold px-2 py-1">Reset</a>
                     @endif
                 </form>
