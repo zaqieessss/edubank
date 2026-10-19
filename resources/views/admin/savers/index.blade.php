@@ -7,11 +7,25 @@
 <div class="h-full flex flex-col justify-between gap-4 pb-0.5">
 
     <!-- Top Bento Stats Grid (2 Cards Minimalis & Spacious) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0">
-        <!-- Card 1: Nasabah Aktif -->
+    <!-- Top Bento Stats Grid (3 Cards Minimalis & Spacious) -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 shrink-0">
+        <!-- Card 1: Total Nasabah -->
         <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between">
             <span class="text-xs font-semibold text-slate-400 tracking-wide">
-                Jumlah Nasabah Aktif
+                Total Seluruh Nasabah
+            </span>
+            <div class="mt-2 flex items-baseline gap-2">
+                <span class="text-2xl font-bold tracking-tight text-slate-900">
+                    {{ number_format($savers->total(), 0, ',', '.') }}
+                </span>
+                <span class="text-xs text-slate-400 font-medium">Siswa</span>
+            </div>
+        </div>
+
+        <!-- Card 2: Nasabah Aktif -->
+        <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between">
+            <span class="text-xs font-semibold text-slate-400 tracking-wide">
+                Nasabah Aktif
             </span>
             <div class="mt-2 flex items-baseline gap-2">
                 <span class="text-2xl font-bold tracking-tight text-emerald-600">
@@ -21,7 +35,7 @@
             </div>
         </div>
 
-        <!-- Card 2: Nasabah Dibekukan / Nonaktif -->
+        <!-- Card 3: Nasabah Dibekukan / Nonaktif -->
         <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between">
             <span class="text-xs font-semibold text-slate-400 tracking-wide">
                 Nasabah Dibekukan
