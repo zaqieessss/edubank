@@ -27,12 +27,18 @@ class AccountingJournalController extends Controller
         $isBalanced = ($totalDebits === $totalCredits);
         $totalEntries = AccountingJournal::count();
 
+        // Uang Masuk (Kas Debet) & Uang Keluar (Kas Kredit)
+        $totalIn = (int) AccountingJournal::where('account_code', '101')->where('position', 'debit')->sum('amount');
+        $totalOut = (int) AccountingJournal::where('account_code', '101')->where('position', 'credit')->sum('amount');
+
         return view('admin.accounting-journals.index', compact(
             'journals',
             'totalDebits',
             'totalCredits',
             'isBalanced',
-            'totalEntries'
+            'totalEntries',
+            'totalIn',
+            'totalOut'
         ));
     }
 }

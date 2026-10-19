@@ -6,8 +6,8 @@
 @section('content')
 <div class="h-full flex flex-col justify-between gap-4 pb-0.5">
 
-    <!-- Top Stats Grid (3 Card Bersih, Informatif, Tanpa Teks Mikro) -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 shrink-0">
+    <!-- Top Stats Grid (4 Card Bersih: Status, Uang Masuk, Uang Keluar, Total Ayat) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
         <!-- Card 1: Status Keseimbangan Double-Entry -->
         <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between">
             <span class="text-xs font-semibold text-slate-400">Status Keseimbangan</span>
@@ -15,7 +15,7 @@
                 @if($isBalanced)
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                        Seimbang (100% Balanced)
+                        Seimbang
                     </span>
                 @else
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">
@@ -26,15 +26,23 @@
             </div>
         </div>
 
-        <!-- Card 2: Total Perputaran Debet & Kredit -->
+        <!-- Card 2: Total Uang Masuk (Kas Debet) -->
         <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between">
-            <span class="text-xs font-semibold text-slate-400">Total Mutasi Transaksi</span>
+            <span class="text-xs font-semibold text-slate-400">Total Uang Masuk</span>
             <p class="text-2xl font-mono font-extrabold text-slate-900 mt-2">
-                Rp {{ number_format($totalDebits, 0, ',', '.') }}
+                Rp {{ number_format($totalIn, 0, ',', '.') }}
             </p>
         </div>
 
-        <!-- Card 3: Total Ayat Jurnal (Baris Buku Besar) -->
+        <!-- Card 3: Total Uang Keluar (Kas Kredit) -->
+        <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between">
+            <span class="text-xs font-semibold text-slate-400">Total Uang Keluar</span>
+            <p class="text-2xl font-mono font-extrabold text-slate-900 mt-2">
+                Rp {{ number_format($totalOut, 0, ',', '.') }}
+            </p>
+        </div>
+
+        <!-- Card 4: Total Ayat Jurnal (Baris Buku Besar) -->
         <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between">
             <span class="text-xs font-semibold text-slate-400">Total Ayat Jurnal</span>
             <p class="text-2xl font-mono font-extrabold text-slate-900 mt-2">
