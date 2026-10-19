@@ -41,10 +41,10 @@
     </style>
     @stack('styles')
 </head>
-<body class="min-h-screen p-2.5 md:p-5 flex items-center justify-center">
+<body class="h-screen w-screen p-2.5 md:p-3.5 flex items-center justify-center overflow-hidden">
 
-    <!-- Floating Master Application Container -->
-    <div class="w-full max-w-[1600px] h-[94vh] bg-[#F8FAFC] rounded-[32px] border border-white/80 shadow-[0_20px_50px_-15px_rgba(15,23,42,0.07)] flex overflow-hidden p-3 md:p-4 gap-3.5 relative">
+    <!-- Floating Master Application Container (Fluid & Responsive to Any Screen Size) -->
+    <div class="w-full h-full bg-[#F8FAFC] rounded-[28px] md:rounded-[32px] border border-white/80 shadow-[0_20px_50px_-15px_rgba(15,23,42,0.07)] flex overflow-hidden p-3 md:p-4 gap-3.5 relative">
 
         <!-- ========================================================================= -->
         <!-- FLOATING SIDEBAR DOCK (Melayang Ramping & Elegan)                          -->
