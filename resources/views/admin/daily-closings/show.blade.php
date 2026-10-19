@@ -147,8 +147,8 @@
         </div>
 
         <!-- Action Footer (Pinned at Bottom) -->
-        <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
-            @if($dailyClosing->status === 'submitted' || $dailyClosing->status === 'discrepancy')
+        @if($dailyClosing->status === 'submitted' || $dailyClosing->status === 'discrepancy')
+            <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
                 <p class="text-xs text-slate-400 max-w-xl">
                     Pastikan fisik uang tunai sebesar <strong class="text-slate-800 font-mono">Rp {{ number_format($dailyClosing->physical_cash, 0, ',', '.') }}</strong> telah dihitung nyata di laci kas sebelum melakukan verifikasi brankas atau penolakan.
                 </p>
@@ -171,18 +171,15 @@
                         </button>
                     </form>
                 </div>
-            @elseif($dailyClosing->status === 'approved')
+            </div>
+        @elseif($dailyClosing->status === 'approved')
+            <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
                 <div class="flex items-center gap-2 text-xs text-emerald-700 font-medium">
                     <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <span>Laporan telah diverifikasi dan disetujui oleh <strong>{{ $dailyClosing->admin?->name ?? 'Admin' }}</strong> pada {{ $dailyClosing->updated_at->format('d/m/Y H:i') }} WIB. Dana telah aman di brankas utama.</span>
                 </div>
-            @else
-                <div class="flex items-center gap-2 text-xs text-rose-700 font-medium">
-                    <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    <span>Laporan ini telah ditolak dan dikembalikan ke teller untuk rekonsiliasi ulang.</span>
-                </div>
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
 
     <!-- Modal Reject Laporan (Pure Vanilla JavaScript Driven) -->
