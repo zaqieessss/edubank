@@ -29,12 +29,46 @@
 @section('content')
 <div class="h-full flex flex-col justify-between gap-4 pb-0.5">
 
-    <!-- Top Action Toolbar (Kembali & Navigasi Cepat) -->
-    <div class="flex items-center justify-between no-print shrink-0">
-        <a href="{{ route('admin.savers.index') }}" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            <span>Kembali ke Daftar Nasabah</span>
-        </a>
+    <!-- Top Navigation Card (Tombol Kembali Dibungkus Card Rapi) -->
+    <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 no-print">
+        <div class="flex items-center gap-3">
+            <a href="{{ route('admin.savers.index') }}" 
+               class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors shrink-0"
+               title="Kembali ke Daftar Nasabah">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            </a>
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Detail Nasabah</span>
+                    <span class="text-xs text-slate-300 font-mono">&bull;</span>
+                    <span class="text-xs font-mono font-bold text-slate-500">{{ $saver->account_number }}</span>
+                </div>
+                <h1 class="text-base font-extrabold text-slate-900 mt-0.5">
+                    {{ $saver->full_name }}
+                </h1>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div class="text-left sm:text-right">
+                <div class="text-xs font-bold text-slate-800">{{ $saver->student_id_number }} &bull; {{ $saver->class_name }}</div>
+                <div class="text-[11px] text-slate-400">{{ $saver->major }}</div>
+            </div>
+
+            <div>
+                @if($saver->status === 'active')
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        Aktif
+                    </span>
+                @else
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">
+                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                        Dibekukan
+                    </span>
+                @endif
+            </div>
+        </div>
     </div>
 
     <!-- Bento Grid Layout: 2 Kolom Seimbang -->

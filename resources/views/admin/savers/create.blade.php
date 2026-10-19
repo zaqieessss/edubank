@@ -6,13 +6,22 @@
 @section('content')
 <div class="max-w-4xl mx-auto space-y-4 pb-8">
 
-    <!-- Back Button & Breadcrumb -->
-    <div class="flex items-center justify-between">
-        <a href="{{ route('admin.savers.index') }}" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            <span>Kembali ke Daftar Nasabah</span>
-        </a>
-        <span class="text-xs text-slate-400 font-mono">Prosedur Standar Akuntansi Bank Mini</span>
+    <!-- Top Navigation Card (Tombol Kembali Dibungkus Card Rapi) -->
+    <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+            <a href="{{ route('admin.savers.index') }}" 
+               class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors shrink-0"
+               title="Kembali ke Daftar Nasabah">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            </a>
+            <div>
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Buka Rekening Baru</span>
+                <h1 class="text-base font-extrabold text-slate-900 mt-0.5">
+                    Registrasi Nasabah Siswa
+                </h1>
+            </div>
+        </div>
+        <span class="text-xs text-slate-400 font-mono hidden sm:inline">Bank Mini SMKN 1 Bantul</span>
     </div>
 
     <!-- Bento Form Card -->

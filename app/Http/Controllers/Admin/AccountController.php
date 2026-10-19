@@ -54,11 +54,16 @@ class AccountController extends Controller
 
     public function show(Account $account)
     {
-        $account->load(['saver.member', 'saver.user', 'transactions.user']);
+        $account->load(['saver.member', 'saver.user']);
+        $transactions = $account->transactions()
+            ->with('user')
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         $qrCodeDataUri = $this->qrCodeService->generateDataUri($account->account_number);
 
-        return view('admin.accounts.show', compact('account', 'qrCodeDataUri'));
+        return view('admin.accounts.show', compact('account', 'qrCodeDataUri', 'transactions'));
     }
 
     public function updateStatus(Request $request, Account $account)
