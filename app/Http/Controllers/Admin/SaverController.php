@@ -39,7 +39,7 @@ class SaverController extends Controller
             });
         }
 
-        $savers = $query->orderBy('account_number', 'desc')->paginate(15)->withQueryString();
+        $savers = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
 
         return view('admin.savers.index', compact('savers'));
     }

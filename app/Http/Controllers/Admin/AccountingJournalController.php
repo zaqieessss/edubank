@@ -20,7 +20,7 @@ class AccountingJournalController extends Controller
             $query->where('account_code', $request->account_code);
         }
 
-        $journals = $query->latest('entry_date')->paginate(20)->withQueryString();
+        $journals = $query->orderBy('id', 'desc')->paginate(20)->withQueryString();
 
         $totalDebits = (int) AccountingJournal::where('position', 'debit')->sum('amount');
         $totalCredits = (int) AccountingJournal::where('position', 'credit')->sum('amount');

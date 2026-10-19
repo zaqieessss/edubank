@@ -42,7 +42,7 @@ class MemberController extends Controller
             });
         }
 
-        $members = $query->orderBy('grade_level')->orderBy('class_name')->orderBy('full_name')->paginate(15)->withQueryString();
+        $members = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
 
         $majors = Major::cases();
         $grades = GradeLevel::cases();

@@ -309,5 +309,97 @@
     </div>
 
     @stack('scripts')
+
+    <!-- Universal Auto-Format Mata Uang Rupiah (Pemisah Titik Ribuan) -->
+    <script>
+        (function() {
+            function formatRupiah(value) {
+                if (!value && value !== 0) return '';
+                const clean = String(value).replace(/[^0-9]/g, '');
+                if (!clean) return '';
+                return clean.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            }
+
+            function setupCurrencyInputs() {
+                const currencyInputs = document.querySelectorAll('input[data-currency="true"]');
+                currencyInputs.forEach(input => {
+                    if (input.dataset.currencyInitialized) return;
+                    input.dataset.currencyInitialized = 'true';
+
+                    // Ensure there's a hidden input for raw integer value if name exists
+                    const form = input.form;
+                    let hidden = null;
+                    if (form && (input.name || input.dataset.targetName)) {
+                        const rawName = input.name || input.dataset.targetName;
+                        input.dataset.targetName = rawName;
+                        // Create or reuse hidden input
+                        hidden = form.querySelector(`input[type="hidden"][name="${rawName}"]`);
+                        if (!hidden) {
+                            hidden = document.createElement('input');
+                            hidden.type = 'hidden';
+                            hidden.name = rawName;
+                            input.insertAdjacentElement('afterend', hidden);
+                        }
+                        input.removeAttribute('name');
+                        hidden.value = String(input.value || '').replace(/[^0-9]/g, '');
+                    }
+
+                    // Format initial value
+                    if (input.value) {
+                        input.value = formatRupiah(input.value);
+                    }
+
+                    // On input event
+                    input.addEventListener('input', function(e) {
+                        const cursor = this.selectionStart;
+                        const prevLen = this.value.length;
+                        const rawVal = this.value.replace(/[^0-9]/g, '');
+                        
+                        this.value = formatRupiah(rawVal);
+                        if (hidden) {
+                            hidden.value = rawVal;
+                        }
+
+                        // Dispatch custom or change event if needed
+                        const event = new Event('currency-change', { bubbles: true });
+                        this.dispatchEvent(event);
+
+                        // Try to keep cursor position relatively natural
+                        const newLen = this.value.length;
+                        const diff = newLen - prevLen;
+                        this.setSelectionRange(cursor + diff, cursor + diff);
+                    });
+
+                    // Keep hidden input in sync before form submit
+                    if (form) {
+                        form.addEventListener('submit', function() {
+                            if (hidden) {
+                                hidden.value = String(input.value).replace(/[^0-9]/g, '');
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Expose global helper for dynamic changes (like quick pills)
+            window.setCurrencyInputValue = function(inputId, rawNumber) {
+                const input = document.getElementById(inputId);
+                if (!input) return;
+                input.value = formatRupiah(rawNumber);
+                const form = input.form;
+                if (form) {
+                    const targetName = input.dataset.targetName || input.id;
+                    const hidden = form.querySelector(`input[type="hidden"][name="${targetName}"]`);
+                    if (hidden) {
+                        hidden.value = String(rawNumber).replace(/[^0-9]/g, '');
+                    }
+                }
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            };
+
+            document.addEventListener('DOMContentLoaded', setupCurrencyInputs);
+            window.setupCurrencyInputs = setupCurrencyInputs;
+        })();
+    </script>
 </body>
 </html>

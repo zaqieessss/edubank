@@ -19,7 +19,7 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         $transactions = Transaction::with(['saver', 'user'])
-            ->latest('transaction_date')
+            ->orderBy('id', 'desc')
             ->paginate(15);
 
         return view('teller.transactions.index', compact('transactions'));

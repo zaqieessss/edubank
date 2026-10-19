@@ -96,11 +96,11 @@
                         </label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 font-mono">Rp</span>
-                            <input type="number" 
+                            <input type="text" 
+                                   inputmode="numeric"
+                                   data-currency="true"
                                    name="initial_deposit" 
                                    id="initial_deposit" 
-                                   min="10000" 
-                                   step="1000" 
                                    value="{{ old('initial_deposit', 10000) }}" 
                                    required 
                                    class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold font-mono text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
@@ -221,7 +221,11 @@
     }
 
     function setDeposit(amount) {
-        document.getElementById('initial_deposit').value = amount;
+        if (window.setCurrencyInputValue) {
+            window.setCurrencyInputValue('initial_deposit', amount);
+        } else {
+            document.getElementById('initial_deposit').value = amount;
+        }
     }
 
     const memberSelect = document.getElementById('member_select');

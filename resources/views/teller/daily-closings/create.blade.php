@@ -113,11 +113,11 @@
                 </label>
                 <div class="relative">
                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">Rp</span>
-                    <input type="number" 
+                    <input type="text" 
+                           inputmode="numeric"
+                           data-currency="true"
                            name="physical_cash" 
                            id="physicalCashInput" 
-                           min="0" 
-                           step="1000" 
                            value="{{ old('physical_cash', $summary['closing_cash']) }}" 
                            required 
                            oninput="calculateDifference()" 
@@ -175,7 +175,9 @@
 <script>
     function calculateDifference() {
         const systemCash = parseInt(document.getElementById('systemCashDisplay').dataset.value) || 0;
-        const physicalCash = parseInt(document.getElementById('physicalCashInput').value) || 0;
+        const physicalCashInput = document.getElementById('physicalCashInput');
+        const rawVal = physicalCashInput ? String(physicalCashInput.value).replace(/[^0-9]/g, '') : '0';
+        const physicalCash = parseInt(rawVal) || 0;
         const difference = physicalCash - systemCash;
 
         const diffBox = document.getElementById('diffBox');

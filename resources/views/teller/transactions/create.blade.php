@@ -128,11 +128,11 @@
                         </label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">Rp</span>
-                            <input type="number" 
+                            <input type="text" 
+                                   inputmode="numeric"
+                                   data-currency="true"
                                    name="amount" 
                                    id="deposit_amount" 
-                                   min="10000" 
-                                   step="1000" 
                                    placeholder="0" 
                                    required 
                                    class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-4 py-3 text-lg font-mono font-extrabold text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500/20">
@@ -189,12 +189,11 @@
                         </div>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">Rp</span>
-                            <input type="number" 
+                            <input type="text" 
+                                   inputmode="numeric"
+                                   data-currency="true"
                                    name="amount" 
                                    id="withdraw_amount" 
-                                   min="10000" 
-                                   max="{{ $maxWithdrawable }}" 
-                                   step="1000" 
                                    placeholder="0" 
                                    required 
                                    class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-4 py-3 text-lg font-mono font-extrabold text-slate-900 focus:bg-white focus:ring-2 focus:ring-rose-500/20">
@@ -272,9 +271,17 @@
 
     function setAmount(type, val) {
         if (type === 'deposit') {
-            document.getElementById('deposit_amount').value = val;
+            if (window.setCurrencyInputValue) {
+                window.setCurrencyInputValue('deposit_amount', val);
+            } else {
+                document.getElementById('deposit_amount').value = val;
+            }
         } else {
-            document.getElementById('withdraw_amount').value = val;
+            if (window.setCurrencyInputValue) {
+                window.setCurrencyInputValue('withdraw_amount', val);
+            } else {
+                document.getElementById('withdraw_amount').value = val;
+            }
         }
     }
 </script>
