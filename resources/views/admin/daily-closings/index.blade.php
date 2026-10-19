@@ -99,7 +99,7 @@
                                     <div class="font-bold text-slate-800">{{ $c->teller?->name ?? 'Unknown' }}</div>
                                 </td>
                                 <td class="py-3 px-3 text-right font-mono font-bold text-slate-800 text-xs">
-                                    Rp {{ number_format($c->system_cash, 0, ',', '.') }}
+                                    Rp {{ number_format($c->system_balance ?? $c->system_cash, 0, ',', '.') }}
                                 </td>
                                 <td class="py-3 px-3 text-right font-mono font-bold text-slate-900 text-xs">
                                     Rp {{ number_format($c->physical_cash, 0, ',', '.') }}

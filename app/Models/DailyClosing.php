@@ -52,4 +52,9 @@ class DailyClosing extends Model
     {
         return $this->difference === 0;
     }
+
+    public function getSystemCashAttribute(): int
+    {
+        return (int) ($this->attributes['system_balance'] ?? 0);
+    }
 }
