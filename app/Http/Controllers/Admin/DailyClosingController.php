@@ -17,9 +17,15 @@ class DailyClosingController extends Controller
 
     public function index(Request $request)
     {
-        $closings = DailyClosing::with(['teller', 'admin'])
-            ->orderBy('closing_date', 'desc')
-            ->paginate(15);
+        $query = DailyClosing::with(['teller', 'admin']);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $closings = $query->orderBy('closing_date', 'desc')
+            ->paginate(15)
+            ->withQueryString();
 
         return view('admin.daily-closings.index', compact('closings'));
     }
