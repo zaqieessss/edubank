@@ -4,7 +4,7 @@
 @section('page_title', 'Buka Rekening Baru')
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-4 pb-8">
+<div class="h-full flex flex-col justify-between gap-4 pb-0.5">
 
     <!-- Top Navigation Card (Tombol Kembali Dibungkus Card Rapi) -->
     <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex items-center justify-between gap-3">
@@ -24,128 +24,125 @@
         <span class="text-xs text-slate-400 font-mono hidden sm:inline">Bank Mini SMKN 1 Bantul</span>
     </div>
 
-    <!-- Bento Form Card -->
-    <div class="bg-white rounded-[28px] p-6 border border-slate-200/80 shadow-[0_4px_30px_-5px_rgba(15,23,42,0.04)] space-y-6">
-        
-        <!-- Header -->
-        <div class="border-b border-slate-100 pb-4">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[11px] font-bold mb-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-ping"></span>
-                Registrasi Rekening Simpanan Siswa
-            </div>
-            <h2 class="text-lg font-extrabold text-slate-900 tracking-tight">Form Pembukaan Rekening Tabungan Baru</h2>
-            <p class="text-xs text-slate-500 mt-1">
-                Pilih siswa dari database master (600 siswa). Sistem akan otomatis membuatkan Nomor Rekening berformat <span class="font-mono font-bold text-slate-800">[JURUSAN]-[ANGKATAN]-[0001]</span>, mengaktifkan akun login, membuat QR Code, dan membukukan jurnal akuntansi debit-kredit.
-            </p>
-        </div>
-
-        <form method="POST" action="{{ route('admin.savers.store') }}" class="space-y-5">
+    <!-- Bento Form Card (Memenuhi Layar Sejajar Sidebar) -->
+    <div class="bg-white rounded-[24px] p-6 md:p-8 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between min-h-[420px]">
+        <form method="POST" action="{{ route('admin.savers.store') }}" class="flex-1 flex flex-col justify-between">
             @csrf
 
-            <!-- 1. Pilih Siswa -->
-            <div>
-                <label class="block text-xs font-bold text-slate-800 mb-1.5">
-                    1. Pilih Siswa (Hanya menampilkan siswa yang belum memiliki rekening) *
-                </label>
-                @if($unregisteredMembers->isEmpty())
-                    <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-2xl text-xs">
-                        Semua siswa di master database telah memiliki rekening tabungan! Jika ingin menambah nasabah baru, tambahkan terlebih dahulu melalui menu <a href="{{ route('admin.members.index') }}" class="font-bold underline">Members</a>.
+            <div class="space-y-4">
+                <!-- Header Info -->
+                <div class="border-b border-slate-100 pb-3">
+                    <h2 class="text-base font-extrabold text-slate-900 tracking-tight">Form Pembukaan Rekening Tabungan Baru</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">
+                        Pilih siswa dari database master (600 siswa). Sistem akan otomatis membuatkan Nomor Rekening berformat <span class="font-mono font-bold text-slate-800">[JURUSAN]-[ANGKATAN]-[0001]</span>, mengaktifkan akun login, membuat QR Code, dan membukukan mutasi setoran awal.
+                    </p>
+                </div>
+
+                <!-- 1. Pilih Siswa -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-800 mb-1.5">
+                        1. Pilih Siswa (Hanya menampilkan siswa yang belum memiliki rekening) *
+                    </label>
+                    @if($unregisteredMembers->isEmpty())
+                        <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-2xl text-xs">
+                            Semua siswa di master database telah memiliki rekening tabungan! Jika ingin menambah nasabah baru, tambahkan terlebih dahulu melalui menu <a href="{{ route('admin.members.index') }}" class="font-bold underline">Members</a>.
+                        </div>
+                    @else
+                        <select name="member_id" id="member_select" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20 font-medium">
+                            <option value="">-- Pilih Siswa Berdasarkan NIS / Nama Lengkap --</option>
+                            @foreach($unregisteredMembers as $m)
+                                <option value="{{ $m->id }}" 
+                                        data-nis="{{ $m->student_id_number }}"
+                                        data-major="{{ $m->major }}"
+                                        data-class="{{ $m->class_name }}"
+                                        data-cohort="{{ $m->cohort }}"
+                                        {{ (old('member_id') == $m->id || request('member_id') == $m->id) ? 'selected' : '' }}>
+                                    [NIS: {{ $m->student_id_number }}] {{ $m->full_name }} — {{ $m->class_name }} ({{ $m->major }})
+                                </option>
+                            @endforeach
+                        </select>
+                    @endif
+                    @error('member_id')
+                        <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Preview Data Siswa Terpilih (Interactive) -->
+                <div id="student_preview" class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                    <div>
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Jurusan</span>
+                        <span id="prev_major" class="font-bold text-slate-800">-</span>
                     </div>
-                @else
-                    <select name="member_id" id="member_select" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20 font-medium">
-                        <option value="">-- Pilih Siswa Berdasarkan NIS / Nama Lengkap --</option>
-                        @foreach($unregisteredMembers as $m)
-                            <option value="{{ $m->id }}" 
-                                    data-nis="{{ $m->student_id_number }}"
-                                    data-major="{{ $m->major }}"
-                                    data-class="{{ $m->class_name }}"
-                                    data-cohort="{{ $m->cohort }}"
-                                    {{ (old('member_id') == $m->id || request('member_id') == $m->id) ? 'selected' : '' }}>
-                                [NIS: {{ $m->student_id_number }}] {{ $m->full_name }} — {{ $m->class_name }} ({{ $m->major }})
-                            </option>
-                        @endforeach
-                    </select>
-                @endif
-                @error('member_id')
-                    <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
-                @enderror
+                    <div>
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Kelas</span>
+                        <span id="prev_class" class="font-bold text-slate-800">-</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Angkatan</span>
+                        <span id="prev_cohort" class="font-bold text-slate-800">-</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Estimasi Rekening</span>
+                        <span id="prev_acc" class="font-mono font-bold text-blue-600">-</span>
+                    </div>
+                </div>
+
+                <!-- Grid Baris: Setoran Awal & PIN Keamanan -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- 2. Setoran Awal Tabungan -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-800 mb-1.5">
+                            2. Setoran Awal Tunai (Wajib Minimal Rp 10.000) *
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 font-mono">Rp</span>
+                            <input type="number" 
+                                   name="initial_deposit" 
+                                   id="initial_deposit" 
+                                   min="10000" 
+                                   step="1000" 
+                                   value="{{ old('initial_deposit', 10000) }}" 
+                                   required 
+                                   class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold font-mono text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
+                        </div>
+                        <div class="flex items-center gap-2 mt-2">
+                            <span class="text-[10px] text-slate-500">Pilihan Cepat:</span>
+                            <button type="button" onclick="setDeposit(10000)" class="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold">Rp 10.000</button>
+                            <button type="button" onclick="setDeposit(20000)" class="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold">Rp 20.000</button>
+                            <button type="button" onclick="setDeposit(50000)" class="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold">Rp 50.000</button>
+                            <button type="button" onclick="setDeposit(100000)" class="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold">Rp 100.000</button>
+                        </div>
+                        @error('initial_deposit')
+                            <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- 3. PIN Keamanan Rekening -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-800 mb-1.5">
+                            3. Buat PIN Keamanan Nasabah (6 Digit Angka) *
+                        </label>
+                        <input type="password" 
+                               name="security_pin" 
+                               id="security_pin" 
+                               maxlength="6" 
+                               pattern="[0-9]{6}" 
+                               value="{{ old('security_pin', '123456') }}" 
+                               placeholder="Misal: 123456" 
+                               required 
+                               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-mono tracking-widest text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
+                        <p class="text-[10px] text-slate-400 mt-1">
+                            PIN ini digunakan siswa untuk otorisasi penarikan tunai di loket teller dan login mobile.
+                        </p>
+                        @error('security_pin')
+                            <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
             </div>
 
-            <!-- Preview Data Siswa Terpilih (Interactive) -->
-            <div id="student_preview" class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                <div>
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Jurusan</span>
-                    <span id="prev_major" class="font-bold text-slate-800">-</span>
-                </div>
-                <div>
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Kelas</span>
-                    <span id="prev_class" class="font-bold text-slate-800">-</span>
-                </div>
-                <div>
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Angkatan</span>
-                    <span id="prev_cohort" class="font-bold text-slate-800">-</span>
-                </div>
-                <div>
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Estimasi Format Rekening</span>
-                    <span id="prev_acc" class="font-mono font-bold text-blue-600">-</span>
-                </div>
-            </div>
-
-            <!-- 2. Setoran Awal Tabungan -->
-            <div>
-                <label class="block text-xs font-bold text-slate-800 mb-1.5">
-                    2. Setoran Awal Tunai (Wajib Minimal Rp 10.000) *
-                </label>
-                <div class="relative">
-                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">Rp</span>
-                    <input type="number" 
-                           name="initial_deposit" 
-                           id="initial_deposit" 
-                           min="10000" 
-                           step="1000" 
-                           value="{{ old('initial_deposit', 10000) }}" 
-                           required 
-                           class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-11 pr-4 py-2.5 text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
-                </div>
-                <div class="flex items-center gap-2 mt-2">
-                    <span class="text-[10px] text-slate-500">Pilihan Cepat:</span>
-                    <button type="button" onclick="setDeposit(10000)" class="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold">Rp 10.000</button>
-                    <button type="button" onclick="setDeposit(20000)" class="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold">Rp 20.000</button>
-                    <button type="button" onclick="setDeposit(50000)" class="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold">Rp 50.000</button>
-                    <button type="button" onclick="setDeposit(100000)" class="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold">Rp 100.000</button>
-                </div>
-                <p class="text-[11px] text-slate-400 mt-1.5">
-                    * Sesuai ketentuan Bank Mini SMKN 1 Bantul, Rp 10.000 menjadi saldo minimum mengendap (holding balance) yang tidak dapat ditarik habis.
-                </p>
-                @error('initial_deposit')
-                    <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- 3. PIN Keamanan Rekening -->
-            <div>
-                <label class="block text-xs font-bold text-slate-800 mb-1.5">
-                    3. Buat PIN Keamanan Nasabah (6 Digit Angka) *
-                </label>
-                <input type="password" 
-                       name="security_pin" 
-                       id="security_pin" 
-                       maxlength="6" 
-                       pattern="[0-9]{6}" 
-                       value="{{ old('security_pin', '123456') }}" 
-                       placeholder="Misal: 123456" 
-                       required 
-                       class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-sm font-mono tracking-widest text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
-                <p class="text-[11px] text-slate-400 mt-1">
-                    PIN ini digunakan siswa untuk otorisasi penarikan tunai di loket teller dan login mobile.
-                </p>
-                @error('security_pin')
-                    <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- Submit Button -->
-            <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+            <!-- Submit Button (Pinned at Bottom) -->
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3 shrink-0 mt-4">
                 <a href="{{ route('admin.savers.index') }}" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-all">
                     Batal
                 </a>

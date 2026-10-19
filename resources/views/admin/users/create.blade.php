@@ -4,7 +4,7 @@
 @section('page_title', 'Tambah Pengguna')
 
 @section('content')
-<div class="max-w-3xl mx-auto space-y-4 pb-8">
+<div class="h-full flex flex-col justify-between gap-4 pb-0.5">
 
     <!-- Top Navigation Card (Tombol Kembali Dibungkus Card Rapi) -->
     <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex items-center justify-between gap-3">
@@ -22,92 +22,96 @@
         <span class="text-xs text-slate-400 font-mono hidden sm:inline">Bank Mini SMKN 1 Bantul</span>
     </div>
 
-    <!-- Main Bento Form Card -->
-    <div class="bg-white rounded-[28px] p-6 sm:p-8 border border-slate-200/80 shadow-[0_4px_30px_-5px_rgba(15,23,42,0.04)] space-y-6">
-        
-        <div>
-            <h2 class="text-base font-extrabold text-slate-900 tracking-tight">Formulir Akun Pengguna</h2>
-            <p class="text-xs text-slate-500 mt-1">
-                Buat kredensial login baru untuk Administrator, Petugas Teller Kasir, atau Akun Siswa (Saver).
-            </p>
-        </div>
-
-        <form id="userForm" method="POST" action="{{ route('admin.users.store') }}" class="space-y-5">
+    <!-- Main Bento Form Card (Memenuhi Layar Sejajar Sidebar) -->
+    <div class="bg-white rounded-[24px] p-6 md:p-8 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between min-h-[420px]">
+        <form id="userForm" method="POST" action="{{ route('admin.users.store') }}" class="flex-1 flex flex-col justify-between">
             @csrf
 
-            <!-- Nama Lengkap -->
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Lengkap Pengguna <span class="text-rose-500">*</span></label>
-                <input type="text" 
-                       name="name" 
-                       id="name" 
-                       value="{{ old('name') }}" 
-                       required 
-                       placeholder="Contoh: Rina Melati, S.Pd." 
-                       class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-slate-900/10">
-                @error('name')
-                    <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- Email Akun -->
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1.5">Alamat Email Login <span class="text-rose-500">*</span></label>
-                <input type="email" 
-                       name="email" 
-                       id="email" 
-                       value="{{ old('email') }}" 
-                       required 
-                       placeholder="Contoh: rina.teller@smkn1bantul.sch.id" 
-                       class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-slate-900/10">
-                @error('email')
-                    <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- Password -->
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1.5">Kata Sandi (Password) <span class="text-rose-500">*</span></label>
-                <input type="password" 
-                       name="password" 
-                       id="password" 
-                       required 
-                       minlength="6"
-                       placeholder="Minimal 6 karakter kombinasi aman" 
-                       class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-slate-900/10">
-                @error('password')
-                    <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- Role & Status -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Peran / Hak Akses (Role) <span class="text-rose-500">*</span></label>
-                    <select name="role" id="role" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:bg-white">
-                        <option value="teller" {{ old('role') == 'teller' ? 'selected' : '' }}>Teller Kasir</option>
-                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin / Supervisor</option>
-                        <option value="saver" {{ old('role') == 'saver' ? 'selected' : '' }}>Siswa (Saver)</option>
-                    </select>
-                    @error('role')
-                        <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
-                    @enderror
+                    <h2 class="text-base font-extrabold text-slate-900 tracking-tight">Formulir Akun Pengguna</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">
+                        Buat kredensial login baru untuk Administrator, Petugas Teller Kasir, atau Akun Siswa (Saver).
+                    </p>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Status Akun <span class="text-rose-500">*</span></label>
-                    <select name="status" id="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:bg-white">
-                        <option value="active" {{ old('status', 'active') == 'active' ? 'selected' : '' }}>Aktif</option>
-                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Nonaktif</option>
-                    </select>
-                    @error('status')
-                        <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
-                    @enderror
+                <!-- Grid Form Input Pengguna -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                    <!-- Nama Lengkap -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Lengkap Pengguna <span class="text-rose-500">*</span></label>
+                        <input type="text" 
+                               name="name" 
+                               id="name" 
+                               value="{{ old('name') }}" 
+                               required 
+                               placeholder="Contoh: Rina Melati, S.Pd." 
+                               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-slate-900/10">
+                        @error('name')
+                            <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Email Akun -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Alamat Email Login <span class="text-rose-500">*</span></label>
+                        <input type="email" 
+                               name="email" 
+                               id="email" 
+                               value="{{ old('email') }}" 
+                               required 
+                               placeholder="Contoh: rina.teller@smkn1bantul.sch.id" 
+                               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-slate-900/10">
+                        @error('email')
+                            <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Kata Sandi (Password) <span class="text-rose-500">*</span></label>
+                        <input type="password" 
+                               name="password" 
+                               id="password" 
+                               required 
+                               minlength="6"
+                               placeholder="Minimal 6 karakter kombinasi aman" 
+                               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-slate-900/10">
+                        @error('password')
+                            <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Role & Status -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Role / Hak Akses <span class="text-rose-500">*</span></label>
+                            <select name="role" id="role" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:bg-white">
+                                <option value="teller" {{ old('role') == 'teller' ? 'selected' : '' }}>Teller Kasir</option>
+                                <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin / Supervisor</option>
+                                <option value="saver" {{ old('role') == 'saver' ? 'selected' : '' }}>Siswa (Saver)</option>
+                            </select>
+                            @error('role')
+                                <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Status Akun <span class="text-rose-500">*</span></label>
+                            <select name="status" id="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:bg-white">
+                                <option value="active" {{ old('status', 'active') == 'active' ? 'selected' : '' }}>Aktif</option>
+                                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Nonaktif</option>
+                            </select>
+                            @error('status')
+                                <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Footer Action Buttons -->
-            <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+            <!-- Footer Action Buttons (Pinned at Bottom) -->
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3 shrink-0 mt-4">
                 <a href="{{ route('admin.users.index') }}" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition-all">
                     Batal
                 </a>
