@@ -95,11 +95,11 @@
                     @endif
                 </form>
 
-                <!-- Tambah Pengguna Button -->
-                <button type="button" onclick="openUserModal()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-sm transition-all hover:shadow">
+                <!-- Tambah Pengguna Button (Dedicated Page) -->
+                <a href="{{ route('admin.users.create') }}" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-sm transition-all hover:shadow">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     <span>Tambah Pengguna</span>
-                </button>
+                </a>
             </div>
 
             <!-- Table Container -->
@@ -166,24 +166,21 @@
                                 </td>
                                 <td class="py-3 px-3 text-right">
                                     <div class="flex items-center justify-end gap-1.5">
-                                        <!-- Edit Button -->
-                                        <button type="button" 
-                                                onclick='editUser(@json($u))' 
-                                                class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors" 
-                                                title="Edit Pengguna">
+                                        <!-- Edit Button (Dedicated Page) -->
+                                        <a href="{{ route('admin.users.edit', $u->id) }}" 
+                                           class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors" 
+                                           title="Edit Pengguna">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                        </button>
+                                        </a>
 
                                         @if($u->id !== auth()->id())
-                                            <form method="POST" action="{{ route('admin.users.destroy', $u->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini? Akun dengan histori transaksi tidak dapat dihapus.')" class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" 
-                                                        class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 flex items-center justify-center transition-colors" 
-                                                        title="Hapus Pengguna">
-                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                                </button>
-                                            </form>
+                                            <!-- Delete Button (Centered Modal Confirmation) -->
+                                            <button type="button" 
+                                                    onclick="openDeleteUserModal('{{ route('admin.users.destroy', $u->id) }}', '{{ addslashes($u->name) }}')"
+                                                    class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 flex items-center justify-center transition-colors cursor-pointer" 
+                                                    title="Hapus Pengguna">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                            </button>
                                         @endif
                                     </div>
                                 </td>
@@ -216,54 +213,39 @@
 </div>
 
 <!-- ========================================================================= -->
-<!-- MODAL: Tambah / Edit Pengguna                                             -->
+<!-- MODAL: Hapus Pengguna (Centered Backdrop Blur Confirmation)                -->
 <!-- ========================================================================= -->
-<div id="userModal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+<div id="deleteUserModal" 
+     class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs"
+     onclick="if(event.target === this) closeDeleteUserModal()">
+    
+    <div class="bg-white rounded-[24px] max-w-md w-full p-6 border border-slate-200/80 shadow-2xl space-y-4 relative">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-            <h3 id="userModalTitle" class="text-sm font-bold text-slate-800">Tambah Pengguna Baru</h3>
-            <button onclick="closeUserModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </div>
+                <h3 class="text-sm font-bold text-slate-800">Konfirmasi Hapus Pengguna</h3>
+            </div>
+            <button type="button" onclick="closeDeleteUserModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm">
+                &times;
+            </button>
         </div>
-        <form id="userForm" method="POST" action="{{ route('admin.users.store') }}" class="mt-4 space-y-3.5">
+
+        <p class="text-xs text-slate-500 leading-relaxed">
+            Apakah Anda yakin ingin menghapus akun pengguna <strong id="deleteUserName" class="text-slate-800"></strong>? Akun dengan histori transaksi audit tidak dapat dihapus (ON DELETE RESTRICT).
+        </p>
+
+        <form id="deleteUserForm" method="POST" action="" class="pt-2">
             @csrf
-            <input type="hidden" name="_method" id="userFormMethod" value="POST">
-
-            <div>
-                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Nama Lengkap *</label>
-                <input type="text" name="name" id="u_name" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Email Akun *</label>
-                <input type="email" name="email" id="u_email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Password <span id="passOptional" class="text-slate-400 font-normal"></span></label>
-                <input type="password" name="password" id="u_password" placeholder="Minimal 6 karakter" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-700 mb-1">Role / Peran *</label>
-                    <select name="role" id="u_role" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-800 focus:bg-white">
-                        <option value="admin">Admin / Supervisor</option>
-                        <option value="teller">Teller Kasir</option>
-                        <option value="saver">Siswa (Saver)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold text-slate-700 mb-1">Status Akun *</label>
-                    <select name="status" id="u_status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-800 focus:bg-white">
-                        <option value="active">Aktif</option>
-                        <option value="inactive">Nonaktif</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-                <button type="button" onclick="closeUserModal()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200">Batal</button>
-                <button type="submit" class="px-5 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 shadow-sm">Simpan Akun</button>
+            @method('DELETE')
+            <div class="flex items-center justify-end gap-2">
+                <button type="button" onclick="closeDeleteUserModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+                    Batal
+                </button>
+                <button type="submit" class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">
+                    Ya, Hapus Pengguna
+                </button>
             </div>
         </form>
     </div>
@@ -271,36 +253,32 @@
 
 @push('scripts')
 <script>
-    function openUserModal() {
-        document.getElementById('userModalTitle').innerText = 'Tambah Pengguna Baru';
-        document.getElementById('userFormMethod').value = 'POST';
-        document.getElementById('userForm').action = "{{ route('admin.users.store') }}";
-        document.getElementById('userForm').reset();
-        document.getElementById('passOptional').innerText = '*';
-        document.getElementById('u_password').required = true;
-        document.getElementById('userModal').classList.remove('hidden');
+    function openDeleteUserModal(actionUrl, userName) {
+        const form = document.getElementById('deleteUserForm');
+        const nameEl = document.getElementById('deleteUserName');
+        const modal = document.getElementById('deleteUserModal');
+
+        if (form && nameEl && modal) {
+            form.action = actionUrl;
+            nameEl.innerText = userName;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
     }
 
-    function editUser(user) {
-        document.getElementById('userModalTitle').innerText = 'Edit Pengguna: ' + user.name;
-        document.getElementById('userFormMethod').value = 'PUT';
-        document.getElementById('userForm').action = "/admin/users/" + user.id;
-
-        document.getElementById('u_name').value = user.name;
-        document.getElementById('u_email').value = user.email;
-        document.getElementById('u_role').value = user.role;
-        document.getElementById('u_status').value = user.status;
-        
-        document.getElementById('passOptional').innerText = '(Kosongkan jika tidak diubah)';
-        document.getElementById('u_password').value = '';
-        document.getElementById('u_password').required = false;
-
-        document.getElementById('userModal').classList.remove('hidden');
+    function closeDeleteUserModal() {
+        const modal = document.getElementById('deleteUserModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
     }
 
-    function closeUserModal() {
-        document.getElementById('userModal').classList.add('hidden');
-    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDeleteUserModal();
+        }
+    });
 </script>
 @endpush
 @endsection

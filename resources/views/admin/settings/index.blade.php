@@ -16,7 +16,7 @@
             </h1>
         </div>
 
-        <button type="submit" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-xs flex items-center gap-2 cursor-pointer">
+        <button type="button" onclick="triggerSettingsConfirm()" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-xs flex items-center gap-2 cursor-pointer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
             <span>Simpan Perubahan</span>
         </button>
@@ -74,4 +74,75 @@
         @endforeach
     </div>
 </form>
+
+<!-- Modal Konfirmasi Simpan Pengaturan (Centered Backdrop Blur) -->
+<div id="confirmSettingsModal" 
+     class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs"
+     onclick="if(event.target === this) closeSettingsConfirmModal()">
+    
+    <div class="bg-white rounded-[24px] max-w-md w-full p-6 border border-slate-200/80 shadow-2xl space-y-4 relative">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <h3 class="text-sm font-bold text-slate-800">Konfirmasi Pengaturan</h3>
+            </div>
+            <button type="button" onclick="closeSettingsConfirmModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm">
+                &times;
+            </button>
+        </div>
+
+        <p class="text-xs text-slate-500 leading-relaxed">
+            Apakah Anda yakin ingin menerapkan perubahan konfigurasi perbankan dan data sekolah ini? Pengaturan akan langsung berlaku bagi operasional sistem.
+        </p>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+            <button type="button" onclick="closeSettingsConfirmModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+                Periksa Kembali
+            </button>
+            <button type="button" onclick="submitSettingsForm()" class="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">
+                Ya, Simpan Perubahan
+            </button>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    function triggerSettingsConfirm() {
+        const form = document.querySelector('form[action="{{ route('admin.settings.update') }}"]');
+        if (form && form.reportValidity()) {
+            openSettingsConfirmModal();
+        }
+    }
+
+    function openSettingsConfirmModal() {
+        const modal = document.getElementById('confirmSettingsModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closeSettingsConfirmModal() {
+        const modal = document.getElementById('confirmSettingsModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    }
+
+    function submitSettingsForm() {
+        const form = document.querySelector('form[action="{{ route('admin.settings.update') }}"]');
+        if (form) form.submit();
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeSettingsConfirmModal();
+        }
+    });
+</script>
+@endpush
 @endsection

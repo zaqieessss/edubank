@@ -146,10 +146,13 @@
 
             <!-- Submit Button -->
             <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-                <a href="{{ route('admin.savers.index') }}" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-2xl text-xs font-semibold hover:bg-slate-200">
+                <a href="{{ route('admin.savers.index') }}" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-all">
                     Batal
                 </a>
-                <button type="submit" {{ $unregisteredMembers->isEmpty() ? 'disabled' : '' }} class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-2xl text-xs font-bold shadow-md shadow-blue-600/20 transition-all hover:shadow-lg">
+                <button type="button" 
+                        onclick="triggerSaverConfirm()" 
+                        {{ $unregisteredMembers->isEmpty() ? 'disabled' : '' }} 
+                        class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-600/20 transition-all hover:shadow-lg cursor-pointer">
                     Proses Pembukaan Rekening & Cetak Kartu
                 </button>
             </div>
@@ -157,8 +160,69 @@
     </div>
 </div>
 
+<!-- Modal Konfirmasi Buka Rekening (Centered Backdrop Blur) -->
+<div id="confirmSaverModal" 
+     class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs"
+     onclick="if(event.target === this) closeSaverConfirmModal()">
+    
+    <div class="bg-white rounded-[24px] max-w-md w-full p-6 border border-slate-200/80 shadow-2xl space-y-4 relative">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </div>
+                <h3 class="text-sm font-bold text-slate-800">Konfirmasi Buka Rekening</h3>
+            </div>
+            <button type="button" onclick="closeSaverConfirmModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm">
+                &times;
+            </button>
+        </div>
+
+        <p class="text-xs text-slate-500 leading-relaxed">
+            Apakah Anda yakin ingin memproses pembukaan rekening tabungan baru untuk siswa terpilih? Sistem akan langsung membuat nomor rekening resmi, QR Code, dan membukukan mutasi setoran awal.
+        </p>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+            <button type="button" onclick="closeSaverConfirmModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+                Periksa Kembali
+            </button>
+            <button type="button" onclick="submitSaverForm()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">
+                Ya, Buka Rekening
+            </button>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
+    function triggerSaverConfirm() {
+        const form = document.querySelector('form[action="{{ route('admin.savers.store') }}"]');
+        if (form && form.reportValidity()) {
+            openSaverConfirmModal();
+        }
+    }
+
+    function openSaverConfirmModal() {
+        const modal = document.getElementById('confirmSaverModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closeSaverConfirmModal() {
+        const modal = document.getElementById('confirmSaverModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    }
+
+    function submitSaverForm() {
+        const form = document.querySelector('form[action="{{ route('admin.savers.store') }}"]');
+        if (form) form.submit();
+    }
+
     function setDeposit(amount) {
         document.getElementById('initial_deposit').value = amount;
     }
@@ -182,6 +246,12 @@
         memberSelect.addEventListener('change', updatePreview);
         updatePreview();
     }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeSaverConfirmModal();
+        }
+    });
 </script>
 @endpush
 @endsection

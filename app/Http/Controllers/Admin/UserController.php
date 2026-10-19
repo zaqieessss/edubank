@@ -34,6 +34,11 @@ class UserController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
+    public function create()
+    {
+        return view('admin.users.create');
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -51,7 +56,12 @@ class UserController extends Controller
 
         User::create($validated);
 
-        return back()->with('success', "Akun pengguna {$validated['name']} berhasil dibuat.");
+        return redirect()->route('admin.users.index')->with('success', "Akun pengguna {$validated['name']} berhasil dibuat.");
+    }
+
+    public function edit(User $user)
+    {
+        return view('admin.users.edit', compact('user'));
     }
 
     public function update(Request $request, User $user)
@@ -72,7 +82,7 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return back()->with('success', "Akun pengguna {$user->name} berhasil diperbarui.");
+        return redirect()->route('admin.users.index')->with('success', "Akun pengguna {$user->name} berhasil diperbarui.");
     }
 
     public function destroy(User $user)

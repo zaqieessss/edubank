@@ -42,12 +42,28 @@ class FrontendViewsTest extends TestCase
 
         $this->actingAs($admin);
 
+        $testMember = Member::create([
+            'student_id_number'   => '99988',
+            'full_name'           => 'Test Member Route',
+            'grade_level'         => '10',
+            'class_name'          => 'X RPL 1',
+            'major'               => 'RPL',
+            'cohort'              => '2026',
+            'gender'              => 'male',
+            'email'               => 'testroute@test.com',
+            'registration_status' => 'unregistered',
+        ]);
+
         $this->get(route('admin.dashboard'))->assertStatus(200);
         $this->get(route('admin.members.index'))->assertStatus(200);
+        $this->get(route('admin.members.create'))->assertStatus(200);
+        $this->get(route('admin.members.edit', $testMember->id))->assertStatus(200);
         $this->get(route('admin.savers.index'))->assertStatus(200);
         $this->get(route('admin.savers.create'))->assertStatus(200);
         $this->get(route('admin.accounts.index'))->assertStatus(200);
         $this->get(route('admin.users.index'))->assertStatus(200);
+        $this->get(route('admin.users.create'))->assertStatus(200);
+        $this->get(route('admin.users.edit', $admin->id))->assertStatus(200);
         $this->get(route('admin.daily-closings.index'))->assertStatus(200);
         $this->get(route('admin.accounting-journals.index'))->assertStatus(200);
         $this->get(route('admin.settings.index'))->assertStatus(200);

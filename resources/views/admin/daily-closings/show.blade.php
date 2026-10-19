@@ -163,13 +163,12 @@
                     </button>
 
                     <!-- Tombol Approve -->
-                    <form method="POST" action="{{ route('admin.daily-closings.approve', $dailyClosing->id) }}" onsubmit="return confirm('Apakah Anda yakin telah menerima fisik uang kas sebesar Rp {{ number_format($dailyClosing->physical_cash, 0, ',', '.') }} untuk dimasukkan ke Brankas Utama?')">
-                        @csrf
-                        <button type="submit" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                            <span>Verifikasi & Masukkan ke Brankas</span>
-                        </button>
-                    </form>
+                    <button type="button" 
+                            onclick="openApproveModal()" 
+                            class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <span>Verifikasi & Masukkan ke Brankas</span>
+                    </button>
                 </div>
             </div>
         @elseif($dailyClosing->status === 'approved')
@@ -227,6 +226,42 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal Approve Laporan (Centered Backdrop Blur) -->
+    <div id="approveModal" 
+         class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs"
+         onclick="if(event.target === this) closeApproveModal()">
+        
+        <div class="bg-white rounded-[24px] max-w-md w-full p-6 border border-slate-200/80 shadow-2xl space-y-4 relative">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-800">Verifikasi & Masukkan ke Brankas</h3>
+                </div>
+                <button type="button" onclick="closeApproveModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm">
+                    &times;
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-500 leading-relaxed">
+                Apakah Anda yakin telah menerima dan menghitung fisik uang tunai sebesar <strong class="text-slate-800 font-mono">Rp {{ number_format($dailyClosing->physical_cash, 0, ',', '.') }}</strong> dari teller untuk dimasukkan ke Brankas Utama (Vault)?
+            </p>
+
+            <form method="POST" action="{{ route('admin.daily-closings.approve', $dailyClosing->id) }}" class="pt-2">
+                @csrf
+                <div class="flex items-center justify-end gap-2">
+                    <button type="button" onclick="closeApproveModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+                        Periksa Lagi
+                    </button>
+                    <button type="submit" class="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">
+                        Ya, Verifikasi & Terima Uang
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @push('scripts')
@@ -249,9 +284,26 @@
         }
     }
 
+    function openApproveModal() {
+        const modal = document.getElementById('approveModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closeApproveModal() {
+        const modal = document.getElementById('approveModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    }
+
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeRejectModal();
+            closeApproveModal();
         }
     });
 </script>

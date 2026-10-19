@@ -96,7 +96,7 @@
                         Perbarui Status Rekening
                     </h3>
 
-                    <form method="POST" action="{{ route('admin.accounts.status', $account->id) }}" class="space-y-4">
+                    <form id="accountStatusForm" method="POST" action="{{ route('admin.accounts.status', $account->id) }}" class="space-y-4">
                         @csrf
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1.5">Status Rekening</label>
@@ -116,7 +116,7 @@
                                    class="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10">
                         </div>
 
-                        <button type="submit" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">
+                        <button type="button" onclick="triggerAccountStatusConfirm()" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">
                             Simpan Perubahan Status
                         </button>
                     </form>
@@ -206,4 +206,75 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Konfirmasi Status Rekening (Centered Backdrop Blur) -->
+<div id="confirmAccountStatusModal" 
+     class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs"
+     onclick="if(event.target === this) closeAccountStatusModal()">
+    
+    <div class="bg-white rounded-[24px] max-w-md w-full p-6 border border-slate-200/80 shadow-2xl space-y-4 relative">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                </div>
+                <h3 class="text-sm font-bold text-slate-800">Konfirmasi Status Rekening</h3>
+            </div>
+            <button type="button" onclick="closeAccountStatusModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm">
+                &times;
+            </button>
+        </div>
+
+        <p class="text-xs text-slate-500 leading-relaxed">
+            Apakah Anda yakin ingin memperbarui status rekening ini? Perubahan status akan mempengaruhi hak akses transaksi nasabah bersangkutan.
+        </p>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+            <button type="button" onclick="closeAccountStatusModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+                Periksa Kembali
+            </button>
+            <button type="button" onclick="submitAccountStatusForm()" class="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">
+                Ya, Perbarui Status
+            </button>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    function triggerAccountStatusConfirm() {
+        const form = document.getElementById('accountStatusForm');
+        if (form && form.reportValidity()) {
+            openAccountStatusModal();
+        }
+    }
+
+    function openAccountStatusModal() {
+        const modal = document.getElementById('confirmAccountStatusModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closeAccountStatusModal() {
+        const modal = document.getElementById('confirmAccountStatusModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    }
+
+    function submitAccountStatusForm() {
+        const form = document.getElementById('accountStatusForm');
+        if (form) form.submit();
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAccountStatusModal();
+        }
+    });
+</script>
+@endpush
 @endsection

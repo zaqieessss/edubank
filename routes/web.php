@@ -45,7 +45,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/members/template', [AdminMemberController::class, 'downloadTemplate'])->name('members.template');
     Route::post('/members/import', [AdminMemberController::class, 'import'])->name('members.import');
     Route::post('/members/promote-grades', [AdminMemberController::class, 'promoteGrades'])->name('members.promote');
-    Route::resource('members', AdminMemberController::class)->except(['create', 'show']);
+    Route::resource('members', AdminMemberController::class)->except(['show']);
 
     // Bank Account Opening (Savers)
     Route::post('/savers/{saver}/toggle-status', [AdminSaverController::class, 'toggleStatus'])->name('savers.toggle-status');
@@ -57,7 +57,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/accounts/{account}/status', [\App\Http\Controllers\Admin\AccountController::class, 'updateStatus'])->name('accounts.status');
 
     // System Users Management (users)
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except(['create', 'show', 'edit']);
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except(['show']);
 
     // Daily Closings & Vault Transfer Approval (Daily Report)
     Route::get('/daily-closings', [AdminClosingController::class, 'index'])->name('daily-closings.index');

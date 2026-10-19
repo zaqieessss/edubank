@@ -50,6 +50,14 @@ class MemberController extends Controller
         return view('admin.members.index', compact('members', 'majors', 'grades'));
     }
 
+    public function create()
+    {
+        $majors = Major::cases();
+        $grades = GradeLevel::cases();
+
+        return view('admin.members.create', compact('majors', 'grades'));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -71,7 +79,15 @@ class MemberController extends Controller
 
         Member::create($validated);
 
-        return back()->with('success', "Data siswa {$validated['full_name']} berhasil ditambahkan.");
+        return redirect()->route('admin.members.index')->with('success', "Data siswa {$validated['full_name']} berhasil ditambahkan.");
+    }
+
+    public function edit(Member $member)
+    {
+        $majors = Major::cases();
+        $grades = GradeLevel::cases();
+
+        return view('admin.members.edit', compact('member', 'majors', 'grades'));
     }
 
     public function update(Request $request, Member $member)
@@ -103,7 +119,7 @@ class MemberController extends Controller
             ]);
         }
 
-        return back()->with('success', "Data siswa {$member->full_name} berhasil diperbarui.");
+        return redirect()->route('admin.members.index')->with('success', "Data siswa {$member->full_name} berhasil diperbarui.");
     }
 
     public function destroy(Member $member)

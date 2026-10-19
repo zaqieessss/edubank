@@ -188,20 +188,23 @@
 
                 <!-- Tombol Nonaktifkan / Aktifkan Nasabah -->
                 <div class="flex items-center gap-2 shrink-0">
-                    <form method="POST" action="{{ route('admin.savers.toggle-status', $saver->id) }}" onsubmit="return confirm('{{ $saver->status === 'active' ? 'Apakah Anda yakin ingin menonaktifkan nasabah ini? Rekening siswa otomatis akan dibekukan.' : 'Aktifkan kembali nasabah dan rekening tabungan siswa ini?' }}')">
-                        @csrf
-                        @if($saver->status === 'active')
-                            <button type="submit" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200/80 text-xs font-bold transition-all shadow-xs" title="Nonaktifkan nasabah dan bekukan rekening">
-                                <svg class="w-3.5 h-3.5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                                <span>Nonaktifkan Nasabah</span>
-                            </button>
-                        @else
-                            <button type="submit" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 text-xs font-bold transition-all shadow-xs" title="Aktifkan kembali nasabah dan rekening">
-                                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                <span>Aktifkan Kembali</span>
-                            </button>
-                        @endif
-                    </form>
+                    @if($saver->status === 'active')
+                        <button type="button" 
+                                onclick="openToggleSaverModal()"
+                                class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200/80 text-xs font-bold transition-all shadow-xs cursor-pointer" 
+                                title="Nonaktifkan nasabah dan bekukan rekening">
+                            <svg class="w-3.5 h-3.5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                            <span>Nonaktifkan Nasabah</span>
+                        </button>
+                    @else
+                        <button type="button" 
+                                onclick="openToggleSaverModal()"
+                                class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 text-xs font-bold transition-all shadow-xs cursor-pointer" 
+                                title="Aktifkan kembali nasabah dan rekening">
+                            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span>Aktifkan Kembali</span>
+                        </button>
+                    @endif
                 </div>
             </div>
 
@@ -315,31 +318,96 @@
 
         <!-- Action Buttons -->
         <div class="flex items-center gap-2 mt-5">
-            <button type="button" onclick="window.print()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">
+            <button type="button" onclick="window.print()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
                 <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                 <span>Cetak Kartu</span>
             </button>
-            <button type="button" onclick="closeQrModal()" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors">
+            <button type="button" onclick="closeQrModal()" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer">
                 Tutup
             </button>
         </div>
     </div>
 </div>
 
+<!-- Modal Konfirmasi Status Nasabah (Centered Backdrop Blur) -->
+<div id="confirmToggleSaverModal" 
+     class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs"
+     onclick="if(event.target === this) closeToggleSaverModal()">
+    
+    <div class="bg-white rounded-[24px] max-w-md w-full p-6 border border-slate-200/80 shadow-2xl space-y-4 relative">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl {{ $saver->status === 'active' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600' }} flex items-center justify-center shrink-0">
+                    @if($saver->status === 'active')
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                    @else
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    @endif
+                </div>
+                <h3 class="text-sm font-bold text-slate-800">
+                    {{ $saver->status === 'active' ? 'Konfirmasi Nonaktifkan Nasabah' : 'Konfirmasi Aktifkan Nasabah' }}
+                </h3>
+            </div>
+            <button type="button" onclick="closeToggleSaverModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm">
+                &times;
+            </button>
+        </div>
+
+        <p class="text-xs text-slate-500 leading-relaxed">
+            @if($saver->status === 'active')
+                Apakah Anda yakin ingin menonaktifkan nasabah <strong>{{ $saver->full_name }}</strong>? Rekening tabungan siswa ini otomatis akan dibekukan sementara.
+            @else
+                Apakah Anda yakin ingin mengaktifkan kembali nasabah <strong>{{ $saver->full_name }}</strong> beserta rekening tabungannya?
+            @endif
+        </p>
+
+        <form method="POST" action="{{ route('admin.savers.toggle-status', $saver->id) }}" class="pt-2">
+            @csrf
+            <div class="flex items-center justify-end gap-2">
+                <button type="button" onclick="closeToggleSaverModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+                    Batal
+                </button>
+                <button type="submit" class="px-5 py-2 {{ $saver->status === 'active' ? 'bg-rose-600 hover:bg-rose-700' : 'bg-emerald-600 hover:bg-emerald-700' }} text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">
+                    {{ $saver->status === 'active' ? 'Ya, Nonaktifkan' : 'Ya, Aktifkan' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @push('scripts')
 <script>
     function openQrModal() {
-        document.getElementById('qrModal').classList.remove('hidden');
+        const modal = document.getElementById('qrModal');
+        if (modal) modal.classList.remove('hidden');
     }
 
     function closeQrModal() {
-        document.getElementById('qrModal').classList.add('hidden');
+        const modal = document.getElementById('qrModal');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    function openToggleSaverModal() {
+        const modal = document.getElementById('confirmToggleSaverModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closeToggleSaverModal() {
+        const modal = document.getElementById('confirmToggleSaverModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
     }
 
     // Keyboard ESC to close modal
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeQrModal();
+            closeToggleSaverModal();
         }
     });
 </script>
