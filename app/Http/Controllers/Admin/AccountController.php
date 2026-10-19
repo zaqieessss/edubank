@@ -21,6 +21,18 @@ class AccountController extends Controller
             $query->where('status', $request->status);
         }
 
+        if ($request->filled('grade_level')) {
+            $query->whereHas('saver', function ($q) use ($request) {
+                $q->where('grade_level', $request->grade_level);
+            });
+        }
+
+        if ($request->filled('cohort')) {
+            $query->whereHas('saver', function ($q) use ($request) {
+                $q->where('cohort', $request->cohort);
+            });
+        }
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -35,7 +47,9 @@ class AccountController extends Controller
 
         $accounts = $query->orderBy('account_number', 'desc')->paginate(15)->withQueryString();
 
-        return view('admin.accounts.index', compact('accounts'));
+        $cohorts = \App\Models\Saver::distinct()->orderBy('cohort', 'desc')->pluck('cohort');
+
+        return view('admin.accounts.index', compact('accounts', 'cohorts'));
     }
 
     public function show(Account $account)

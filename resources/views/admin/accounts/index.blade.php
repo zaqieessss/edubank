@@ -54,24 +54,39 @@
         <div class="flex-1 flex flex-col min-h-0">
             <!-- Action Toolbar (Pencarian, Filter Status, Buka Rekening) -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 shrink-0">
-                <!-- Search & Filter Form -->
+                <!-- Search & Filter Form (Tingkat, Angkatan & Status) -->
                 <form method="GET" action="{{ route('admin.accounts.index') }}" class="flex flex-wrap items-center gap-2">
                     <!-- Search Input -->
-                    <div class="flex items-center bg-slate-50 border border-slate-200/70 rounded-xl px-3 py-1.5 text-xs text-slate-600 w-64 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500/20">
+                    <div class="flex items-center bg-slate-50 border border-slate-200/70 rounded-xl px-3 py-1.5 text-xs text-slate-600 w-52 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500/20">
                         <svg class="w-3.5 h-3.5 text-slate-400 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Rekening, Siswa, Kelas..." class="bg-transparent border-none outline-none text-xs w-full p-0">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Rekening, NIS, Nama..." class="bg-transparent border-none outline-none text-xs w-full p-0">
                     </div>
 
-                    <!-- Status Filter Select -->
-                    <select name="status" onchange="this.form.submit()" class="bg-slate-50 border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-xs text-slate-700 outline-none focus:bg-white">
-                        <option value="">Semua Status Rekening</option>
-                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Aktif</option>
-                        <option value="frozen" {{ request('status') == 'frozen' ? 'selected' : '' }}>Dibekukan (Frozen)</option>
-                        <option value="dormant" {{ request('status') == 'dormant' ? 'selected' : '' }}>Dormant</option>
-                        <option value="closed" {{ request('status') == 'closed' ? 'selected' : '' }}>Ditutup (Closed)</option>
+                    <!-- Filter Tingkat Kelas -->
+                    <select name="grade_level" onchange="this.form.submit()" class="bg-slate-50 border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-xs text-slate-700 outline-none focus:bg-white">
+                        <option value="">Semua Tingkat</option>
+                        <option value="10" {{ request('grade_level') == '10' ? 'selected' : '' }}>Kelas 10</option>
+                        <option value="11" {{ request('grade_level') == '11' ? 'selected' : '' }}>Kelas 11</option>
+                        <option value="12" {{ request('grade_level') == '12' ? 'selected' : '' }}>Kelas 12</option>
+                        <option value="alumni" {{ request('grade_level') == 'alumni' ? 'selected' : '' }}>Alumni</option>
                     </select>
 
-                    @if(request()->anyFilled(['search', 'status']))
+                    <!-- Filter Angkatan -->
+                    <select name="cohort" onchange="this.form.submit()" class="bg-slate-50 border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-xs text-slate-700 outline-none focus:bg-white">
+                        <option value="">Semua Angkatan</option>
+                        @foreach($cohorts as $c)
+                            <option value="{{ $c }}" {{ request('cohort') == $c ? 'selected' : '' }}>Angkatan {{ $c }}</option>
+                        @endforeach
+                    </select>
+
+                    <!-- Filter Status (Disederhanakan: Aktif & Dibekukan) -->
+                    <select name="status" onchange="this.form.submit()" class="bg-slate-50 border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-xs text-slate-700 outline-none focus:bg-white">
+                        <option value="">Semua Status</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Aktif</option>
+                        <option value="frozen" {{ request('status') == 'frozen' ? 'selected' : '' }}>Dibekukan</option>
+                    </select>
+
+                    @if(request()->anyFilled(['search', 'grade_level', 'cohort', 'status']))
                         <a href="{{ route('admin.accounts.index') }}" class="text-[11px] text-rose-500 hover:text-rose-700 font-semibold px-2 py-1">Reset</a>
                     @endif
                 </form>
