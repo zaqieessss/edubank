@@ -28,6 +28,20 @@ class DashboardController extends Controller
         $currentBalance = (int) ($saver->account->balance ?? $saver->balance ?? 0);
         $availableBalance = max(0, $currentBalance - $minHolding);
 
+        // Hitung total setoran & penarikan bulan ini (1 s/d akhir bulan)
+        $startOfMonth = now()->startOfMonth();
+        $endOfMonth = now()->endOfMonth();
+
+        $monthlyIn = (int) $saver->transactions()
+            ->where('transaction_type', 'deposit')
+            ->whereBetween('transaction_date', [$startOfMonth, $endOfMonth])
+            ->sum('amount');
+
+        $monthlyOut = (int) $saver->transactions()
+            ->where('transaction_type', 'withdraw')
+            ->whereBetween('transaction_date', [$startOfMonth, $endOfMonth])
+            ->sum('amount');
+
         // Hitung total uang masuk (setoran) & uang keluar (penarikan) pada minggu ini (Senin - Minggu)
         $startOfWeek = now()->startOfWeek();
         $endOfWeek = now()->endOfWeek();
@@ -80,6 +94,10 @@ class DashboardController extends Controller
                     'min_holding'       => $minHolding,
                     'available_balance' => $availableBalance,
                     'account_type'      => 'Tabungan Siswa Edubank',
+                ],
+                'monthly_stats' => [
+                    'total_in'  => $monthlyIn,
+                    'total_out' => $monthlyOut,
                 ],
                 'weekly_stats' => [
                     'total_in'  => $weeklyIn,
