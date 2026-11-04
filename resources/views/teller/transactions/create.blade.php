@@ -4,7 +4,7 @@
 @section('page_title', 'Loket Transaksi Nasabah')
 
 @section('content')
-<div class="h-full flex flex-col justify-between gap-4 pb-0.5">
+<div class="min-h-full flex flex-col gap-4 pb-6">
 
     <!-- Top Navigation Card (Konsisten & Rapi Terbungkus Card) -->
     <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -35,11 +35,11 @@
         </div>
     </div>
 
-    <!-- Bento Grid: 2 Columns (Student Profile vs Service Desk Tabs) Memenuhi Layar Sejajar Sidebar -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 flex-1 min-h-0">
+    <!-- Bento Grid: 2 Columns (Student Profile vs Service Desk Tabs) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         
         <!-- Left: Student Savings Profile & Balance Specs -->
-        <div class="lg:col-span-5 flex flex-col justify-between gap-4">
+        <div class="lg:col-span-5 flex flex-col gap-4">
             
             <!-- Student Header Profile Card -->
             <div class="bg-white rounded-[26px] p-5 md:p-6 border border-slate-200/80 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] space-y-4">
@@ -82,7 +82,7 @@
             </div>
 
             <!-- Recent 5 Transactions Mini Ledger -->
-            <div class="bg-white rounded-[26px] p-5 border border-slate-200/80 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between min-h-[180px]">
+            <div class="bg-white rounded-[26px] p-5 border border-slate-200/80 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex flex-col gap-4">
                 <div>
                     <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">5 Riwayat Transaksi Terakhir</h4>
                     <div class="divide-y divide-slate-100 text-xs">
@@ -115,8 +115,8 @@
         </div>
 
         <!-- Right: Transaction Operations (Tabs: Setor Tunai vs Tarik Tunai) -->
-        <div class="lg:col-span-7 flex flex-col">
-            <div class="bg-white rounded-[28px] p-6 md:p-8 border border-slate-200/80 shadow-[0_4px_30px_-5px_rgba(15,23,42,0.04)] flex-1 flex flex-col justify-between">
+        <div class="lg:col-span-7">
+            <div class="bg-white rounded-[28px] p-5 sm:p-6 md:p-8 border border-slate-200/80 shadow-[0_4px_30px_-5px_rgba(15,23,42,0.04)] flex flex-col gap-6">
                 
                 <div class="space-y-5">
                     <!-- Segmented Tabs Button -->
