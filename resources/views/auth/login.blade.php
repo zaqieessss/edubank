@@ -28,50 +28,85 @@
     <!-- Floating Login Container (Besar, Mewah, dan Proporsional) -->
     <div class="w-full max-w-5xl min-h-[620px] bg-white rounded-[32px] border border-slate-200/90 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.12)] overflow-hidden grid grid-cols-1 md:grid-cols-12 relative">
         
-        <!-- LEFT HERO (5 Cols): Branding Elegan & Berkelas (Terang Sesuai Tema Minibank) -->
-        <div class="md:col-span-5 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 p-8 md:p-12 text-white flex flex-col justify-between relative overflow-hidden">
-            <!-- Background Glow Subtle & Terang -->
-            <div class="absolute -top-20 -left-20 w-64 h-64 bg-white/20 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-sky-400/25 rounded-full blur-3xl pointer-events-none"></div>
+        <!-- LEFT HERO (5 Cols): Branding Elegan & Berkelas (Midnight Sapphire & Geometric Art) -->
+        <div class="md:col-span-5 bg-gradient-to-br from-[#0B1528] via-[#102A54] to-[#1E3A8A] p-8 md:p-12 text-white flex flex-col justify-between relative overflow-hidden">
+            
+            <!-- Geometric Background Illustration Layer (Aesthetic & Luxury Bank Look) -->
+            <div class="absolute inset-0 overflow-hidden pointer-events-none select-none">
+                <!-- Ambient Sapphire Glows -->
+                <div class="absolute -top-24 -left-24 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-24 -right-24 w-72 h-72 bg-indigo-500/25 rounded-full blur-3xl"></div>
+                
+                <!-- Geometric Concentric Rings & Radial Crosshair (Guilloche / Security Token Aesthetic) -->
+                <svg class="absolute -right-16 -top-16 w-80 h-80 text-blue-300/15" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="200" cy="200" r="185" stroke="currentColor" stroke-width="1" stroke-dasharray="4 6" opacity="0.4" />
+                    <circle cx="200" cy="200" r="145" stroke="currentColor" stroke-width="1.2" opacity="0.6" />
+                    <circle cx="200" cy="200" r="105" stroke="currentColor" stroke-width="1" stroke-dasharray="3 4" opacity="0.5" />
+                    <circle cx="200" cy="200" r="65" stroke="currentColor" stroke-width="1.5" opacity="0.8" />
+                    <line x1="20" y1="200" x2="380" y2="200" stroke="currentColor" stroke-width="0.8" opacity="0.3" />
+                    <line x1="200" y1="20" x2="200" y2="380" stroke="currentColor" stroke-width="0.8" opacity="0.3" />
+                    <line x1="70" y1="70" x2="330" y2="330" stroke="currentColor" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.25" />
+                    <line x1="70" y1="330" x2="330" y2="70" stroke="currentColor" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.25" />
+                    <circle cx="200" cy="55" r="3.5" fill="#60A5FA" opacity="0.9" />
+                    <circle cx="345" cy="200" r="3.5" fill="#60A5FA" opacity="0.9" />
+                    <circle cx="200" cy="345" r="3.5" fill="#38BDF8" opacity="0.9" />
+                    <circle cx="55" cy="200" r="3.5" fill="#38BDF8" opacity="0.9" />
+                </svg>
+
+                <!-- Isometric Geometric Dot Matrix Pattern (Bottom Right) -->
+                <svg class="absolute -bottom-8 right-0 w-64 h-64 text-blue-200/10 opacity-70" viewBox="0 0 200 200" fill="none">
+                    <defs>
+                        <pattern id="loginDotPattern" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+                            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
+                        </pattern>
+                    </defs>
+                    <rect width="200" height="200" fill="url(#loginDotPattern)" />
+                </svg>
+
+                <!-- Floating Glassmorphic Geometric Polygon (Hexagon/Diamond Facet) -->
+                <div class="absolute top-1/2 right-3 -translate-y-1/2 w-28 h-28 border border-white/15 rounded-3xl rotate-45 bg-gradient-to-tr from-white/5 to-transparent backdrop-blur-xs opacity-60">
+                    <div class="absolute inset-3 border border-blue-400/20 rounded-2xl rotate-12"></div>
+                </div>
+            </div>
 
             <div class="relative z-10">
                 <div class="mb-8">
-                    <div class="w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-2 shadow-sm inline-flex items-center justify-center">
-                        <img src="{{ asset('images/logo-white.png') }}" alt="Edubank Logo" class="w-full h-full object-contain drop-shadow-sm">
+                    <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-2.5 shadow-md inline-flex items-center justify-center">
+                        <img src="{{ asset('images/logo-white.png') }}" alt="Edubank Logo" class="w-full h-full object-contain drop-shadow-md">
                     </div>
                 </div>
                 
                 <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">Edubank</h1>
-                <p class="text-sm text-blue-100 font-semibold mt-1">Bank Mini Sekolah Digital</p>
+                <p class="text-sm text-blue-200 font-semibold mt-1">Bank Mini Sekolah Digital</p>
 
-                <p class="text-sm text-blue-100/90 mt-5 leading-relaxed">
+                <p class="text-sm text-slate-300/90 mt-5 leading-relaxed">
                     Sistem perbankan sekolah yang dirancang untuk mendukung literasi keuangan, tabungan siswa, dan transparansi transaksi sekolah.
                 </p>
 
-                <!-- Keunggulan Singkat -->
-                <div class="mt-8 space-y-3 pt-6 border-t border-white/20 text-xs text-blue-50">
+                <!-- Keunggulan Singkat (Glassmorphism Pill) -->
+                <div class="mt-8 space-y-3 pt-6 border-t border-white/15 text-xs text-blue-100/90">
                     <div class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-lg bg-white/20 text-white flex items-center justify-center shrink-0">
+                        <div class="w-6 h-6 rounded-lg bg-blue-500/20 border border-blue-400/30 text-blue-300 flex items-center justify-center shrink-0">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                         </div>
-                        <span class="font-medium">Pencatatan Transaksi & Mutasi Real-Time</span>
+                        <span class="font-medium text-slate-200">Pencatatan Transaksi & Mutasi Real-Time</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-lg bg-white/20 text-white flex items-center justify-center shrink-0">
+                        <div class="w-6 h-6 rounded-lg bg-blue-500/20 border border-blue-400/30 text-blue-300 flex items-center justify-center shrink-0">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                         </div>
-                        <span class="font-medium">Keamanan PIN & Otorisasi Bertingkat</span>
+                        <span class="font-medium text-slate-200">Keamanan PIN & Otorisasi Bertingkat</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-lg bg-white/20 text-white flex items-center justify-center shrink-0">
+                        <div class="w-6 h-6 rounded-lg bg-blue-500/20 border border-blue-400/30 text-blue-300 flex items-center justify-center shrink-0">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
-                        <span class="font-medium">Terintegrasi Mobile & Web Dashboard</span>
+                        <span class="font-medium text-slate-200">Terintegrasi Mobile & Web Dashboard</span>
                     </div>
                 </div>
             </div>
 
-            <div class="relative z-10 pt-8 text-xs text-blue-200 font-medium">
+            <div class="relative z-10 pt-8 text-xs text-blue-300/70 font-medium">
                 &copy; {{ date('Y') }} SMKN 1 Bantul • Hak Cipta Dilindungi
             </div>
         </div>
