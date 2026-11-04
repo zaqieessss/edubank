@@ -17,51 +17,52 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #E8EEF5;
+            background-color: #F8FAFC;
             color: #0F172A;
+            -webkit-font-smoothing: antialiased;
         }
     </style>
 </head>
-<body class="min-h-screen p-3 md:p-6 flex items-center justify-center">
+<body class="min-h-screen p-3 md:p-6 flex items-center justify-center bg-[#F8FAFC]">
 
     <!-- Container Form (Identik dengan Desain Form Login) -->
-    <div class="w-full max-w-4xl bg-white/95 backdrop-blur-md rounded-[32px] border border-white/80 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.1)] overflow-hidden grid grid-cols-1 md:grid-cols-12 relative">
+    <div class="w-full max-w-4xl bg-white rounded-[32px] border border-slate-200/90 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.1)] overflow-hidden grid grid-cols-1 md:grid-cols-12 relative">
         
-        <!-- LEFT HERO (5 Cols): Branding & Atmosphere -->
-        <div class="md:col-span-5 bg-gradient-to-br from-blue-600 via-indigo-600 to-slate-900 p-8 text-white flex flex-col justify-between relative overflow-hidden">
-            <!-- Background Glow -->
-            <div class="absolute -top-12 -left-12 w-48 h-48 bg-blue-400/30 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -bottom-12 -right-12 w-48 h-48 bg-indigo-400/20 rounded-full blur-3xl pointer-events-none"></div>
+        <!-- LEFT HERO (5 Cols): Branding & Atmosphere (Terang Sesuai Tema Minibank) -->
+        <div class="md:col-span-5 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 p-8 text-white flex flex-col justify-between relative overflow-hidden">
+            <!-- Background Glow Terang -->
+            <div class="absolute -top-12 -left-12 w-48 h-48 bg-white/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -right-12 w-48 h-48 bg-sky-400/25 rounded-full blur-3xl pointer-events-none"></div>
 
             <div class="relative z-10">
-                <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center mb-6 shadow-inner">
+                <div class="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 flex items-center justify-center mb-6 shadow-sm">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
                     </svg>
                 </div>
                 <h1 class="text-2xl font-extrabold mt-3 tracking-tight leading-snug">Edubank</h1>
-                <p class="text-xs text-blue-100/80 mt-1 leading-relaxed">
+                <p class="text-xs text-blue-100 font-semibold mt-1 leading-relaxed">
                     Bank Mini SMKN 1 Bantul
                 </p>
             </div>
 
             <!-- Steps Mini Checklist -->
-            <div class="relative z-10 space-y-2.5 pt-6 border-t border-white/15 text-[11px] text-blue-100/90 font-medium">
+            <div class="relative z-10 space-y-2.5 pt-6 border-t border-white/20 text-[11px] text-blue-50 font-medium">
                 <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-[10px] font-bold">1</span>
-                    <span>Masukkan alamat email terdaftar</span>
+                    <span class="w-5 h-5 rounded-full bg-white text-blue-700 flex items-center justify-center text-[10px] font-extrabold shadow-xs">1</span>
+                    <span class="font-bold text-white">Masukkan alamat email terdaftar</span>
                 </div>
-                <div class="flex items-center gap-2 text-white/50">
-                    <span class="w-5 h-5 rounded-full bg-white/10 text-white/50 flex items-center justify-center text-[10px] font-bold">2</span>
+                <div class="flex items-center gap-2 text-white/60">
+                    <span class="w-5 h-5 rounded-full bg-white/15 text-white/70 flex items-center justify-center text-[10px] font-bold">2</span>
                     <span>Verifikasi 6 digit kode OTP email</span>
                 </div>
-                <div class="flex items-center gap-2 text-white/50">
-                    <span class="w-5 h-5 rounded-full bg-white/10 text-white/50 flex items-center justify-center text-[10px] font-bold">3</span>
+                <div class="flex items-center gap-2 text-white/60">
+                    <span class="w-5 h-5 rounded-full bg-white/15 text-white/70 flex items-center justify-center text-[10px] font-bold">3</span>
                     <span>Buat kata sandi baru yang aman</span>
                 </div>
             </div>
 
-            <div class="relative z-10 pt-4 text-[10px] text-blue-200/60 font-medium">
+            <div class="relative z-10 pt-4 text-[10px] text-blue-200 font-medium">
                 &copy; {{ date('Y') }} SMKN 1 Bantul
             </div>
         </div>
@@ -108,9 +109,9 @@
                     @enderror
                 </div>
 
-                <!-- Submit Button -->
+                <!-- Submit Button (Terang Sesuai Tema Minibank) -->
                 <button type="submit" 
-                        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs py-3 rounded-xl shadow-md shadow-blue-500/20 hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer">
+                        class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs py-3.5 rounded-xl shadow-md shadow-blue-600/30 hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer">
                     <span>Kirim Kode OTP</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </button>

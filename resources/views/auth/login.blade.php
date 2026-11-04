@@ -28,40 +28,42 @@
     <!-- Floating Login Container (Besar, Mewah, dan Proporsional) -->
     <div class="w-full max-w-5xl min-h-[620px] bg-white rounded-[32px] border border-slate-200/90 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.12)] overflow-hidden grid grid-cols-1 md:grid-cols-12 relative">
         
-        <!-- LEFT HERO (5 Cols): Branding Elegan & Berkelas -->
-        <div class="md:col-span-5 bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 p-8 md:p-12 text-white flex flex-col justify-between relative overflow-hidden">
-            <!-- Background Glow Subtle -->
-            <div class="absolute -top-20 -left-20 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <!-- LEFT HERO (5 Cols): Branding Elegan & Berkelas (Terang Sesuai Tema Minibank) -->
+        <div class="md:col-span-5 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 p-8 md:p-12 text-white flex flex-col justify-between relative overflow-hidden">
+            <!-- Background Glow Subtle & Terang -->
+            <div class="absolute -top-20 -left-20 w-64 h-64 bg-white/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-sky-400/25 rounded-full blur-3xl pointer-events-none"></div>
 
             <div class="relative z-10">
                 <div class="mb-8">
-                    <img src="{{ asset('images/logo-white.png') }}" alt="Edubank Logo" class="w-16 h-16 object-contain drop-shadow-lg">
+                    <div class="w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-2 shadow-sm inline-flex items-center justify-center">
+                        <img src="{{ asset('images/logo-white.png') }}" alt="Edubank Logo" class="w-full h-full object-contain drop-shadow-sm">
+                    </div>
                 </div>
                 
                 <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">Edubank</h1>
-                <p class="text-sm text-blue-200/90 font-semibold mt-1">Bank Mini Sekolah Digital</p>
+                <p class="text-sm text-blue-100 font-semibold mt-1">Bank Mini Sekolah Digital</p>
 
-                <p class="text-sm text-slate-300/90 mt-5 leading-relaxed">
+                <p class="text-sm text-blue-100/90 mt-5 leading-relaxed">
                     Sistem perbankan sekolah yang dirancang untuk mendukung literasi keuangan, tabungan siswa, dan transparansi transaksi sekolah.
                 </p>
 
                 <!-- Keunggulan Singkat -->
-                <div class="mt-8 space-y-3 pt-6 border-t border-white/10 text-xs text-slate-300">
+                <div class="mt-8 space-y-3 pt-6 border-t border-white/20 text-xs text-blue-50">
                     <div class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                        <div class="w-6 h-6 rounded-lg bg-white/20 text-white flex items-center justify-center shrink-0">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                         </div>
                         <span class="font-medium">Pencatatan Transaksi & Mutasi Real-Time</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
+                        <div class="w-6 h-6 rounded-lg bg-white/20 text-white flex items-center justify-center shrink-0">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                         </div>
                         <span class="font-medium">Keamanan PIN & Otorisasi Bertingkat</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                        <div class="w-6 h-6 rounded-lg bg-white/20 text-white flex items-center justify-center shrink-0">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
                         <span class="font-medium">Terintegrasi Mobile & Web Dashboard</span>
@@ -69,7 +71,7 @@
                 </div>
             </div>
 
-            <div class="relative z-10 pt-8 text-xs text-slate-400/80 font-medium">
+            <div class="relative z-10 pt-8 text-xs text-blue-200 font-medium">
                 &copy; {{ date('Y') }} SMKN 1 Bantul • Hak Cipta Dilindungi
             </div>
         </div>
@@ -156,9 +158,9 @@
                     </label>
                 </div>
 
-                <!-- Submit Button -->
+                <!-- Submit Button (Terang & Elegan Sesuai Tema Minibank) -->
                 <button type="submit" 
-                        class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm py-4 rounded-xl shadow-lg shadow-slate-900/20 transition-all hover:shadow-xl active:scale-[0.99] flex items-center justify-center gap-2.5 cursor-pointer mt-4">
+                        class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm py-3.5 rounded-xl shadow-md shadow-blue-600/30 transition-all hover:shadow-lg hover:shadow-blue-600/40 active:scale-[0.99] flex items-center justify-center gap-2.5 cursor-pointer mt-4">
                     <span>Masuk ke Akun</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </button>

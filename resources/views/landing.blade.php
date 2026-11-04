@@ -75,13 +75,13 @@
                 <!-- Tombol Aksi Header (Ringkas & Sempurna di HP, Tidak Keluar Layar) -->
                 <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
                     <!-- Download APK Button -->
-                    <a href="{{ asset('edubank-v1.1.1.apk') }}" download="edubank-v1.1.1.apk" 
+                    <a href="{{ asset('edubank-v1.1.2.apk') }}" download="edubank-v1.1.2.apk" 
                        class="inline-flex items-center gap-1 px-2 py-1.5 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/80 text-[11px] sm:text-xs font-bold transition-all hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
-                       title="Download APK Android v1.1.1">
+                       title="Download APK Android v1.1.2">
                         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                         </svg>
-                        <span><span class="inline sm:hidden">APK</span><span class="hidden sm:inline">Unduh APK (v1.1.1)</span></span>
+                        <span><span class="inline sm:hidden">APK</span><span class="hidden sm:inline">Unduh APK (v1.1.2)</span></span>
                     </a>
 
                     <!-- Masuk Petugas Button -->
@@ -139,12 +139,12 @@
                             </a>
 
                             <!-- Button 2: Download APK Android -->
-                            <a href="{{ asset('edubank-v1.1.1.apk') }}" download="edubank-v1.1.1.apk" 
+                            <a href="{{ asset('edubank-v1.1.2.apk') }}" download="edubank-v1.1.2.apk" 
                                class="inline-flex items-center justify-center gap-2.5 px-5 sm:px-6 py-3 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/15 text-white border border-white/20 font-bold text-xs sm:text-sm backdrop-blur-md transition-all hover:scale-[1.01] active:scale-[0.99]">
                                 <svg class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-1.0001s.4482-.9993.9993-.9993c.551 0 .9993.4478.9993.9993s-.4483 1.0001-.9993 1.0001m-11.046 0c-.5511 0-.9993-.4486-.9993-1.0001s.4482-.9993.9993-.9993c.5511 0 .9993.4478.9993.9993s-.4482 1.0001-.9993 1.0001m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1523-.5676.416.416 0 00-.5677.1523l-2.0223 3.503C15.5902 8.4116 13.8533 8.125 12 8.125s-3.5902.2866-5.1364.825L4.8413 5.447a.4163.4163 0 00-.5677-.1523.4158.4158 0 00-.1523.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.7778h24c-.3432-4.1189-2.6889-7.5911-6.1185-9.4564"/>
                                 </svg>
-                                <span>Download APK Android (v1.1.1)</span>
+                                <span>Download APK Android (v1.1.2)</span>
                             </a>
                         </div>
 
@@ -315,9 +315,9 @@
                     </div>
 
                     <div class="pt-5 mt-5 border-t border-slate-100">
-                        <a href="{{ asset('edubank-v1.1.1.apk') }}" download="edubank-v1.1.1.apk" 
+                        <a href="{{ asset('edubank-v1.1.2.apk') }}" download="edubank-v1.1.2.apk" 
                            class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold transition-colors">
-                            <span>Unduh File APK Android (v1.1.1) &rarr;</span>
+                            <span>Unduh File APK Android (v1.1.2) &rarr;</span>
                         </a>
                     </div>
                 </div>
@@ -452,11 +452,11 @@
                         </div>
                         <h4 class="text-sm sm:text-base font-bold text-slate-900 mb-1.5">Unduh Berkas APK</h4>
                         <p class="text-xs text-slate-600 leading-relaxed">
-                            Klik tombol <strong>"Download APK Android"</strong> di website ini. Berkas <code class="text-blue-600 bg-blue-50 px-1 py-0.5 rounded font-mono text-[11px]">edubank-v1.1.1.apk</code> (ukuran ±48.2 MB, Versi 1.1.1 Rilis Terbaru) akan langsung diunduh ke ponsel Anda.
+                            Klik tombol <strong>"Download APK Android"</strong> di website ini. Berkas <code class="text-blue-600 bg-blue-50 px-1 py-0.5 rounded font-mono text-[11px]">edubank-v1.1.2.apk</code> (ukuran ±48.2 MB, Versi 1.1.2 Rilis Terbaru) akan langsung diunduh ke ponsel Anda.
                         </p>
                     </div>
                     <div class="pt-3 mt-3 border-t border-slate-200/60 text-[11px] text-slate-400 font-medium">
-                        Ukuran: ~48.2 MB (v1.1.1)
+                        Ukuran: ~48.2 MB (v1.1.2)
                     </div>
                 </div>
 
@@ -520,12 +520,12 @@
                 </div>
 
                 <div class="w-full sm:w-auto shrink-0 flex justify-center">
-                    <a href="{{ asset('edubank-v1.1.1.apk') }}" download="edubank-v1.1.1.apk" 
+                    <a href="{{ asset('edubank-v1.1.2.apk') }}" download="edubank-v1.1.2.apk" 
                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl sm:rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs sm:text-sm shadow-md transition-all hover:scale-[1.01] active:scale-[0.99]">
                         <svg class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-1.0001s.4482-.9993.9993-.9993c.551 0 .9993.4478.9993.9993s-.4483 1.0001-.9993 1.0001m-11.046 0c-.5511 0-.9993-.4486-.9993-1.0001s.4482-.9993.9993-.9993c.5511 0 .9993.4478.9993.9993s-.4482 1.0001-.9993 1.0001m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1523-.5676.416.416 0 00-.5677.1523l-2.0223 3.503C15.5902 8.4116 13.8533 8.125 12 8.125s-3.5902.2866-5.1364.825L4.8413 5.447a.4163.4163 0 00-.5677-.1523.4158.4158 0 00-.1523.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.7778h24c-.3432-4.1189-2.6889-7.5911-6.1185-9.4564"/>
                         </svg>
-                        <span>Download APK Android (v1.1.1)</span>
+                        <span>Download APK Android (v1.1.2)</span>
                     </a>
                 </div>
             </div>
@@ -550,7 +550,7 @@
 
                 <div class="flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-xs text-slate-500 font-medium">
                     <a href="{{ route('login') }}" class="hover:text-blue-600 transition-colors">Portal Login Petugas</a>
-                    <a href="{{ asset('edubank-v1.1.1.apk') }}" download="edubank-v1.1.1.apk" class="hover:text-blue-600 transition-colors">Unduh APK (v1.1.1)</a>
+                    <a href="{{ asset('edubank-v1.1.2.apk') }}" download="edubank-v1.1.2.apk" class="hover:text-blue-600 transition-colors">Unduh APK (v1.1.2)</a>
                     <a href="#tentang" class="hover:text-blue-600 transition-colors">Tentang Sistem</a>
                 </div>
 
