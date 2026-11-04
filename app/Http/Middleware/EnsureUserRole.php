@@ -24,7 +24,14 @@ class EnsureUserRole
         $user = Auth::user();
 
         if ($user->status !== 'active') {
-            Auth::logout();
+            if ($request->expectsJson()) {
+                $user->currentAccessToken()?->delete();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Akun Anda sedang dinonaktifkan.',
+                ], 403);
+            }
+            Auth::guard('web')->logout();
             return redirect()->route('login')->with('error', 'Akun Anda sedang dinonaktifkan.');
         }
 

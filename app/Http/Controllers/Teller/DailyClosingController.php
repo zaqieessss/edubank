@@ -37,21 +37,45 @@ class DailyClosingController extends Controller
         return view('teller.daily-closings.create', compact('summary', 'todayClosing'));
     }
 
-    public function store(Request $request)
+    public function setOpeningBalance(Request $request)
     {
         $validated = $request->validate([
-            'physical_cash' => ['required', 'integer', 'min:0'],
-            'notes'         => ['nullable', 'string', 'max:500'],
+            'opening_balance' => ['required', 'integer', 'min:0'],
         ], [
-            'physical_cash.required' => 'Nominal uang fisik di laci kas wajib diisi.',
-            'physical_cash.min'      => 'Nominal uang fisik tidak boleh minus.',
+            'opening_balance.required' => 'Nominal modal awal kas wajib diisi.',
+            'opening_balance.min'      => 'Modal awal tidak boleh minus.',
         ]);
 
         try {
             $tellerId = Auth::id();
+            $this->cashClosingService->setOpeningBalance($tellerId, (int) $validated['opening_balance']);
+
+            return back()->with('success', 'Modal awal kas pagi sebesar Rp ' . number_format($validated['opening_balance'], 0, ',', '.') . ' berhasil dicatat.');
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'opening_balance' => ['nullable', 'integer', 'min:0'],
+            'physical_cash'   => ['required', 'integer', 'min:0'],
+            'notes'           => ['nullable', 'string', 'max:500'],
+        ], [
+            'physical_cash.required' => 'Nominal uang fisik di laci kas wajib diisi.',
+            'physical_cash.min'      => 'Nominal uang fisik tidak boleh minus.',
+            'opening_balance.min'    => 'Modal awal tidak boleh minus.',
+        ]);
+
+        try {
+            $tellerId = Auth::id();
+            $openingBalance = isset($validated['opening_balance']) ? (int) $validated['opening_balance'] : null;
+
             $closing = $this->cashClosingService->submitClosing(
                 tellerId: $tellerId,
                 physicalCash: (int) $validated['physical_cash'],
+                openingBalance: $openingBalance,
                 notes: $validated['notes'] ?? null
             );
 

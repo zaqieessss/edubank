@@ -29,6 +29,14 @@ class FrontendViewsTest extends TestCase
         $response = $this->get('/forgot-password');
         $response->assertStatus(200);
 
+        \Illuminate\Support\Facades\DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => 'admin@test.com'],
+            ['token' => 'sample-token', 'created_at' => now()]
+        );
+
+        $response = $this->get('/verify-otp?email=admin@test.com');
+        $response->assertStatus(200);
+
         $response = $this->get('/reset-password/sample-token?email=admin@test.com');
         $response->assertStatus(200);
     }
@@ -66,6 +74,7 @@ class FrontendViewsTest extends TestCase
         $this->get(route('admin.users.edit', $admin->id))->assertStatus(200);
         $this->get(route('admin.daily-closings.index'))->assertStatus(200);
         $this->get(route('admin.accounting-journals.index'))->assertStatus(200);
+        $this->get(route('admin.transactions.index'))->assertStatus(200);
         $this->get(route('admin.settings.index'))->assertStatus(200);
     }
 
@@ -274,5 +283,90 @@ class FrontendViewsTest extends TestCase
         $closing->refresh();
         $this->assertEquals('approved', $closing->status);
         $this->assertEquals('transferred_to_vault', $closing->vault_status);
+    }
+
+    public function test_admin_can_view_monthly_transactions_report_and_detail(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin', 'status' => 'active']);
+        $teller = User::factory()->create(['role' => 'teller', 'status' => 'active']);
+        $saverUser = User::factory()->create(['role' => 'saver', 'status' => 'active']);
+
+        $member = Member::create([
+            'student_id_number'   => '10088',
+            'full_name'           => 'Siswa Transaksi',
+            'grade_level'         => '10',
+            'class_name'          => 'X RPL 1',
+            'major'               => 'RPL',
+            'cohort'              => '2026',
+            'gender'              => 'male',
+            'email'               => 'siswatrx@test.com',
+            'registration_status' => 'registered',
+        ]);
+
+        $saver = Saver::create([
+            'user_id'           => $saverUser->id,
+            'member_id'         => $member->id,
+            'account_number'    => 'RPL-2026-0088',
+            'student_id_number' => '10088',
+            'full_name'         => 'Siswa Transaksi',
+            'class_name'        => 'X RPL 1',
+            'major'             => 'RPL',
+            'cohort'            => '2026',
+            'security_pin'      => '123456',
+            'joined_date'       => now(),
+            'balance'           => 100000,
+            'status'            => 'active',
+        ]);
+
+        $account = \App\Models\Account::create([
+            'saver_id'       => $saver->id,
+            'account_number' => $saver->account_number,
+            'account_type'   => 'regular_savings',
+            'balance'        => 100000,
+            'status'         => 'active',
+            'opened_date'    => now(),
+        ]);
+
+        $transaction = Transaction::create([
+            'transaction_code' => 'TRX-TEST-0001',
+            'saver_id'         => $saver->id,
+            'account_id'       => $account->id,
+            'user_id'          => $teller->id,
+            'transaction_type' => 'deposit',
+            'amount'           => 50000,
+            'balance_before'   => 50000,
+            'balance_after'    => 100000,
+            'description'      => 'Setoran Tunai Percobaan',
+            'transaction_date' => now(),
+        ]);
+
+        $this->actingAs($admin);
+
+        // 1. Check monthly report view
+        $indexResponse = $this->get(route('admin.transactions.index', [
+            'month' => now()->format('m'),
+            'year'  => now()->format('Y'),
+        ]));
+        $indexResponse->assertStatus(200);
+        $indexResponse->assertSee('TRX-TEST-0001');
+        $indexResponse->assertSee('Siswa Transaksi');
+        $indexResponse->assertSee('Setoran');
+
+        // 2. Check detail view
+        $showResponse = $this->get(route('admin.transactions.show', $transaction->id));
+        $showResponse->assertStatus(200);
+        $showResponse->assertSee('TRX-TEST-0001');
+        $showResponse->assertSee('Siswa Transaksi');
+        $showResponse->assertSee('Rp 50.000');
+
+        // 3. Check printable PDF view
+        $printResponse = $this->get(route('admin.transactions.print', [
+            'month' => now()->format('m'),
+            'year'  => now()->format('Y'),
+        ]));
+        $printResponse->assertStatus(200);
+        $printResponse->assertSee('LAPORAN MUTASI KAS TRANSAKSI TABUNGAN SISWA');
+        $printResponse->assertSee('TRX-TEST-0001');
+        $printResponse->assertSee('Siswa Transaksi');
     }
 }

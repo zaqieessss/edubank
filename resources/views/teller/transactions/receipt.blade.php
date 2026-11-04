@@ -30,12 +30,12 @@
 
     <!-- Top Action Card (Konsisten & Rapi Terbungkus Card) -->
     <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex items-center justify-between gap-3 no-print">
-        <a href="{{ route('teller.dashboard') }}" 
-           class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors shrink-0"
-           title="Kembali ke Loket">
+        <a href="{{ route('teller.transactions.create', $transaction->saver_id) }}" 
+           class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors shrink-0 cursor-pointer"
+           title="Kembali ke Form Transaksi Siswa Ini">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
         </a>
-        <button onclick="window.print()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-sm transition-all hover:shadow">
+        <button onclick="window.print()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-sm transition-all hover:shadow cursor-pointer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
             <span>Cetak Thermal Struk</span>
         </button>
@@ -45,7 +45,10 @@
     <div class="receipt-card bg-white rounded-[24px] p-6 border border-slate-200/90 shadow-[0_4px_30px_-5px_rgba(15,23,42,0.05)] text-slate-900 font-mono text-xs space-y-3.5">
         
         <!-- School & Bank Header -->
-        <div class="text-center border-b border-dashed border-slate-300 pb-3 space-y-0.5">
+        <div class="text-center border-b border-dashed border-slate-300 pb-3 space-y-1">
+            <div class="flex justify-center mb-1.5">
+                <img src="{{ asset('images/logo-blue.png') }}" alt="Logo Edubank" class="w-11 h-11 object-contain mx-auto">
+            </div>
             <h3 class="font-extrabold text-sm tracking-wider uppercase font-sans">BANK MINI EDUBANK</h3>
             <p class="text-[11px] font-sans font-semibold text-slate-700">SMK NEGERI 1 BANTUL</p>
             <p class="text-[10px] text-slate-400 font-sans">Jl. Parangtritis No.KM.11, Sabdodadi, Bantul, DIY</p>

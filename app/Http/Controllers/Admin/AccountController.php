@@ -45,7 +45,7 @@ class AccountController extends Controller
             });
         }
 
-        $accounts = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
+        $accounts = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
 
         $majors = \App\Enums\Major::cases();
 

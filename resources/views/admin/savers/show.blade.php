@@ -85,10 +85,8 @@
 
                 <!-- Card Header -->
                 <div class="relative z-10 flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-sm">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                        </div>
+                    <div class="flex items-center gap-2.5">
+                        <img src="{{ asset('images/logo-white.png') }}" alt="Edubank Logo" class="w-9 h-9 object-contain drop-shadow-sm">
                         <div>
                             <h4 class="text-xs font-extrabold tracking-wider uppercase text-white">EDUBANK MINI</h4>
                             <p class="text-[9px] text-slate-400">SMK Negeri 1 Bantul</p>

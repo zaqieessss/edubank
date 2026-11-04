@@ -6,6 +6,7 @@ use App\Models\AccountingJournal;
 use App\Models\Saver;
 use App\Models\Transaction;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -41,154 +42,196 @@ class TransactionService
             throw new Exception('Nominal setoran tunai minimal adalah Rp ' . number_format(self::MINIMUM_TRANSACTION_AMOUNT, 0, ',', '.') . '.');
         }
 
-        return DB::transaction(function () use ($saver, $amount, $tellerId, $description) {
-            // Pessimistic locking to prevent race conditions
-            $lockedSaver = Saver::where('id', $saver->id)->lockForUpdate()->firstOrFail();
+        // Atomic lock (5 detik) untuk mencegah double-entry jika tombol ditekan berulang
+        $lock = Cache::lock("transaction:saver:{$saver->id}", 5);
+        if (!$lock->get()) {
+            throw new Exception('Transaksi untuk nasabah ini sedang diproses. Mohon tunggu beberapa detik untuk menghindari transaksi ganda.');
+        }
 
-            $balanceBefore = $lockedSaver->balance;
-            $balanceAfter  = $balanceBefore + $amount;
+        try {
+            return DB::transaction(function () use ($saver, $amount, $tellerId, $description) {
+                // Pessimistic locking to prevent race conditions
+                $lockedSaver = Saver::where('id', $saver->id)->lockForUpdate()->firstOrFail();
 
-            // 1. Update Saver Balance
-            $lockedSaver->update(['balance' => $balanceAfter]);
+                $balanceBefore = $lockedSaver->balance;
+                $balanceAfter  = $balanceBefore + $amount;
 
-            // 1b. Update Account Record if exists
-            $account = \App\Models\Account::where('saver_id', $lockedSaver->id)->first();
-            if ($account) {
-                $account->update(['balance' => $balanceAfter]);
-            }
+                // 1. Update Saver Balance
+                $lockedSaver->update(['balance' => $balanceAfter]);
 
-            // 2. Record Transaction
-            $transactionCode = 'TRX-' . date('Ymd') . '-' . str_pad((string) (Transaction::count() + 1), 4, '0', STR_PAD_LEFT);
-            $transaction = Transaction::create([
-                'transaction_code' => $transactionCode,
-                'saver_id'         => $lockedSaver->id,
-                'account_id'       => $account?->id,
-                'user_id'          => $tellerId,
-                'transaction_type' => 'deposit',
-                'amount'           => $amount,
-                'balance_before'   => $balanceBefore,
-                'balance_after'    => $balanceAfter,
-                'description'      => $description ?? 'Setoran Tunai di Loket Teller',
-                'transaction_date' => now(),
-            ]);
+                // 1b. Update Account Record if exists
+                $account = \App\Models\Account::where('saver_id', $lockedSaver->id)->first();
+                if ($account) {
+                    $account->update(['balance' => $balanceAfter]);
+                }
 
-            // 3. Double-Entry Accounting Journal
-            // Debit: Kas Teller (101)
-            AccountingJournal::create([
-                'transaction_id' => $transaction->id,
-                'account_code' => '101',
-                'account_name' => 'Cash at Teller',
-                'position' => 'debit',
-                'amount' => $amount,
-                'entry_date' => now(),
-            ]);
+                // 2. Record Transaction
+                $transactionCode = 'TRX-' . date('Ymd') . '-' . str_pad((string) (Transaction::count() + 1), 4, '0', STR_PAD_LEFT);
+                $transaction = Transaction::create([
+                    'transaction_code' => $transactionCode,
+                    'saver_id'         => $lockedSaver->id,
+                    'account_id'       => $account?->id,
+                    'user_id'          => $tellerId,
+                    'transaction_type' => 'deposit',
+                    'amount'           => $amount,
+                    'balance_before'   => $balanceBefore,
+                    'balance_after'    => $balanceAfter,
+                    'description'      => $description ?? 'Setoran Tunai di Loket Teller',
+                    'transaction_date' => now(),
+                ]);
 
-            // Credit: Simpanan Nasabah (201)
-            AccountingJournal::create([
-                'transaction_id' => $transaction->id,
-                'account_code' => '201',
-                'account_name' => 'Student Savings Liability',
-                'position' => 'credit',
-                'amount' => $amount,
-                'entry_date' => now(),
-            ]);
+                // 3. Double-Entry Accounting Journal
+                // Debit: Kas Teller (101)
+                AccountingJournal::create([
+                    'transaction_id' => $transaction->id,
+                    'account_code' => '101',
+                    'account_name' => 'Cash at Teller',
+                    'position' => 'debit',
+                    'amount' => $amount,
+                    'entry_date' => now(),
+                ]);
 
-            return $transaction;
-        });
+                // Credit: Simpanan Nasabah (201)
+                AccountingJournal::create([
+                    'transaction_id' => $transaction->id,
+                    'account_code' => '201',
+                    'account_name' => 'Student Savings Liability',
+                    'position' => 'credit',
+                    'amount' => $amount,
+                    'entry_date' => now(),
+                ]);
+
+                return $transaction;
+            });
+        } finally {
+            $lock->release();
+        }
     }
 
     /**
-     * Process cash withdrawal at teller counter with PIN verification & minimum holding balance check.
+     * Process cash withdrawal at teller counter with PIN verification (manual or mobile in-app authorization) & minimum holding balance check.
      *
      * @param Saver $saver
      * @param int $amount
-     * @param string $pin 6-digit PIN input by customer
+     * @param string|null $pin 6-digit PIN input by customer (if manual)
      * @param int $tellerId
      * @param string|null $description
+     * @param string|null $authorizationToken Mobile authorization token (if approved via app)
      * @return Transaction
      * @throws Exception
      */
     public function withdraw(
         Saver $saver,
         int $amount,
-        string $pin,
+        ?string $pin,
         int $tellerId,
-        ?string $description = null
+        ?string $description = null,
+        ?string $authorizationToken = null
     ): Transaction {
         if ($amount < self::MINIMUM_TRANSACTION_AMOUNT) {
             throw new Exception('Nominal penarikan tunai minimal adalah Rp ' . number_format(self::MINIMUM_TRANSACTION_AMOUNT, 0, ',', '.') . '.');
         }
 
-        // Verify Customer 6-digit Security PIN
-        if (!Hash::check($pin, $saver->security_pin)) {
-            throw new Exception('PIN keamanan nasabah salah! Transaksi penarikan dibatalkan.');
+        $authRequest = null;
+        if (!empty($authorizationToken)) {
+            $authRequest = \App\Models\PinAuthorizationRequest::where('token', $authorizationToken)
+                ->where('saver_id', $saver->id)
+                ->where('status', 'approved')
+                ->first();
+
+            if (!$authRequest) {
+                throw new Exception('Otorisasi PIN mobile tidak valid atau belum disetujui.');
+            }
+            if ($authRequest->amount != $amount) {
+                throw new Exception('Nominal penarikan berbeda dengan nominal otorisasi mobile.');
+            }
+        } else {
+            // Verify Customer 6-digit Security PIN manual
+            if (empty($pin) || !Hash::check($pin, $saver->security_pin)) {
+                throw new Exception('PIN keamanan nasabah salah! Transaksi penarikan dibatalkan.');
+            }
         }
 
-        return DB::transaction(function () use ($saver, $amount, $tellerId, $description) {
-            // Pessimistic locking
-            $lockedSaver = Saver::where('id', $saver->id)->lockForUpdate()->firstOrFail();
+        // Atomic lock (5 detik) untuk mencegah double-entry jika tombol ditekan berulang
+        $lock = Cache::lock("transaction:saver:{$saver->id}", 5);
+        if (!$lock->get()) {
+            throw new Exception('Transaksi untuk nasabah ini sedang diproses. Mohon tunggu beberapa detik untuk menghindari transaksi ganda.');
+        }
 
-            $balanceBefore = $lockedSaver->balance;
+        try {
+            return DB::transaction(function () use ($saver, $amount, $tellerId, $description, $authRequest) {
+                // Pessimistic locking
+                $lockedSaver = Saver::where('id', $saver->id)->lockForUpdate()->firstOrFail();
 
-            // Check Minimum Holding Balance Rule (Rp 10.000)
-            if (($balanceBefore - $amount) < self::MINIMUM_HOLDING_BALANCE) {
-                $maxWithdrawable = max(0, $balanceBefore - self::MINIMUM_HOLDING_BALANCE);
-                throw new Exception(
-                    "Penarikan ditolak! Saldo mengendap minimal adalah Rp " . number_format(self::MINIMUM_HOLDING_BALANCE, 0, ',', '.') .
-                    ". Saldo saat ini: Rp " . number_format($balanceBefore, 0, ',', '.') .
-                    ". Maksimal yang dapat ditarik: Rp " . number_format($maxWithdrawable, 0, ',', '.') . "."
-                );
-            }
+                $balanceBefore = $lockedSaver->balance;
 
-            $balanceAfter = $balanceBefore - $amount;
+                // Check Minimum Holding Balance Rule (Rp 10.000)
+                if (($balanceBefore - $amount) < self::MINIMUM_HOLDING_BALANCE) {
+                    $maxWithdrawable = max(0, $balanceBefore - self::MINIMUM_HOLDING_BALANCE);
+                    throw new Exception(
+                        "Penarikan ditolak! Saldo mengendap minimal adalah Rp " . number_format(self::MINIMUM_HOLDING_BALANCE, 0, ',', '.') .
+                        ". Saldo saat ini: Rp " . number_format($balanceBefore, 0, ',', '.') .
+                        ". Maksimal yang dapat ditarik: Rp " . number_format($maxWithdrawable, 0, ',', '.') . "."
+                    );
+                }
 
-            // 1. Update Saver Balance
-            $lockedSaver->update(['balance' => $balanceAfter]);
+                $balanceAfter = $balanceBefore - $amount;
 
-            // 1b. Update Account Record if exists
-            $account = \App\Models\Account::where('saver_id', $lockedSaver->id)->first();
-            if ($account) {
-                $account->update(['balance' => $balanceAfter]);
-            }
+                // 1. Update Saver Balance
+                $lockedSaver->update(['balance' => $balanceAfter]);
 
-            // 2. Record Transaction
-            $transactionCode = 'TRX-' . date('Ymd') . '-' . str_pad((string) (Transaction::count() + 1), 4, '0', STR_PAD_LEFT);
-            $transaction = Transaction::create([
-                'transaction_code' => $transactionCode,
-                'saver_id'         => $lockedSaver->id,
-                'account_id'       => $account?->id,
-                'user_id'          => $tellerId,
-                'transaction_type' => 'withdrawal',
-                'amount'           => $amount,
-                'balance_before'   => $balanceBefore,
-                'balance_after'    => $balanceAfter,
-                'description'      => $description ?? 'Penarikan Tunai di Loket Teller',
-                'transaction_date' => now(),
-            ]);
+                // 1b. Update Account Record if exists
+                $account = \App\Models\Account::where('saver_id', $lockedSaver->id)->first();
+                if ($account) {
+                    $account->update(['balance' => $balanceAfter]);
+                }
 
-            // 3. Double-Entry Accounting Journal
-            // Debit: Simpanan Nasabah (201)
-            AccountingJournal::create([
-                'transaction_id' => $transaction->id,
-                'account_code' => '201',
-                'account_name' => 'Student Savings Liability',
-                'position' => 'debit',
-                'amount' => $amount,
-                'entry_date' => now(),
-            ]);
+                // 2. Record Transaction
+                $transactionCode = 'TRX-' . date('Ymd') . '-' . str_pad((string) (Transaction::count() + 1), 4, '0', STR_PAD_LEFT);
+                $transaction = Transaction::create([
+                    'transaction_code' => $transactionCode,
+                    'saver_id'         => $lockedSaver->id,
+                    'account_id'       => $account?->id,
+                    'user_id'          => $tellerId,
+                    'transaction_type' => 'withdrawal',
+                    'amount'           => $amount,
+                    'balance_before'   => $balanceBefore,
+                    'balance_after'    => $balanceAfter,
+                    'description'      => $description ?? 'Penarikan Tunai di Loket Teller',
+                    'transaction_date' => now(),
+                ]);
 
-            // Credit: Kas Teller (101)
-            AccountingJournal::create([
-                'transaction_id' => $transaction->id,
-                'account_code' => '101',
-                'account_name' => 'Cash at Teller',
-                'position' => 'credit',
-                'amount' => $amount,
-                'entry_date' => now(),
-            ]);
+                // If an authorization request was used, mark it as completed
+                if ($authRequest) {
+                    $authRequest->update(['status' => 'completed']);
+                }
 
-            return $transaction;
-        });
+                // 3. Double-Entry Accounting Journal
+                // Debit: Simpanan Nasabah (201)
+                AccountingJournal::create([
+                    'transaction_id' => $transaction->id,
+                    'account_code' => '201',
+                    'account_name' => 'Student Savings Liability',
+                    'position' => 'debit',
+                    'amount' => $amount,
+                    'entry_date' => now(),
+                ]);
+
+                // Credit: Kas Teller (101)
+                AccountingJournal::create([
+                    'transaction_id' => $transaction->id,
+                    'account_code' => '101',
+                    'account_name' => 'Cash at Teller',
+                    'position' => 'credit',
+                    'amount' => $amount,
+                    'entry_date' => now(),
+                ]);
+
+                return $transaction;
+            });
+        } finally {
+            $lock->release();
+        }
     }
 
     /**

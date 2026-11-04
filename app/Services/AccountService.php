@@ -53,7 +53,8 @@ class AccountService
         Member $member,
         int $initialDeposit = 10000,
         string $pin = '123456',
-        int $processedByUserId = 1
+        int $processedByUserId = 1,
+        ?string $password = null
     ): Saver {
         if ($member->registration_status === 'registered') {
             throw new Exception("Siswa {$member->full_name} sudah memiliki rekening tabungan aktif.");
@@ -67,22 +68,26 @@ class AccountService
             throw new Exception('PIN keamanan harus berupa 6 digit angka.');
         }
 
-        return DB::transaction(function () use ($member, $initialDeposit, $pin, $processedByUserId) {
+        return DB::transaction(function () use ($member, $initialDeposit, $pin, $processedByUserId, $password) {
             // 1. Generate Account Number
             $accountNumber = $this->generateAccountNumber($member->major, $member->cohort);
 
             // 2. Create User login account for student (if not exists)
             $user = User::where('email', $member->email)->first();
+            $accountPassword = $password ?: $pin;
             if (!$user) {
                 $user = User::create([
                     'name' => $member->full_name,
                     'email' => $member->email,
-                    'password' => Hash::make($pin), // Default password matches initial PIN
+                    'password' => Hash::make($accountPassword),
                     'role' => 'saver',
                     'status' => 'active',
                 ]);
             } else {
-                $user->update(['role' => 'saver']);
+                $user->update([
+                    'role' => 'saver',
+                    'password' => Hash::make($accountPassword),
+                ]);
             }
 
             // 3. Generate and save QR Code

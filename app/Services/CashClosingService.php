@@ -16,14 +16,25 @@ class CashClosingService
     {
         $targetDate = $date ?? now()->toDateString();
 
-        // 1. Get Opening Balance (Yesterday's approved system balance or 0)
-        $previousClosing = DailyClosing::where('teller_id', $tellerId)
-            ->where('closing_date', '<', $targetDate)
-            ->where('status', 'approved')
-            ->orderBy('closing_date', 'desc')
+        // 1. Get Opening Balance: cek apakah teller sudah input modal hari ini
+        $todayClosing = DailyClosing::where('teller_id', $tellerId)
+            ->whereDate('closing_date', $targetDate)
             ->first();
 
-        $openingBalance = $previousClosing ? $previousClosing->system_balance : 0;
+        if ($todayClosing) {
+            $openingBalance = (int) $todayClosing->opening_balance;
+            $hasSetOpening = true;
+        } else {
+            // Cek saldo akhir kemarin yang approved, atau 0
+            $previousClosing = DailyClosing::where('teller_id', $tellerId)
+                ->where('closing_date', '<', $targetDate)
+                ->where('status', 'approved')
+                ->orderBy('closing_date', 'desc')
+                ->first();
+
+            $openingBalance = $previousClosing ? (int) $previousClosing->system_balance : 0;
+            $hasSetOpening = false;
+        }
 
         // 2. Sum deposits processed by this teller today
         $totalDeposits = (int) Transaction::where('user_id', $tellerId)
@@ -37,7 +48,7 @@ class CashClosingService
             ->where('transaction_type', 'withdrawal')
             ->sum('amount');
 
-        // 4. Formula: Opening + Deposits - Withdrawals
+        // 4. Formula: Modal Awal + Setoran Masuk - Penarikan Keluar
         $systemBalance = $openingBalance + $totalDeposits - $totalWithdrawals;
 
         // 5. Total count of transactions
@@ -54,6 +65,7 @@ class CashClosingService
         return [
             'date'              => $targetDate,
             'opening_balance'   => $openingBalance,
+            'has_set_opening'   => $hasSetOpening,
             'total_deposits'    => $totalDeposits,
             'total_withdrawals' => $totalWithdrawals,
             'system_balance'    => $systemBalance,
@@ -65,16 +77,64 @@ class CashClosingService
     }
 
     /**
+     * Input or update opening cash capital given by supervisor for today.
+     */
+    public function setOpeningBalance(int $tellerId, int $openingBalance, ?string $date = null): DailyClosing
+    {
+        $targetDate = $date ?? now()->toDateString();
+
+        $closing = DailyClosing::firstOrNew([
+            'teller_id'    => $tellerId,
+            'closing_date' => $targetDate,
+        ]);
+
+        if (in_array($closing->status, ['submitted', 'approved'], true)) {
+            throw new Exception('Buku kas hari ini sudah diajukan/ditutup dan tidak dapat mengubah modal awal.');
+        }
+
+        $totalDeposits = (int) Transaction::where('user_id', $tellerId)
+            ->whereDate('transaction_date', $targetDate)
+            ->where('transaction_type', 'deposit')
+            ->sum('amount');
+
+        $totalWithdrawals = (int) Transaction::where('user_id', $tellerId)
+            ->whereDate('transaction_date', $targetDate)
+            ->where('transaction_type', 'withdrawal')
+            ->sum('amount');
+
+        $systemBalance = $openingBalance + $totalDeposits - $totalWithdrawals;
+
+        $closing->opening_balance   = $openingBalance;
+        $closing->total_deposits    = $totalDeposits;
+        $closing->total_withdrawals = $totalWithdrawals;
+        $closing->system_balance    = $systemBalance;
+        if (!$closing->exists) {
+            $closing->status       = 'draft';
+            $closing->vault_status = 'with_teller';
+        }
+        $closing->save();
+
+        return $closing;
+    }
+
+    /**
      * Submit teller cash closing for daily reconciliation.
      *
      * @param int $tellerId
      * @param int $physicalCash
+     * @param int|null $openingBalance
      * @param string|null $notes
      * @return DailyClosing
      */
-    public function submitClosing(int $tellerId, int $physicalCash, ?string $notes = null): DailyClosing
+    public function submitClosing(int $tellerId, int $physicalCash, ?int $openingBalance = null, ?string $notes = null): DailyClosing
     {
-        $summary = $this->getDailySummary($tellerId);
+        $targetDate = now()->toDateString();
+
+        if ($openingBalance !== null) {
+            $this->setOpeningBalance($tellerId, $openingBalance, $targetDate);
+        }
+
+        $summary = $this->getDailySummary($tellerId, $targetDate);
 
         $difference = $physicalCash - $summary['system_balance'];
         $status = ($difference === 0) ? 'submitted' : 'discrepancy';

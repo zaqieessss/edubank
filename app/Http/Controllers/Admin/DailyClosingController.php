@@ -34,7 +34,27 @@ class DailyClosingController extends Controller
     {
         $dailyClosing->load(['teller', 'admin']);
 
-        return view('admin.daily-closings.show', compact('dailyClosing'));
+        // Ambil seluruh transaksi hari itu yang diproses oleh teller closing bersangkutan
+        $transactions = \App\Models\Transaction::with('saver')
+            ->where('user_id', $dailyClosing->teller_id)
+            ->whereDate('transaction_date', $dailyClosing->closing_date)
+            ->orderBy('id', 'asc')
+            ->get();
+
+        return view('admin.daily-closings.show', compact('dailyClosing', 'transactions'));
+    }
+
+    public function print(DailyClosing $dailyClosing)
+    {
+        $dailyClosing->load(['teller', 'admin']);
+
+        $transactions = \App\Models\Transaction::with('saver')
+            ->where('user_id', $dailyClosing->teller_id)
+            ->whereDate('transaction_date', $dailyClosing->closing_date)
+            ->orderBy('id', 'asc')
+            ->get();
+
+        return view('admin.daily-closings.print', compact('dailyClosing', 'transactions'));
     }
 
     public function approve(DailyClosing $dailyClosing)

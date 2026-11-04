@@ -6,6 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') - Edubank SMKN 1 Bantul</title>
 
+    <!-- Favicon (Icon Tab Browser) -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-blue.png') }}">
+
     <!-- Google Fonts: Plus Jakarta Sans (Crisp, Modern, Eye-Friendly) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +20,7 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #E8EEF5;
+            background-color: #F8FAFC;
             color: #0F172A;
             -webkit-font-smoothing: antialiased;
         }
@@ -38,31 +41,38 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94A3B8;
         }
+
+        /* Utility: Hide Scrollbar but keep scrollability */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
     @stack('styles')
 </head>
-<body class="h-screen w-screen p-2.5 md:p-3.5 flex items-center justify-center overflow-hidden">
+<body class="h-screen w-screen p-0 flex overflow-hidden bg-[#F8FAFC]">
 
-    <!-- Floating Master Application Container (Fluid & Responsive to Any Screen Size) -->
-    <div class="w-full h-full bg-[#F8FAFC] rounded-[28px] md:rounded-[32px] border border-white/80 shadow-[0_20px_50px_-15px_rgba(15,23,42,0.07)] flex overflow-hidden p-3 md:p-4 gap-3.5 relative">
+    <!-- Full-bleed Container (Full ke pojokan layar, tanpa card luar) -->
+    <div class="w-full h-full flex overflow-hidden p-3 md:p-3.5 gap-3 relative">
 
         <!-- ========================================================================= -->
         <!-- FLOATING SIDEBAR DOCK (Melayang Ramping & Elegan)                          -->
         <!-- ========================================================================= -->
-        <aside class="w-18 md:w-20 bg-white/95 backdrop-blur-md rounded-[26px] border border-slate-200/70 shadow-sm flex flex-col items-center py-4 justify-between shrink-0 select-none z-30">
+        <aside class="w-18 md:w-20 bg-white/95 backdrop-blur-md rounded-[26px] border border-slate-200/80 shadow-[0_10px_30px_-5px_rgba(15,23,42,0.06)] flex flex-col items-center py-4 justify-between shrink-0 select-none z-30">
             
             <!-- Logo Icon -->
             <div class="flex flex-col items-center gap-1">
-                <a href="{{ route('admin.dashboard') }}" class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-500 flex items-center justify-center shadow-md shadow-blue-500/25 group transition-transform hover:scale-105 active:scale-95" title="Edubank SMKN 1 Bantul">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                    </svg>
+                <a href="{{ route('admin.dashboard') }}" class="w-12 h-12 flex items-center justify-center group transition-transform hover:scale-110 active:scale-95" title="Edubank SMKN 1 Bantul">
+                    <img src="{{ asset('images/logo-blue.png') }}" alt="Edubank Logo" class="w-11 h-11 object-contain drop-shadow-xs">
                 </a>
-                <span class="text-[9px] font-bold text-slate-400 tracking-wider uppercase mt-1">Edubank</span>
+                <span class="text-[9px] font-bold text-slate-400 tracking-wider uppercase">Edubank</span>
             </div>
 
-            <!-- Navigation Menu Icons -->
-            <nav class="flex flex-col items-center gap-2 w-full px-2 my-auto">
+            <!-- Navigation Menu Icons (Responsive max-height with no-scrollbar) -->
+            <nav class="flex flex-col items-center gap-1.5 md:gap-2 w-full px-2 my-auto overflow-y-auto no-scrollbar max-h-[calc(100vh-170px)]">
                 @if(Auth::user()->role === 'admin')
                     <!-- 1. Dashboard -->
                     <a href="{{ route('admin.dashboard') }}" 
@@ -141,6 +151,17 @@
                         </span>
                     </a>
 
+                    <!-- 8. Laporan Transaksi Bulanan -->
+                    <a href="{{ route('admin.transactions.index') }}" 
+                       class="relative group w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 {{ request()->routeIs('admin.transactions.*') ? 'bg-slate-900 text-white shadow-md shadow-slate-900/20' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100/80' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                        <span class="absolute left-16 bg-slate-900 text-white text-[11px] font-semibold px-2.5 py-1 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg z-50">
+                            Laporan Transaksi
+                        </span>
+                    </a>
+
                     <!-- 8. Setting (Konfigurasi Sistem) -->
                     <a href="{{ route('admin.settings.index') }}" 
                        class="relative group w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 {{ request()->routeIs('admin.settings.*') ? 'bg-slate-900 text-white shadow-md shadow-slate-900/20' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100/80' }}">
@@ -175,7 +196,18 @@
                         </span>
                     </a>
 
-                    <!-- 3. Daily Report (Rekonsiliasi Kas Harian) -->
+                    <!-- 3. Buka Rekening & Nasabah (Tabungan Siswa) -->
+                    <a href="{{ route('teller.savers.index') }}" 
+                       class="relative group w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 {{ request()->routeIs('teller.savers.*') ? 'bg-slate-900 text-white shadow-md shadow-slate-900/20' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100/80' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                        </svg>
+                        <span class="absolute left-16 bg-slate-900 text-white text-[11px] font-semibold px-2.5 py-1 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg z-50">
+                            Buka Rekening
+                        </span>
+                    </a>
+
+                    <!-- 4. Daily Report (Rekonsiliasi Kas Harian) -->
                     <a href="{{ route('teller.daily-closings.index') }}" 
                        class="relative group w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 {{ request()->routeIs('teller.daily-closings.*') ? 'bg-slate-900 text-white shadow-md shadow-slate-900/20' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100/80' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -241,18 +273,19 @@
                     <h1 class="text-xs font-bold text-slate-800 uppercase tracking-wider">@yield('page_title', 'Dashboard')</h1>
                 </div>
 
-                <!-- Kanan: Quick Date, Badges & Profile Pill -->
+                <!-- Kanan: Quick Date & Profile Pill -->
                 <div class="flex items-center gap-3">
-                    <!-- Academic Year Badge -->
-                    <div class="hidden sm:flex items-center gap-1.5 bg-blue-50/80 text-blue-700 border border-blue-200/60 rounded-full px-3 py-1 text-[11px] font-semibold">
-                        <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
-                        TA 2026/2027
-                    </div>
-
-                    <!-- Clock / Date -->
-                    <div class="hidden lg:block text-right">
-                        <p class="text-[11px] font-semibold text-slate-600">{{ date('d M Y') }}</p>
-                        <p class="text-[10px] text-slate-400">SMKN 1 Bantul</p>
+                    <!-- Real-Time Clock & Date (Jam, Menit, Detik Dunia Nyata) -->
+                    <div class="hidden sm:flex items-center gap-2.5 px-3 py-1 bg-slate-50 border border-slate-200/70 rounded-2xl select-none">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                        <div class="text-right leading-tight">
+                            <div class="text-xs font-mono font-bold text-slate-800 tracking-wider" id="appLiveClock">
+                                {{ now()->format('H:i:s') }} WIB
+                            </div>
+                            <div class="text-[10px] text-slate-400 font-medium" id="appLiveDate">
+                                {{ \Carbon\Carbon::now()->translatedFormat('l, d M Y') }}
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Profile Pill Button -->
@@ -270,22 +303,30 @@
 
             <!-- FLASH ALERTS (Pemberitahuan Sukses / Error yang Lembut) -->
             @if(session('success'))
-                <div class="bg-emerald-50 border border-emerald-200/80 text-emerald-800 px-3.5 py-2 rounded-2xl text-xs flex items-center justify-between shadow-sm animate-fade-in shrink-0">
-                    <div class="flex items-center gap-2">
+                <div class="flash-alert bg-emerald-50 border border-emerald-200/80 text-emerald-800 px-3.5 py-2.5 rounded-2xl text-xs flex items-center justify-between shadow-sm animate-fade-in shrink-0 gap-3">
+                    <div class="flex items-center gap-2 flex-1">
                         <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                        <span>{{ session('success') }}</span>
+                        <span class="leading-relaxed">{{ session('success') }}</span>
                     </div>
-                    <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-800 text-sm font-bold">&times;</button>
+                    <button type="button" onclick="this.closest('.flash-alert').remove()" aria-label="Tutup notifikasi" class="inline-flex items-center justify-center w-6 h-6 rounded-lg text-emerald-500 hover:text-emerald-800 hover:bg-emerald-100/60 transition-colors shrink-0 my-auto cursor-pointer">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
                 </div>
             @endif
 
             @if(session('error'))
-                <div class="bg-rose-50 border border-rose-200/80 text-rose-800 px-3.5 py-2 rounded-2xl text-xs flex items-center justify-between shadow-sm animate-fade-in shrink-0">
-                    <div class="flex items-center gap-2">
+                <div class="flash-alert bg-rose-50 border border-rose-200/80 text-rose-800 px-3.5 py-2.5 rounded-2xl text-xs flex items-center justify-between shadow-sm animate-fade-in shrink-0 gap-3">
+                    <div class="flex items-center gap-2 flex-1">
                         <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                        <span>{{ session('error') }}</span>
+                        <span class="leading-relaxed">{{ session('error') }}</span>
                     </div>
-                    <button type="button" onclick="this.parentElement.remove()" class="text-rose-500 hover:text-rose-800 text-sm font-bold">&times;</button>
+                    <button type="button" onclick="this.closest('.flash-alert').remove()" aria-label="Tutup notifikasi" class="inline-flex items-center justify-center w-6 h-6 rounded-lg text-rose-500 hover:text-rose-800 hover:bg-rose-100/60 transition-colors shrink-0 my-auto cursor-pointer">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
                 </div>
             @endif
 
@@ -388,6 +429,23 @@
 
             document.addEventListener('DOMContentLoaded', setupCurrencyInputs);
             window.setupCurrencyInputs = setupCurrencyInputs;
+
+            // Live Real-Time Clock Ticker (Jam Menit Detik WIB Dunia Nyata)
+            function initLiveRealtimeClock() {
+                const clockEl = document.getElementById('appLiveClock');
+                if (!clockEl) return;
+
+                function tick() {
+                    const now = new Date();
+                    const h = String(now.getHours()).padStart(2, '0');
+                    const m = String(now.getMinutes()).padStart(2, '0');
+                    const s = String(now.getSeconds()).padStart(2, '0');
+                    clockEl.textContent = `${h}:${m}:${s} WIB`;
+                }
+                tick();
+                setInterval(tick, 1000);
+            }
+            document.addEventListener('DOMContentLoaded', initLiveRealtimeClock);
         })();
     </script>
 </body>

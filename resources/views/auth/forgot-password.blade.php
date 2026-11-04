@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lupa Password - Edubank SMKN 1 Bantul</title>
+    <title>Lupa Kata Sandi - Edubank SMKN 1 Bantul</title>
+
+    <!-- Favicon (Icon Tab Browser) -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-blue.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,53 +24,107 @@
 </head>
 <body class="min-h-screen p-3 md:p-6 flex items-center justify-center">
 
-    <!-- Floating Container -->
-    <div class="w-full max-w-md bg-white/95 backdrop-blur-md rounded-[32px] border border-white/80 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.1)] p-8 relative space-y-6">
+    <!-- Container Form (Identik dengan Desain Form Login) -->
+    <div class="w-full max-w-4xl bg-white/95 backdrop-blur-md rounded-[32px] border border-white/80 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.1)] overflow-hidden grid grid-cols-1 md:grid-cols-12 relative">
         
-        <div class="text-center space-y-2">
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center mx-auto shadow-md shadow-blue-500/25">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+        <!-- LEFT HERO (5 Cols): Branding & Atmosphere -->
+        <div class="md:col-span-5 bg-gradient-to-br from-blue-600 via-indigo-600 to-slate-900 p-8 text-white flex flex-col justify-between relative overflow-hidden">
+            <!-- Background Glow -->
+            <div class="absolute -top-12 -left-12 w-48 h-48 bg-blue-400/30 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -right-12 w-48 h-48 bg-indigo-400/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center mb-6 shadow-inner">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-extrabold mt-3 tracking-tight leading-snug">Edubank</h1>
+                <p class="text-xs text-blue-100/80 mt-1 leading-relaxed">
+                    Bank Mini SMKN 1 Bantul
+                </p>
             </div>
-            <h2 class="text-lg font-extrabold text-slate-900">Pemulihan Password</h2>
-            <p class="text-xs text-slate-500 leading-relaxed">
-                Masukkan alamat email yang terdaftar pada akun Anda. Sistem akan membuatkan tautan pengaturan ulang kata sandi.
-            </p>
+
+            <!-- Steps Mini Checklist -->
+            <div class="relative z-10 space-y-2.5 pt-6 border-t border-white/15 text-[11px] text-blue-100/90 font-medium">
+                <div class="flex items-center gap-2">
+                    <span class="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-[10px] font-bold">1</span>
+                    <span>Masukkan alamat email terdaftar</span>
+                </div>
+                <div class="flex items-center gap-2 text-white/50">
+                    <span class="w-5 h-5 rounded-full bg-white/10 text-white/50 flex items-center justify-center text-[10px] font-bold">2</span>
+                    <span>Verifikasi 6 digit kode OTP email</span>
+                </div>
+                <div class="flex items-center gap-2 text-white/50">
+                    <span class="w-5 h-5 rounded-full bg-white/10 text-white/50 flex items-center justify-center text-[10px] font-bold">3</span>
+                    <span>Buat kata sandi baru yang aman</span>
+                </div>
+            </div>
+
+            <div class="relative z-10 pt-4 text-[10px] text-blue-200/60 font-medium">
+                &copy; {{ date('Y') }} SMKN 1 Bantul
+            </div>
         </div>
 
-        @if(session('status'))
-            <div class="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-xs space-y-1">
-                <span class="font-bold block">Tautan Reset Password:</span>
-                <p class="text-[11px] break-all">{{ session('status') }}</p>
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('password.email') }}" class="space-y-4">
-            @csrf
-
-            <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Alamat Email Terdaftar</label>
-                <input type="email" 
-                       name="email" 
-                       value="{{ old('email') }}" 
-                       required 
-                       placeholder="nama@siswa.edubank.test" 
-                       class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
-                @error('email')
-                    <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
-                @enderror
+        <!-- RIGHT FORM (7 Cols): Form Input Email -->
+        <div class="md:col-span-7 p-7 md:p-10 flex flex-col justify-center bg-white">
+            <div class="mb-6">
+                <h2 class="text-xl font-extrabold text-slate-800 tracking-tight">Lupa Kata Sandi?</h2>
+                <p class="text-xs text-slate-500 mt-1">Masukkan email akun Anda. Kami akan mengirimkan 6 digit kode verifikasi OTP.</p>
             </div>
 
-            <button type="submit" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl text-xs font-bold transition-all shadow-md shadow-slate-900/10">
-                Kirim Tautan Reset Password
-            </button>
-        </form>
+            @if(session('error'))
+                <div class="mb-4 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+                    <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>{{ session('error') }}</span>
+                </div>
+            @endif
 
-        <div class="pt-4 border-t border-slate-100 text-center">
-            <a href="{{ route('login') }}" class="text-xs font-bold text-blue-600 hover:text-blue-800 inline-flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                <span>Kembali ke Halaman Login</span>
-            </a>
+            @if(session('success'))
+                <div class="mb-4 p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-2">
+                    <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span>{{ session('success') }}</span>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('password.email') }}" class="space-y-4">
+                @csrf
+
+                <!-- Email Input -->
+                <div>
+                    <label for="email" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Alamat Email Terdaftar</label>
+                    <div class="relative">
+                        <input type="email" 
+                               id="email" 
+                               name="email" 
+                               value="{{ old('email') }}" 
+                               required 
+                               autofocus
+                               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                               placeholder="nama@edubank.test">
+                    </div>
+                    @error('email')
+                        <p class="text-[10px] text-rose-600 font-semibold mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" 
+                        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs py-3 rounded-xl shadow-md shadow-blue-500/20 hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer">
+                    <span>Kirim Kode OTP</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
+
+                <!-- Back to Login -->
+                <div class="text-center pt-2">
+                    <a href="{{ route('login') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-blue-600 transition-colors">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                        <span>Kembali ke Halaman Login</span>
+                    </a>
+                </div>
+            </form>
         </div>
+
     </div>
 
 </body>

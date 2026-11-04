@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Saver\DashboardController as SaverDashboardController;
 use App\Http\Controllers\Teller\DailyClosingController as TellerClosingController;
 use App\Http\Controllers\Teller\DashboardController as TellerDashboardController;
+use App\Http\Controllers\Teller\SaverController as TellerSaverController;
 use App\Http\Controllers\Teller\TransactionController as TellerTransactionController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,14 +24,17 @@ Route::get('/', function () {
 
 Route::controller(AuthController::class)->group(function () {
     Route::get('/login', 'showLogin')->name('login');
-    Route::post('/login', 'login')->name('login.post');
-    Route::post('/logout', 'logout')->name('logout')->middleware('auth');
+    Route::post('/login', 'login')->name('login.post')->middleware('throttle:10,1');
+    Route::match(['get', 'post'], '/logout', 'logout')->name('logout');
 
-    // Forgot & Reset Password
+    // Forgot & Reset Password with OTP Flow
     Route::get('/forgot-password', 'showForgotPassword')->name('password.request');
-    Route::post('/forgot-password', 'sendResetLink')->name('password.email');
+    Route::post('/forgot-password', 'sendResetOtp')->name('password.email')->middleware('throttle:5,1');
+    Route::get('/verify-otp', 'showVerifyOtp')->name('password.otp.view');
+    Route::post('/verify-otp', 'verifyOtp')->name('password.otp.verify')->middleware('throttle:10,1');
+    Route::post('/resend-otp', 'resendOtp')->name('password.otp.resend')->middleware('throttle:3,1');
     Route::get('/reset-password/{token}', 'showResetPassword')->name('password.reset');
-    Route::post('/reset-password', 'resetPassword')->name('password.update');
+    Route::post('/reset-password', 'resetPassword')->name('password.update')->middleware('throttle:5,1');
 });
 
 /*
@@ -44,6 +48,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // School Members (600 Students) Management
     Route::get('/members/template', [AdminMemberController::class, 'downloadTemplate'])->name('members.template');
     Route::post('/members/import', [AdminMemberController::class, 'import'])->name('members.import');
+    Route::get('/members/search-active', [AdminMemberController::class, 'searchActiveMembers'])->name('members.search-active');
     Route::post('/members/promote-grades', [AdminMemberController::class, 'promoteGrades'])->name('members.promote');
     Route::resource('members', AdminMemberController::class)->except(['show']);
 
@@ -61,12 +66,18 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Daily Closings & Vault Transfer Approval (Daily Report)
     Route::get('/daily-closings', [AdminClosingController::class, 'index'])->name('daily-closings.index');
+    Route::get('/daily-closings/{dailyClosing}/print', [AdminClosingController::class, 'print'])->name('daily-closings.print');
     Route::get('/daily-closings/{dailyClosing}', [AdminClosingController::class, 'show'])->name('daily-closings.show');
     Route::post('/daily-closings/{dailyClosing}/approve', [AdminClosingController::class, 'approve'])->name('daily-closings.approve');
     Route::post('/daily-closings/{dailyClosing}/reject', [AdminClosingController::class, 'reject'])->name('daily-closings.reject');
 
     // Double-Entry Accounting Journal Audit (Journal)
     Route::get('/accounting-journals', [AdminJournalController::class, 'index'])->name('accounting-journals.index');
+
+    // Monthly Transactions Report & Audit
+    Route::get('/transactions', [\App\Http\Controllers\Admin\TransactionReportController::class, 'index'])->name('transactions.index');
+    Route::get('/transactions/print', [\App\Http\Controllers\Admin\TransactionReportController::class, 'print'])->name('transactions.print');
+    Route::get('/transactions/{transaction}', [\App\Http\Controllers\Admin\TransactionReportController::class, 'show'])->name('transactions.show');
 
     // System Settings (Setting)
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
@@ -83,17 +94,33 @@ Route::middleware(['auth', 'role:teller'])->prefix('teller')->name('teller.')->g
 
     // Transactions Ledger & Receipts
     Route::get('/transactions', [TellerTransactionController::class, 'index'])->name('transactions.index');
-    Route::get('/scanner', [TellerTransactionController::class, 'scanner'])->name('transactions.scanner');
-    Route::post('/search-account', [TellerTransactionController::class, 'searchAccount'])->name('transactions.search');
-    Route::get('/transactions/{saver}/create', [TellerTransactionController::class, 'create'])->name('transactions.create');
-    Route::post('/transactions/{saver}/deposit', [TellerTransactionController::class, 'deposit'])->name('transactions.deposit');
-    Route::post('/transactions/{saver}/withdraw', [TellerTransactionController::class, 'withdraw'])->name('transactions.withdraw');
     Route::get('/transactions/{transaction}/receipt', [TellerTransactionController::class, 'receipt'])->name('transactions.receipt');
+
+    // Operational Transaction Execution & Buka Rekening Baru (Dilarang jika kas hari ini sudah ditutup)
+    Route::middleware('check.daily.closing')->group(function () {
+        // Buka Rekening & Akun Nasabah oleh Teller
+        Route::get('/savers/create', [TellerSaverController::class, 'create'])->name('savers.create');
+        Route::post('/savers', [TellerSaverController::class, 'store'])->name('savers.store');
+
+        Route::get('/scanner', [TellerTransactionController::class, 'scanner'])->name('transactions.scanner');
+        Route::post('/search-account', [TellerTransactionController::class, 'searchAccount'])->name('transactions.search');
+        Route::get('/transactions/{saver}/create', [TellerTransactionController::class, 'create'])->name('transactions.create');
+        Route::post('/transactions/{saver}/deposit', [TellerTransactionController::class, 'deposit'])->name('transactions.deposit');
+        Route::post('/transactions/{saver}/withdraw', [TellerTransactionController::class, 'withdraw'])->name('transactions.withdraw');
+        Route::post('/transactions/{saver}/request-pin', [TellerTransactionController::class, 'requestPin'])->name('transactions.request-pin');
+        Route::get('/transactions/{saver}/pin-status/{requestId}', [TellerTransactionController::class, 'checkPinStatus'])->name('transactions.pin-status');
+        Route::post('/transactions/{saver}/pin-cancel/{requestId}', [TellerTransactionController::class, 'cancelPinRequest'])->name('transactions.pin-cancel');
+    });
+
+    // Direktori Nasabah & Detail Buku/Kartu (Read-Only)
+    Route::get('/savers', [TellerSaverController::class, 'index'])->name('savers.index');
+    Route::get('/savers/{saver}', [TellerSaverController::class, 'show'])->name('savers.show');
 
     // Cash Closing & Daily Reconciliation
     Route::get('/daily-closings', [TellerClosingController::class, 'index'])->name('daily-closings.index');
     Route::get('/daily-closings/create', [TellerClosingController::class, 'create'])->name('daily-closings.create');
     Route::post('/daily-closings', [TellerClosingController::class, 'store'])->name('daily-closings.store');
+    Route::post('/daily-closings/opening-balance', [TellerClosingController::class, 'setOpeningBalance'])->name('daily-closings.opening-balance');
 });
 
 /*

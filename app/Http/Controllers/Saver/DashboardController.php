@@ -25,7 +25,38 @@ class DashboardController extends Controller
 
         $recentTransactions = $saver->transactions()->take(10)->get();
 
-        return view('saver.dashboard', compact('saver', 'qrCodeDataUri', 'recentTransactions'));
+        // Calculate holding balance & withdrawable limit
+        $holdingBalance = 10000;
+        $maxWithdrawable = max(0, $saver->balance - $holdingBalance);
+
+        // Monthly stats for this saver
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+
+        $monthlyDeposits = (int) $saver->transactions()
+            ->where('transaction_type', 'deposit')
+            ->whereYear('transaction_date', $currentYear)
+            ->whereMonth('transaction_date', $currentMonth)
+            ->sum('amount');
+
+        $monthlyWithdrawals = (int) $saver->transactions()
+            ->where('transaction_type', 'withdrawal')
+            ->whereYear('transaction_date', $currentYear)
+            ->whereMonth('transaction_date', $currentMonth)
+            ->sum('amount');
+
+        $totalTransactionsCount = $saver->transactions()->count();
+
+        return view('saver.dashboard', compact(
+            'saver',
+            'qrCodeDataUri',
+            'recentTransactions',
+            'holdingBalance',
+            'maxWithdrawable',
+            'monthlyDeposits',
+            'monthlyWithdrawals',
+            'totalTransactionsCount'
+        ));
     }
 
     public function mutation(Request $request)

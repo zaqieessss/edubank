@@ -94,7 +94,7 @@
                                     <div class="font-semibold text-slate-800">
                                         {{ \Carbon\Carbon::parse($c->closing_date)->translatedFormat('d F Y') }}
                                     </div>
-                                    <div class="text-[10px] text-slate-400 font-mono">{{ $c->created_at->format('H:i') }} WIB</div>
+                                    <div class="text-[10px] text-slate-400 font-mono">{{ $c->created_at->format('H:i:s') }} WIB</div>
                                 </td>
                                 <td class="py-3 px-3">
                                     <div class="font-bold text-slate-800">{{ $c->teller?->name ?? 'Unknown' }}</div>

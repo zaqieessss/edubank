@@ -42,7 +42,7 @@ class MemberController extends Controller
             });
         }
 
-        $members = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
+        $members = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
 
         $majors = Major::cases();
         $grades = GradeLevel::cases();
@@ -124,8 +124,26 @@ class MemberController extends Controller
 
     public function destroy(Member $member)
     {
+        // Siswa yang sudah terdaftar sebagai nasabah atau memiliki riwayat transaksi TIDAK BOLEH dihapus
         if ($member->registration_status === 'registered' || $member->saver()->exists()) {
-            return back()->with('error', 'Gagal menghapus! Siswa ini sudah memiliki rekening tabungan aktif (ON DELETE RESTRICT).');
+            $saver = $member->saver;
+
+            // Jika statusnya belum alumni, ubah statusnya menjadi nonaktif
+            if ($saver) {
+                $saver->update([
+                    'status'      => 'inactive',
+                    'grade_level' => 'alumni',
+                ]);
+                if ($saver->user) {
+                    $saver->user->update(['status' => 'inactive']);
+                }
+            }
+
+            $member->update([
+                'grade_level' => 'alumni',
+            ]);
+
+            return back()->with('info', "Siswa {$member->full_name} memiliki data keuangan/rekening sehingga tidak dihapus permanen, melainkan statusnya dinonaktifkan (Alumni).");
         }
 
         $member->delete();
@@ -147,10 +165,11 @@ class MemberController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'csv_file' => ['required', 'file', 'mimes:csv,txt'],
+            'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
         ], [
             'csv_file.required' => 'Pilih file CSV terlebih dahulu.',
             'csv_file.mimes'    => 'File harus berformat CSV.',
+            'csv_file.max'      => 'Ukuran file CSV maksimal 5 MB.',
         ]);
 
         try {
@@ -164,15 +183,49 @@ class MemberController extends Controller
         }
     }
 
-    public function promoteGrades()
+    public function searchActiveMembers(Request $request)
     {
+        $q = trim((string) $request->input('q', ''));
+        if (strlen($q) < 1) {
+            return response()->json([]);
+        }
+
+        $members = Member::query()
+            ->where('grade_level', '!=', 'alumni')
+            ->where(function ($query) use ($q) {
+                $query->where('full_name', 'like', "%{$q}%")
+                      ->orWhere('student_id_number', 'like', "%{$q}%")
+                      ->orWhere('class_name', 'like', "%{$q}%");
+            })
+            ->orderBy('class_name')
+            ->orderBy('full_name')
+            ->limit(15)
+            ->get(['id', 'full_name', 'student_id_number', 'class_name', 'grade_level', 'major']);
+
+        return response()->json($members);
+    }
+
+    public function promoteGrades(Request $request)
+    {
+        $request->validate([
+            'excluded_member_ids' => ['nullable', 'array'],
+            'excluded_member_ids.*' => ['integer', 'exists:members,id'],
+        ]);
+
+        $excludedMemberIds = $request->input('excluded_member_ids', []);
+
         try {
-            $result = $this->memberService->promoteGrades();
+            $result = $this->memberService->promoteGrades($excludedMemberIds);
+
+            $excludedInfo = !empty($result['excluded_count']) && $result['excluded_count'] > 0
+                ? " ({$result['excluded_count']} siswa tinggal kelas/dikecualikan)"
+                : "";
 
             $message = "Kenaikan kelas massal berhasil diproses! " .
-                       "Kelas 10 ➔ 11: {$result['promoted_to_11']} siswa, " .
-                       "Kelas 11 ➔ 12: {$result['promoted_to_12']} siswa, " .
-                       "Kelas 12 ➔ Alumni: {$result['promoted_to_alumni']} siswa.";
+                       "Kelas 10 ke 11: {$result['promoted_to_11']} siswa, " .
+                       "Kelas 11 ke 12: {$result['promoted_to_12']} siswa, " .
+                       "Kelas 12 ke Alumni: {$result['promoted_to_alumni']} siswa." .
+                       $excludedInfo;
 
             return back()->with('success', $message);
         } catch (Exception $e) {

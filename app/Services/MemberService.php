@@ -207,22 +207,48 @@ class MemberService
      * 11 -> 12 (XI RPL 1 -> XII RPL 1)
      * 10 -> 11 (X RPL 1 -> XI RPL 1)
      *
+     * @param array $excludedMemberIds List of member IDs that should stay in their current grade (tidak naik kelas)
      * @return array Summary of updated records
      */
-    public function promoteGrades(): array
+    public function promoteGrades(array $excludedMemberIds = []): array
     {
-        return DB::transaction(function () {
-            // 1. Grade 12 -> Alumni
-            $twelfthCount = Member::where('grade_level', '12')->count();
-            Member::where('grade_level', '12')->update([
-                'grade_level' => 'alumni',
-            ]);
-            Saver::where('grade_level', '12')->update([
+        return DB::transaction(function () use ($excludedMemberIds) {
+            // Filter excluded IDs to integers
+            $excludedMemberIds = array_filter(array_map('intval', $excludedMemberIds));
+
+            // 1. Grade 12 -> Alumni (Ubah status siswa dan saver menjadi nonaktif/alumni, TIDAK dihapus)
+            $twelfthQuery = Member::where('grade_level', '12');
+            if (!empty($excludedMemberIds)) {
+                $twelfthQuery->whereNotIn('id', $excludedMemberIds);
+            }
+            $twelfthMembers = $twelfthQuery->get();
+            $twelfthCount = $twelfthMembers->count();
+            $twelfthMemberIds = $twelfthMembers->pluck('id');
+
+            Member::whereIn('id', $twelfthMemberIds)->update([
                 'grade_level' => 'alumni',
             ]);
 
+            // Ubah status saver menjadi inactive dan akun dibekukan/dinonaktifkan
+            $savers = Saver::whereIn('member_id', $twelfthMemberIds)->get();
+            foreach ($savers as $saver) {
+                $saver->update([
+                    'grade_level' => 'alumni',
+                    'status'      => 'inactive',
+                ]);
+
+                // Nonaktifkan user login agar alumni tidak bisa melakukan transaksi loket lagi
+                if ($saver->user) {
+                    $saver->user->update(['status' => 'inactive']);
+                }
+            }
+
             // 2. Grade 11 -> Grade 12
-            $eleventhMembers = Member::where('grade_level', '11')->get();
+            $eleventhQuery = Member::where('grade_level', '11');
+            if (!empty($excludedMemberIds)) {
+                $eleventhQuery->whereNotIn('id', $excludedMemberIds);
+            }
+            $eleventhMembers = $eleventhQuery->get();
             $eleventhCount = $eleventhMembers->count();
             foreach ($eleventhMembers as $m) {
                 $newClassName = preg_replace('/^XI\b/i', 'XII', $m->class_name);
@@ -241,7 +267,11 @@ class MemberService
             }
 
             // 3. Grade 10 -> Grade 11
-            $tenthMembers = Member::where('grade_level', '10')->get();
+            $tenthQuery = Member::where('grade_level', '10');
+            if (!empty($excludedMemberIds)) {
+                $tenthQuery->whereNotIn('id', $excludedMemberIds);
+            }
+            $tenthMembers = $tenthQuery->get();
             $tenthCount = $tenthMembers->count();
             foreach ($tenthMembers as $m) {
                 $newClassName = preg_replace('/^X\b/i', 'XI', $m->class_name);
@@ -264,6 +294,7 @@ class MemberService
                 'promoted_to_12'     => $eleventhCount,
                 'promoted_to_11'     => $tenthCount,
                 'total_affected'     => $twelfthCount + $eleventhCount + $tenthCount,
+                'excluded_count'     => count($excludedMemberIds),
             ];
         });
     }

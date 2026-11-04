@@ -39,7 +39,7 @@ class SaverController extends Controller
             });
         }
 
-        $savers = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
+        $savers = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
 
         return view('admin.savers.index', compact('savers'));
     }
@@ -61,9 +61,13 @@ class SaverController extends Controller
             'member_id'       => ['required', 'exists:members,id'],
             'initial_deposit' => ['required', 'integer', 'min:10000'],
             'security_pin'    => ['required', 'digits:6'],
+            'password'        => ['required', 'string', 'min:6', 'confirmed'],
         ], [
             'initial_deposit.min' => 'Setoran awal buka rekening minimal Rp 10.000.',
             'security_pin.digits' => 'PIN keamanan harus berupa 6 digit angka.',
+            'password.required'   => 'Kata sandi akun login siswa wajib diisi.',
+            'password.min'        => 'Kata sandi akun login minimal 6 karakter.',
+            'password.confirmed'  => 'Konfirmasi kata sandi tidak cocok.',
         ]);
 
         $member = Member::findOrFail($validated['member_id']);
@@ -73,7 +77,8 @@ class SaverController extends Controller
                 member: $member,
                 initialDeposit: (int) $validated['initial_deposit'],
                 pin: $validated['security_pin'],
-                processedByUserId: Auth::id()
+                processedByUserId: Auth::id(),
+                password: $validated['password']
             );
 
             return redirect()->route('admin.savers.show', $saver)

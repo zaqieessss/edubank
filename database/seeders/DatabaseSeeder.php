@@ -17,11 +17,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Create Default Admin (Combined Admin & Supervisor)
+        // 1. Create Default Admin
         $admin = User::create([
-            'name' => 'Administrator Bank Mini',
-            'email' => 'admin@edubank.test',
-            'password' => Hash::make('password'),
+            'name' => 'Zaqi Alfiansyah',
+            'email' => 'zaqqgravity@gmail.com',
+            'password' => Hash::make('zaqialfiansyah'),
             'role' => 'admin',
             'status' => 'active',
         ]);
@@ -126,7 +126,6 @@ class DatabaseSeeder extends Seeder
             'major' => $member1->major,
             'cohort' => $member1->cohort,
             'security_pin' => Hash::make('123456'), // Default PIN 123456
-            'balance' => 10000,
             'qr_code_path' => null,
             'joined_date' => now()->toDateString(),
             'status' => 'active',

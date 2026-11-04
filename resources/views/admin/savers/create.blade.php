@@ -38,21 +38,29 @@
                     </p>
                 </div>
 
-                <!-- 1. Pilih Siswa -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-800 mb-1.5">
-                        1. Pilih Siswa (Hanya menampilkan siswa yang belum memiliki rekening) *
-                    </label>
+                <!-- 1. Pilih Siswa (Dengan Search Bar Cepat) -->
+                <div class="relative" id="student_combobox_container">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="block text-xs font-bold text-slate-800">
+                            1. Pilih Siswa (Hanya siswa yang belum memiliki rekening) <span class="text-rose-500">*</span>
+                        </label>
+                        <span id="student_count_badge" class="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+                            {{ $unregisteredMembers->count() }} siswa tersedia
+                        </span>
+                    </div>
+
                     @if($unregisteredMembers->isEmpty())
                         <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-2xl text-xs">
                             Semua siswa di master database telah memiliki rekening tabungan! Jika ingin menambah nasabah baru, tambahkan terlebih dahulu melalui menu <a href="{{ route('admin.members.index') }}" class="font-bold underline">Members</a>.
                         </div>
                     @else
-                        <select name="member_id" id="member_select" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20 font-medium">
+                        <!-- Real Select (Hidden) -->
+                        <select name="member_id" id="member_select" required class="sr-only" tabindex="-1">
                             <option value="">-- Pilih Siswa Berdasarkan NIS / Nama Lengkap --</option>
                             @foreach($unregisteredMembers as $m)
                                 <option value="{{ $m->id }}" 
                                         data-nis="{{ $m->student_id_number }}"
+                                        data-name="{{ $m->full_name }}"
                                         data-major="{{ $m->major }}"
                                         data-class="{{ $m->class_name }}"
                                         data-cohort="{{ $m->cohort }}"
@@ -61,6 +69,42 @@
                                 </option>
                             @endforeach
                         </select>
+
+                        <!-- Search Bar Input & Dropdown -->
+                        <div class="relative">
+                            <div class="relative flex items-center">
+                                <span class="absolute left-3.5 text-slate-400 pointer-events-none">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                    </svg>
+                                </span>
+                                <input type="text" 
+                                       id="student_search_input" 
+                                       autocomplete="off"
+                                       placeholder="Ketik NIS, nama siswa, kelas, atau jurusan untuk mencari..."
+                                       class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-2.5 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium transition-all">
+                                <button type="button" 
+                                        id="clear_search_btn" 
+                                        class="hidden absolute right-3 w-5 h-5 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center text-[10px] font-bold cursor-pointer transition-colors"
+                                        title="Hapus pencarian">
+                                    &times;
+                                </button>
+                            </div>
+
+                            <!-- Dropdown List Hasil Pencarian -->
+                            <div id="student_dropdown_menu" 
+                                 class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 overflow-hidden animate-fade-in">
+                                <div id="student_dropdown_list" class="max-h-60 overflow-y-auto divide-y divide-slate-100 p-1.5 space-y-0.5">
+                                    <!-- Items di-generate via JS -->
+                                </div>
+                                <div id="student_empty_state" class="hidden p-4 text-center text-xs text-slate-400">
+                                    <svg class="w-6 h-6 mx-auto mb-1 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    Tidak ada siswa yang cocok dengan kata kunci tersebut.
+                                </div>
+                            </div>
+                        </div>
                     @endif
                     @error('member_id')
                         <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
@@ -87,7 +131,7 @@
                     </div>
                 </div>
 
-                <!-- Grid Baris: Setoran Awal & PIN Keamanan -->
+                <!-- Grid Baris: Setoran Awal, PIN Keamanan & Password Akun -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- 2. Setoran Awal Tabungan -->
                     <div>
@@ -119,22 +163,105 @@
 
                     <!-- 3. PIN Keamanan Rekening -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-800 mb-1.5">
-                            3. Buat PIN Keamanan Nasabah (6 Digit Angka) *
-                        </label>
-                        <input type="password" 
-                               name="security_pin" 
-                               id="security_pin" 
-                               maxlength="6" 
-                               pattern="[0-9]{6}" 
-                               value="{{ old('security_pin', '123456') }}" 
-                               placeholder="Misal: 123456" 
-                               required 
-                               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-mono tracking-widest text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="block text-xs font-bold text-slate-800">
+                                3. Buat PIN Transaksi Nasabah (6 Digit Angka) *
+                            </label>
+                        </div>
+                        <div class="relative">
+                            <input type="password" 
+                                   name="security_pin" 
+                                   id="security_pin" 
+                                   maxlength="6" 
+                                   pattern="[0-9]{6}" 
+                                   value="{{ old('security_pin') }}" 
+                                   placeholder="Masukkan 6 digit angka PIN..." 
+                                   autocomplete="new-password"
+                                   required 
+                                   class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-4 pr-10 py-2.5 text-xs font-mono tracking-widest text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
+                            <button type="button" 
+                                    onclick="toggleInputVisibility('security_pin')" 
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                                    title="Lihat / Sembunyikan PIN">
+                                <svg id="eye-icon-security_pin" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                <svg id="eye-slash-security_pin" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>
+                            </button>
+                        </div>
                         <p class="text-[10px] text-slate-400 mt-1">
-                            PIN ini digunakan siswa untuk otorisasi penarikan tunai di loket teller dan login mobile.
+                            PIN ini digunakan siswa untuk otorisasi transaksi tabungan & penarikan tunai di loket teller.
                         </p>
                         @error('security_pin')
+                            <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- 4. Password Akun Login Siswa -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="block text-xs font-bold text-slate-800">
+                                4. Kata Sandi Akun Pengguna (Password Login) *
+                            </label>
+                        </div>
+                        <div class="relative">
+                            <input type="password" 
+                                   name="password" 
+                                   id="password" 
+                                   minlength="6" 
+                                   value="{{ old('password') }}" 
+                                   placeholder="Minimal 6 karakter" 
+                                   required 
+                                   class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-4 pr-10 py-2.5 text-xs text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
+                            <button type="button" 
+                                    onclick="toggleInputVisibility('password')" 
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                                    title="Lihat / Sembunyikan Password">
+                                <svg id="eye-icon-password" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                <svg id="eye-slash-password" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between mt-1">
+                            <p class="text-[10px] text-slate-400">
+                                Password akun pengguna (User) siswa untuk login ke portal Edubank.
+                            </p>
+                            <button type="button" 
+                                    onclick="copyPinToPassword()" 
+                                    class="text-[10px] font-semibold text-blue-600 hover:text-blue-700 hover:underline shrink-0 ml-2 cursor-pointer"
+                                    title="Salin nilai PIN sebagai kata sandi">
+                                Samakan dengan PIN
+                            </button>
+                        </div>
+                        @error('password')
+                            <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- 5. Konfirmasi Password -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="block text-xs font-bold text-slate-800">
+                                5. Konfirmasi Kata Sandi Akun *
+                            </label>
+                        </div>
+                        <div class="relative">
+                            <input type="password" 
+                                   name="password_confirmation" 
+                                   id="password_confirmation" 
+                                   minlength="6" 
+                                   placeholder="Ulangi kata sandi akun" 
+                                   required 
+                                   class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-4 pr-10 py-2.5 text-xs text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
+                            <button type="button" 
+                                    onclick="toggleInputVisibility('password_confirmation')" 
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                                    title="Lihat / Sembunyikan Password">
+                                <svg id="eye-icon-password_confirmation" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                <svg id="eye-slash-password_confirmation" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>
+                            </button>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-1">
+                            Ulangi kata sandi untuk memastikan kecocokan dan menghindari salah ketik.
+                        </p>
+                        @error('password_confirmation')
                             <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
                         @enderror
                     </div>
@@ -176,7 +303,7 @@
         </div>
 
         <p class="text-xs text-slate-500 leading-relaxed">
-            Apakah Anda yakin ingin memproses pembukaan rekening tabungan baru untuk siswa terpilih? Sistem akan langsung membuat nomor rekening resmi, QR Code, dan membukukan mutasi setoran awal.
+            Apakah Anda yakin ingin memproses pembukaan rekening tabungan baru untuk siswa terpilih? Sistem akan langsung membuat nomor rekening resmi, akun login pengguna, QR Code, dan membukukan mutasi setoran awal.
         </p>
 
         <div class="flex items-center justify-end gap-2 pt-2">
@@ -192,11 +319,57 @@
 
 @push('scripts')
 <script>
+    function toggleInputVisibility(id) {
+        const input = document.getElementById(id);
+        const eyeIcon = document.getElementById('eye-icon-' + id);
+        const eyeSlash = document.getElementById('eye-slash-' + id);
+        if (!input) return;
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            if (eyeIcon) eyeIcon.classList.add('hidden');
+            if (eyeSlash) eyeSlash.classList.remove('hidden');
+        } else {
+            input.type = 'password';
+            if (eyeIcon) eyeIcon.classList.remove('hidden');
+            if (eyeSlash) eyeSlash.classList.add('hidden');
+        }
+    }
+
+    function copyPinToPassword() {
+        const pinInput = document.getElementById('security_pin');
+        const pwdInput = document.getElementById('password');
+        const pwdConfInput = document.getElementById('password_confirmation');
+        if (pinInput && pinInput.value) {
+            if (pwdInput) pwdInput.value = pinInput.value;
+            if (pwdConfInput) {
+                pwdConfInput.value = pinInput.value;
+                pwdConfInput.setCustomValidity('');
+            }
+        }
+    }
+
     function triggerSaverConfirm() {
         const form = document.querySelector('form[action="{{ route('admin.savers.store') }}"]');
         if (form && form.reportValidity()) {
+            const pwd = document.getElementById('password');
+            const pwdConf = document.getElementById('password_confirmation');
+            if (pwd && pwdConf && pwd.value !== pwdConf.value) {
+                pwdConf.setCustomValidity('Konfirmasi kata sandi tidak cocok.');
+                form.reportValidity();
+                return;
+            } else if (pwdConf) {
+                pwdConf.setCustomValidity('');
+            }
             openSaverConfirmModal();
         }
+    }
+
+    const confField = document.getElementById('password_confirmation');
+    if (confField) {
+        confField.addEventListener('input', function() {
+            this.setCustomValidity('');
+        });
     }
 
     function openSaverConfirmModal() {
@@ -229,6 +402,12 @@
     }
 
     const memberSelect = document.getElementById('member_select');
+    const searchInput = document.getElementById('student_search_input');
+    const dropdownMenu = document.getElementById('student_dropdown_menu');
+    const dropdownList = document.getElementById('student_dropdown_list');
+    const emptyState = document.getElementById('student_empty_state');
+    const clearBtn = document.getElementById('clear_search_btn');
+
     if (memberSelect) {
         function updatePreview() {
             const opt = memberSelect.options[memberSelect.selectedIndex];
@@ -246,6 +425,156 @@
         }
         memberSelect.addEventListener('change', updatePreview);
         updatePreview();
+
+        // Setup Searchable Combobox
+        if (searchInput && dropdownMenu && dropdownList) {
+            const studentOptions = [];
+            for (let i = 1; i < memberSelect.options.length; i++) {
+                const opt = memberSelect.options[i];
+                studentOptions.push({
+                    id: opt.value,
+                    nis: opt.dataset.nis || '',
+                    name: opt.dataset.name || opt.innerText.split('] ')[1]?.split(' —')[0] || opt.innerText,
+                    major: opt.dataset.major || '',
+                    className: opt.dataset.class || '',
+                    cohort: opt.dataset.cohort || '',
+                });
+            }
+
+            function renderList(filtered, totalMatches) {
+                dropdownList.innerHTML = '';
+                if (filtered.length === 0) {
+                    emptyState.classList.remove('hidden');
+                    return;
+                }
+                emptyState.classList.add('hidden');
+
+                filtered.forEach(item => {
+                    const isSelected = memberSelect.value === String(item.id);
+                    const el = document.createElement('div');
+                    el.className = `p-2.5 rounded-xl cursor-pointer transition-all flex items-center justify-between text-xs ${
+                        isSelected 
+                            ? 'bg-blue-50/80 border border-blue-200 text-blue-900 font-bold' 
+                            : 'hover:bg-slate-50 text-slate-700'
+                    }`;
+                    el.innerHTML = `
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 font-extrabold flex items-center justify-center text-[10px] shrink-0">
+                                ${(item.major || 'SIS').substring(0, 3)}
+                            </div>
+                            <div class="truncate">
+                                <p class="font-bold text-slate-900 leading-tight truncate">${item.name}</p>
+                                <p class="text-[10px] text-slate-400 leading-tight mt-0.5">NIS: <span class="font-mono text-slate-600 font-semibold">${item.nis}</span> • ${item.className} (${item.major})</p>
+                            </div>
+                        </div>
+                        ${isSelected ? '<span class="text-blue-600 font-bold ml-2">✓</span>' : ''}
+                    `;
+                    el.addEventListener('click', () => selectStudent(item));
+                    dropdownList.appendChild(el);
+                });
+
+                if (totalMatches > filtered.length) {
+                    const info = document.createElement('div');
+                    info.className = 'p-2 text-center text-[10px] text-slate-400 bg-slate-50 border-t border-slate-100 font-medium';
+                    info.innerText = `Menampilkan ${filtered.length} dari ${totalMatches} hasil. Ketik lebih spesifik jika belum menemukan.`;
+                    dropdownList.appendChild(info);
+                }
+            }
+
+            function selectStudent(student) {
+                memberSelect.value = student.id;
+                searchInput.value = `[NIS: ${student.nis}] ${student.name} — ${student.className}`;
+                if (clearBtn) clearBtn.classList.remove('hidden');
+                dropdownMenu.classList.add('hidden');
+                memberSelect.dispatchEvent(new Event('change'));
+            }
+
+            function filterStudents() {
+                const query = searchInput.value.toLowerCase().trim();
+                if (clearBtn) clearBtn.classList.toggle('hidden', query.length === 0);
+
+                // Hanya tampilkan jika pengguna mengetik minimal 1 karakter
+                if (!query) {
+                    dropdownMenu.classList.add('hidden');
+                    dropdownList.innerHTML = '';
+                    emptyState.classList.add('hidden');
+                    return;
+                }
+
+                const terms = query.split(/\s+/);
+                const filtered = studentOptions.filter(item => {
+                    return terms.every(term => 
+                        item.nis.toLowerCase().includes(term) ||
+                        item.name.toLowerCase().includes(term) ||
+                        item.className.toLowerCase().includes(term) ||
+                        item.major.toLowerCase().includes(term)
+                    );
+                });
+
+                // Batasi maksimal 25 suggestion agar performa ringan & ringkas
+                renderList(filtered.slice(0, 25), filtered.length);
+                dropdownMenu.classList.remove('hidden');
+            }
+
+            // Saat fokus: HANYA tampilkan suggestion jika ada teks pencarian
+            searchInput.addEventListener('focus', () => {
+                const q = searchInput.value.trim();
+                // Jika input masih kosong, JANGAN buka dropdown ke bawah
+                if (q.length > 0 && !memberSelect.value) {
+                    filterStudents();
+                }
+            });
+
+            // Saat mengetik huruf: Munculkan dropdown hasil filter
+            searchInput.addEventListener('input', () => {
+                const q = searchInput.value.trim();
+                if (q.length > 0) {
+                    filterStudents();
+                } else {
+                    dropdownMenu.classList.add('hidden');
+                    if (clearBtn) clearBtn.classList.add('hidden');
+                }
+            });
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    searchInput.value = '';
+                    memberSelect.value = '';
+                    clearBtn.classList.add('hidden');
+                    memberSelect.dispatchEvent(new Event('change'));
+                    filterStudents();
+                    searchInput.focus();
+                });
+            }
+
+            document.addEventListener('click', (e) => {
+                const container = document.getElementById('student_combobox_container');
+                if (container && !container.contains(e.target)) {
+                    dropdownMenu.classList.add('hidden');
+                    const selectedOpt = memberSelect.options[memberSelect.selectedIndex];
+                    if (selectedOpt && selectedOpt.value) {
+                        const found = studentOptions.find(s => String(s.id) === selectedOpt.value);
+                        if (found) {
+                            searchInput.value = `[NIS: ${found.nis}] ${found.name} — ${found.className}`;
+                            if (clearBtn) clearBtn.classList.remove('hidden');
+                        }
+                    } else if (!memberSelect.value) {
+                        searchInput.value = '';
+                        if (clearBtn) clearBtn.classList.add('hidden');
+                    }
+                }
+            });
+
+            // Pre-select if already chosen
+            if (memberSelect.value) {
+                const initial = studentOptions.find(s => String(s.id) === String(memberSelect.value));
+                if (initial) {
+                    searchInput.value = `[NIS: ${initial.nis}] ${initial.name} — ${initial.className}`;
+                    if (clearBtn) clearBtn.classList.remove('hidden');
+                }
+            }
+        }
     }
 
     document.addEventListener('keydown', function(e) {

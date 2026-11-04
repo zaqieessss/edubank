@@ -4,7 +4,7 @@
 @section('page_title', 'Dashboard')
 
 @section('content')
-<div class="h-full flex flex-col justify-between gap-4 pb-0.5">
+<div class="min-h-full flex flex-col gap-4 pb-4">
 
     <!-- ========================================================================= -->
     <!-- 1. WELCOME CARD (Minimalis, Simpel & Elegan)                               -->
@@ -113,12 +113,12 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- 3. TABEL TRANSAKSI TERAKHIR (Memanjang Elegan Sejajar Bawah Sidebar)       -->
+    <!-- 3. TABEL TRANSAKSI TERAKHIR (Rapi, Terstruktur, Anti-Mbleber)              -->
     <!-- ========================================================================= -->
-    <div class="bg-white rounded-[24px] p-5 md:p-6 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between min-h-[220px]">
+    <div class="bg-white rounded-[24px] p-5 md:p-6 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex flex-col justify-between">
         
         <div>
-            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-2">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
                 <div>
                     <h3 class="text-sm font-bold text-slate-800">
                         Transaksi Terakhir
@@ -132,52 +132,53 @@
                 </a>
             </div>
 
-            <div class="overflow-x-auto">
+            <!-- Table Wrapper (Anti Overflow & Anti Text-Wrapping) -->
+            <div class="overflow-x-auto rounded-xl border border-slate-100/80">
                 <table class="w-full text-left border-collapse text-xs">
                     <thead>
-                        <tr class="border-b border-slate-100 text-[11px] font-semibold text-slate-400">
-                            <th class="py-2.5 px-2 font-medium">Waktu</th>
-                            <th class="py-2.5 px-2 font-medium">No. Kwitansi</th>
-                            <th class="py-2.5 px-2 font-medium">Nama Siswa / Nasabah</th>
-                            <th class="py-2.5 px-2 font-medium">No. Rekening</th>
-                            <th class="py-2.5 px-2 font-medium">Jenis Transaksi</th>
-                            <th class="py-2.5 px-2 font-medium text-right">Nominal</th>
+                        <tr class="bg-slate-50/70 border-b border-slate-100 text-[11px] font-semibold text-slate-500">
+                            <th class="py-3 px-3.5 whitespace-nowrap">Waktu</th>
+                            <th class="py-3 px-3.5 whitespace-nowrap">No. Kwitansi</th>
+                            <th class="py-3 px-3.5 whitespace-nowrap">Nasabah (Siswa)</th>
+                            <th class="py-3 px-3.5 whitespace-nowrap">No. Rekening</th>
+                            <th class="py-3 px-3.5 whitespace-nowrap">Jenis Transaksi</th>
+                            <th class="py-3 px-3.5 whitespace-nowrap text-right">Nominal</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-50">
+                    <tbody class="divide-y divide-slate-100">
                         @forelse($recentTransactions as $trx)
                             <tr class="hover:bg-slate-50/60 transition-colors">
-                                <td class="py-3 px-2 text-slate-500 font-mono text-[11px]">
+                                <td class="py-3 px-3.5 text-slate-500 font-mono text-[11px] whitespace-nowrap">
                                     {{ $trx->transaction_date ? $trx->transaction_date->format('d M Y, H:i') : '-' }}
                                 </td>
-                                <td class="py-3 px-2 font-mono font-semibold text-slate-700 text-xs">
+                                <td class="py-3 px-3.5 font-mono font-bold text-slate-700 text-xs whitespace-nowrap">
                                     {{ $trx->transaction_code ?? $trx->receipt_number }}
                                 </td>
-                                <td class="py-3 px-2">
-                                    <div class="font-bold text-slate-800">{{ $trx->saver->full_name ?? '-' }}</div>
-                                    <div class="text-[10px] text-slate-400">{{ $trx->saver->class_name ?? '' }}</div>
+                                <td class="py-3 px-3.5 whitespace-nowrap">
+                                    <div class="font-bold text-slate-800 text-xs">{{ $trx->saver->full_name ?? '-' }}</div>
+                                    <div class="text-[10px] text-slate-400 font-medium">{{ $trx->saver->class_name ?? '' }}</div>
                                 </td>
-                                <td class="py-3 px-2 font-mono font-medium text-blue-700">
+                                <td class="py-3 px-3.5 font-mono font-semibold text-blue-700 whitespace-nowrap">
                                     {{ $trx->saver->account_number ?? '-' }}
                                 </td>
-                                <td class="py-3 px-2">
+                                <td class="py-3 px-3.5 whitespace-nowrap">
                                     @if($trx->transaction_type === 'deposit')
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700">
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
                                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Setoran
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700">
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200/60">
                                             <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Penarikan
                                         </span>
                                     @endif
                                 </td>
-                                <td class="py-3 px-2 text-right font-mono font-bold text-sm {{ $trx->transaction_type === 'deposit' ? 'text-emerald-600' : 'text-slate-800' }}">
+                                <td class="py-3 px-3.5 text-right font-mono font-bold text-xs whitespace-nowrap {{ $trx->transaction_type === 'deposit' ? 'text-emerald-600' : 'text-slate-800' }}">
                                     {{ $trx->transaction_type === 'deposit' ? '+' : '-' }} Rp {{ number_format($trx->amount, 0, ',', '.') }}
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="py-8 text-center text-xs text-slate-400">
+                                <td colspan="6" class="py-8 text-center text-xs text-slate-400 font-medium">
                                     Belum ada aktivitas transaksi tabungan.
                                 </td>
                             </tr>
@@ -188,7 +189,7 @@
         </div>
 
         <!-- Subtle Footer Alignment -->
-        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 mt-3">
             <span>Sistem Informasi E-Teller Edubank</span>
             <span class="font-mono">SMK Negeri 1 Bantul</span>
         </div>

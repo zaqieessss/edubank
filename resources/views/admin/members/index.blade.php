@@ -3,6 +3,33 @@
 @section('title', 'Data Siswa & Anggota (Members)')
 @section('page_title', 'Members / Siswa')
 
+@push('styles')
+<style>
+    @keyframes siren-alarm {
+        0%, 100% {
+            box-shadow: inset 0 0 100px 30px rgba(239, 68, 68, 0.28), inset 0 0 200px 70px rgba(220, 38, 38, 0.16);
+            background-color: rgba(15, 23, 42, 0.78);
+        }
+        50% {
+            box-shadow: inset 0 0 180px 70px rgba(239, 68, 68, 0.65), inset 0 0 340px 130px rgba(185, 28, 28, 0.42);
+            background-color: rgba(76, 5, 5, 0.75);
+        }
+    }
+    .siren-active {
+        animation: siren-alarm 2s ease-in-out infinite;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+    }
+    @keyframes siren-beacon {
+        0%, 100% { transform: scale(0.95); opacity: 0.4; }
+        50% { transform: scale(1.15); opacity: 1; }
+    }
+    .siren-beacon-pulse {
+        animation: siren-beacon 1.4s ease-in-out infinite;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="h-full flex flex-col justify-between gap-4 pb-0.5">
 
@@ -132,7 +159,7 @@
 
                             <!-- Naik Kelas Massal -->
                             <button type="button" 
-                                    onclick="closeBatchMenu(); document.getElementById('promoteModal').classList.remove('hidden');" 
+                                    onclick="closeBatchMenu(); openPromoteModal();" 
                                     class="w-full text-left flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-amber-700 hover:bg-amber-50 transition-colors">
                                 <svg class="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                                 <span>Naik Kelas Massal</span>
@@ -296,36 +323,94 @@
 </div>
 
 <!-- ========================================================================= -->
-<!-- MODAL: Naik Kelas Massal                                                  -->
+<!-- MODAL: Kenaikan Kelas Massal & Pengecualian Siswa Tinggal Kelas           -->
 <!-- ========================================================================= -->
 <div id="promoteModal" 
-     class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs"
-     onclick="if(event.target === this) document.getElementById('promoteModal').classList.add('hidden')">
-    <div class="bg-white rounded-[24px] max-w-md w-full p-6 border border-slate-200/80 shadow-2xl space-y-4 relative">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+     class="hidden fixed inset-0 z-50 items-center justify-center p-4 transition-all duration-300"
+     onclick="if(event.target === this) closePromoteModal()">
+    
+    <div id="promoteModalCard" 
+         class="bg-white rounded-[24px] max-w-lg w-full border border-slate-200/90 shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh] animate-fade-in text-slate-800"
+         onclick="event.stopPropagation()">
+        
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 siren-beacon-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
                 </div>
-                <h3 class="text-sm font-bold text-slate-800">Proses Kenaikan Kelas Massal</h3>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900">Kenaikan Kelas Massal</h3>
+                    <p class="text-[11px] text-slate-400">Pilih siswa tinggal kelas (bila ada) sebelum eksekusi.</p>
+                </div>
             </div>
-            <button type="button" onclick="document.getElementById('promoteModal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm">
+            <button type="button" 
+                    onclick="closePromoteModal()" 
+                    class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm cursor-pointer shrink-0">
                 &times;
             </button>
         </div>
-        <form method="POST" action="{{ route('admin.members.promote') }}" class="space-y-4">
+
+        <!-- Form Body -->
+        <form method="POST" action="{{ route('admin.members.promote') }}" class="flex-1 overflow-y-auto p-6 space-y-4">
             @csrf
-            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 text-xs text-amber-800 leading-relaxed">
-                <p class="font-bold mb-1">Perhatian Perubahan Massal:</p>
-                <ul class="list-disc pl-4 space-y-0.5 text-[11px]">
-                    <li>Siswa Kelas 10 otomatis dinaikkan ke Kelas 11</li>
-                    <li>Siswa Kelas 11 otomatis dinaikkan ke Kelas 12</li>
-                    <li>Siswa Kelas 12 otomatis lulus menjadi status <strong>Alumni</strong></li>
-                </ul>
+
+            <!-- Search Excluded Students -->
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-slate-700">
+                    Cari Siswa Tinggal Kelas (Opsional)
+                </label>
+                <div class="relative">
+                    <div class="relative flex items-center">
+                        <svg class="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input type="text" 
+                               id="excludedStudentSearch" 
+                               oninput="handleExcludedStudentSearch(event)" 
+                               placeholder="Ketik nama atau NIS siswa..." 
+                               autocomplete="off"
+                               class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-8 py-2 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-rose-500/20 focus:border-rose-400 outline-none transition-all">
+                        <div id="excludedSearchLoading" class="hidden absolute right-3">
+                            <svg class="animate-spin h-3.5 w-3.5 text-rose-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown Hasil Pencarian -->
+                    <div id="excludedSearchResults" class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white rounded-xl shadow-xl border border-slate-200 z-20 overflow-hidden">
+                        <!-- Diisi via JavaScript -->
+                    </div>
+                </div>
             </div>
-            <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
-                <button type="button" onclick="document.getElementById('promoteModal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-all cursor-pointer">Batal</button>
-                <button type="submit" class="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">Eksekusi Naik Kelas</button>
+
+            <!-- Daftar Siswa Tinggal Kelas -->
+            <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-700">Daftar Siswa Tinggal Kelas</span>
+                    <span id="excludedCountBadge" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-400">
+                        0 dipilih
+                    </span>
+                </div>
+                <div id="excludedStudentsList">
+                    <div class="py-2.5 px-3 text-center text-xs text-slate-400 bg-slate-50 rounded-xl border border-slate-100">
+                        Tidak ada siswa tinggal kelas (seluruh siswa akan naik).
+                    </div>
+                </div>
+                <!-- Hidden inputs -->
+                <div id="excludedStudentsHiddenInputs"></div>
+            </div>
+
+            <!-- Footer Buttons -->
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 shrink-0">
+                <button type="button" 
+                        onclick="closePromoteModal()" 
+                        class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+                    Batal
+                </button>
+                <button type="submit" 
+                        class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer">
+                    Eksekusi Naik Kelas
+                </button>
             </div>
         </form>
     </div>
@@ -419,16 +504,227 @@
         if (container && !container.contains(e.target)) {
             closeBatchMenu();
         }
+
+        // Close search results dropdown if clicked outside
+        const searchInput = document.getElementById('excludedStudentSearch');
+        const searchResults = document.getElementById('excludedSearchResults');
+        if (searchResults && !searchResults.contains(e.target) && e.target !== searchInput) {
+            searchResults.classList.add('hidden');
+        }
     });
+
+    // =========================================================================
+    // MODAL SIAGA BERBAHAYA: Kenaikan Kelas Massal & Pengecualian Siswa
+    // =========================================================================
+    let excludedStudents = new Map(); // id -> { id, full_name, student_id_number, class_name }
+    let searchTimeout = null;
+
+    function openPromoteModal() {
+        const modal = document.getElementById('promoteModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            modal.classList.add('siren-active');
+
+            // Reset search input
+            const input = document.getElementById('excludedStudentSearch');
+            if (input) {
+                input.value = '';
+                setTimeout(() => input.focus(), 150);
+            }
+            clearSearchResults();
+        }
+    }
+
+    function closePromoteModal() {
+        const modal = document.getElementById('promoteModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            modal.classList.remove('siren-active');
+        }
+    }
+
+    function handleExcludedStudentSearch(e) {
+        const query = e.target.value.trim();
+        const resultsContainer = document.getElementById('excludedSearchResults');
+        const loadingEl = document.getElementById('excludedSearchLoading');
+
+        if (searchTimeout) clearTimeout(searchTimeout);
+
+        if (query.length < 1) {
+            clearSearchResults();
+            return;
+        }
+
+        if (loadingEl) loadingEl.classList.remove('hidden');
+
+        searchTimeout = setTimeout(() => {
+            fetch(`{{ route('admin.members.search-active') }}?q=${encodeURIComponent(query)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (loadingEl) loadingEl.classList.add('hidden');
+                    renderSearchResults(data);
+                })
+                .catch(err => {
+                    if (loadingEl) loadingEl.classList.add('hidden');
+                    console.error('Gagal memuat pencarian siswa:', err);
+                });
+        }, 220);
+    }
+
+    function clearSearchResults() {
+        const container = document.getElementById('excludedSearchResults');
+        if (container) {
+            container.innerHTML = '';
+            container.classList.add('hidden');
+        }
+    }
+
+    function renderSearchResults(students) {
+        const container = document.getElementById('excludedSearchResults');
+        if (!container) return;
+
+        if (!students || students.length === 0) {
+            container.innerHTML = `
+                <div class="p-3 text-center text-xs text-slate-400">
+                    Tidak ditemukan siswa aktif yang cocok
+                </div>
+            `;
+            container.classList.remove('hidden');
+            return;
+        }
+
+        let html = '<div class="divide-y divide-slate-100 max-h-48 overflow-y-auto">';
+        students.forEach(s => {
+            const isExcluded = excludedStudents.has(s.id);
+            html += `
+                <div class="p-2.5 flex items-center justify-between gap-2 hover:bg-slate-50 transition-colors">
+                    <div class="text-left">
+                        <p class="text-xs font-bold text-slate-800">${escapeHtml(s.full_name)}</p>
+                        <p class="text-[10px] text-slate-400 font-mono">NIS: ${escapeHtml(s.student_id_number)} &bull; ${escapeHtml(s.class_name)}</p>
+                    </div>
+                    <div>
+                        ${isExcluded ? `
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-lg">
+                                <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                Tinggal Kelas
+                            </span>
+                        ` : `
+                            <button type="button" 
+                                    onclick="addExcludedStudent(${s.id}, '${escapeJs(s.full_name)}', '${escapeJs(s.student_id_number)}', '${escapeJs(s.class_name)}')" 
+                                    class="inline-flex items-center gap-1 px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-[10px] font-bold transition-all shadow-xs cursor-pointer">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                <span>Tinggal Kelas</span>
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+
+        container.innerHTML = html;
+        container.classList.remove('hidden');
+    }
+
+    function addExcludedStudent(id, fullName, nis, className) {
+        if (excludedStudents.has(id)) return;
+        excludedStudents.set(id, { id, full_name: fullName, student_id_number: nis, class_name: className });
+        renderExcludedList();
+
+        // Refresh dropdown state
+        const input = document.getElementById('excludedStudentSearch');
+        if (input && input.value.trim().length > 0) {
+            input.dispatchEvent(new Event('input'));
+        }
+    }
+
+    function removeExcludedStudent(id) {
+        excludedStudents.delete(id);
+        renderExcludedList();
+
+        // Refresh dropdown state
+        const input = document.getElementById('excludedStudentSearch');
+        if (input && input.value.trim().length > 0) {
+            input.dispatchEvent(new Event('input'));
+        }
+    }
+
+    function renderExcludedList() {
+        const listEl = document.getElementById('excludedStudentsList');
+        const hiddenInputsEl = document.getElementById('excludedStudentsHiddenInputs');
+        const badgeCountEl = document.getElementById('excludedCountBadge');
+
+        if (badgeCountEl) {
+            badgeCountEl.innerText = `${excludedStudents.size} dipilih`;
+            if (excludedStudents.size > 0) {
+                badgeCountEl.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700';
+            } else {
+                badgeCountEl.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-400';
+            }
+        }
+
+        if (hiddenInputsEl) {
+            let inputs = '';
+            excludedStudents.forEach((student, id) => {
+                inputs += `<input type="hidden" name="excluded_member_ids[]" value="${id}">`;
+            });
+            hiddenInputsEl.innerHTML = inputs;
+        }
+
+        if (!listEl) return;
+
+        if (excludedStudents.size === 0) {
+            listEl.innerHTML = `
+                <div class="py-2.5 px-3 text-center text-xs text-slate-400 bg-slate-50 rounded-xl border border-slate-100">
+                    Tidak ada siswa tinggal kelas (seluruh siswa akan naik).
+                </div>
+            `;
+            return;
+        }
+
+        let html = '<div class="space-y-1.5 max-h-40 overflow-y-auto pr-0.5">';
+        excludedStudents.forEach((student, id) => {
+            html += `
+                <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 text-xs transition-colors">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-slate-800">${escapeHtml(student.full_name)}</span>
+                        <span class="text-[11px] text-slate-400 font-mono">${escapeHtml(student.student_id_number)}</span>
+                        <span class="text-[10px] font-semibold px-2 py-0.5 bg-white border border-slate-200 rounded-md text-slate-600">${escapeHtml(student.class_name)}</span>
+                    </div>
+                    <button type="button" 
+                            onclick="removeExcludedStudent(${id})" 
+                            class="w-6 h-6 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 flex items-center justify-center transition-colors cursor-pointer text-sm font-bold"
+                            title="Hapus dari daftar">
+                        &times;
+                    </button>
+                </div>
+            `;
+        });
+        html += '</div>';
+        listEl.innerHTML = html;
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        return String(text).replace(/[&<>"']/g, function(m) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+        });
+    }
+
+    function escapeJs(text) {
+        if (!text) return '';
+        return String(text).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeDeleteMemberModal();
             closeBatchMenu();
+            closePromoteModal();
             const importModal = document.getElementById('importModal');
             if (importModal) importModal.classList.add('hidden');
-            const promoteModal = document.getElementById('promoteModal');
-            if (promoteModal) promoteModal.classList.add('hidden');
         }
     });
 </script>
