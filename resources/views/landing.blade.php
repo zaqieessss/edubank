@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id" class="scroll-smooth overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Edubank - Bank Mini Digital SMK Negeri 1 Bantul</title>
 
     <!-- Favicon (Icon Tab Browser) -->
@@ -17,6 +17,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #F8FAFC;
@@ -40,23 +45,23 @@
         }
     </style>
 </head>
-<body class="min-h-screen bg-[#F8FAFC] text-slate-900 selection:bg-blue-600 selection:text-white flex flex-col justify-between">
+<body class="min-h-screen bg-[#F8FAFC] text-slate-900 selection:bg-blue-600 selection:text-white flex flex-col justify-between overflow-x-hidden w-full">
 
     <!-- ========================================================================= -->
-    <!-- 1. NAVIGATION BAR (Clean, Ramping & Responsif di HP)                     -->
+    <!-- 1. NAVIGATION BAR (100% Responsif di Layar HP Tanpa Terpotong)           -->
     <!-- ========================================================================= -->
-    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all">
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all w-full">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 sm:h-18">
+            <div class="flex items-center justify-between h-14 sm:h-16 md:h-18">
                 
                 <!-- Logo & Brand Header -->
-                <a href="{{ url('/') }}" class="flex items-center gap-2.5 sm:gap-3 group shrink-0">
-                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white border border-slate-200/80 p-1 shadow-xs flex items-center justify-center transition-transform group-hover:scale-105">
+                <a href="{{ url('/') }}" class="flex items-center gap-2 sm:gap-2.5 group shrink-0 min-w-0">
+                    <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white border border-slate-200/80 p-1 shadow-xs flex items-center justify-center shrink-0 transition-transform group-hover:scale-105">
                         <img src="{{ asset('images/logo-blue.png') }}" alt="Edubank Logo" class="w-full h-full object-contain">
                     </div>
-                    <div>
-                        <span class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors block leading-tight">Edubank</span>
-                        <p class="text-[11px] sm:text-xs text-slate-500 font-medium leading-none">SMK Negeri 1 Bantul</p>
+                    <div class="min-w-0">
+                        <span class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors block leading-tight truncate">Edubank</span>
+                        <p class="hidden sm:block text-[11px] text-slate-500 font-medium leading-none truncate">SMK Negeri 1 Bantul</p>
                     </div>
                 </a>
 
@@ -67,20 +72,20 @@
                     <a href="#panduan-apk" class="hover:text-blue-600 transition-colors">Panduan APK</a>
                 </nav>
 
-                <!-- Tombol Aksi Header (Responsif dan Tidak Berantakan di HP) -->
+                <!-- Tombol Aksi Header (Ringkas & Sempurna di HP) -->
                 <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
                     <!-- Download APK Button -->
                     <a href="{{ asset('edubank-v1.1.1.apk') }}" download="edubank-v1.1.1.apk" 
-                       class="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/80 text-xs font-bold transition-all hover:scale-[1.02] active:scale-[0.98]">
+                       class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/80 text-xs font-bold transition-all hover:scale-[1.02] active:scale-[0.98]">
                         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                         </svg>
-                        <span>Unduh APK <span class="text-[10px] bg-blue-200/80 text-blue-800 px-1.5 py-0.2 rounded-md font-extrabold">v1.1.1</span></span>
+                        <span>Unduh APK<span class="hidden sm:inline"> (v1.1.1)</span></span>
                     </a>
 
                     <!-- Masuk Petugas Button -->
                     <a href="{{ route('login') }}" 
-                       class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98]">
+                       class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98]">
                         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
                         </svg>
