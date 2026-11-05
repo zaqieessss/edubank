@@ -196,9 +196,6 @@
         <div class="md:col-span-7 p-8 sm:p-10 md:p-12 lg:p-14 flex flex-col justify-center bg-white relative">
             
             <div class="mb-7">
-                <span class="text-[11px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 inline-block mb-2">
-                    Portal Masuk Sistem
-                </span>
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Selamat Datang Kembali</h2>
                 <p class="text-xs sm:text-sm text-slate-500 mt-1.5">Masuk ke dashboard operasional Edubank SMKN 1 Bantul.</p>
             </div>
@@ -287,15 +284,6 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </button>
             </form>
-
-            <!-- Bottom Disclaimer -->
-            <div class="mt-8 pt-5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                    Sesi Terenkripsi & Aman
-                </span>
-                <span>&copy; {{ date('Y') }} SMKN 1 Bantul</span>
-            </div>
         </div>
 
     </div>
