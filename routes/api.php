@@ -80,12 +80,26 @@ Route::get('deploy-migrate-{secret}', function (\Illuminate\Http\Request $reques
             $seedOutput = trim(\Illuminate\Support\Facades\Artisan::output());
         }
 
-        // 3. Sambungkan symlink storage publik
+        // 3. Reset Seluruh Transaksi & Saldo (jika parameter ?reset_transactions=1 disertakan)
+        $resetOutput = 'Pembersihan transaksi dilewati.';
+        if ($request->query('reset_transactions') === '1' || $request->has('reset_transactions')) {
+            \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            \Illuminate\Support\Facades\DB::table('transactions')->truncate();
+            \Illuminate\Support\Facades\DB::table('daily_closings')->truncate();
+            \Illuminate\Support\Facades\DB::table('accounting_journals')->truncate();
+            \Illuminate\Support\Facades\DB::table('pin_authorization_requests')->truncate();
+            \Illuminate\Support\Facades\DB::table('accounts')->update(['balance' => 0]);
+            \Illuminate\Support\Facades\DB::table('savers')->update(['balance' => 0]);
+            \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+            $resetOutput = 'Seluruh riwayat transaksi, laporan closing kas teller, jurnal akuntansi, dan otorisasi PIN berhasil dikosongkan. Saldo rekening kembali menjadi Rp 0. Akun user dan master siswa tetap utuh.';
+        }
+
+        // 4. Sambungkan symlink storage publik
         try {
             \Illuminate\Support\Facades\Artisan::call('storage:link');
         } catch (\Throwable $e) {}
 
-        // 4. Bersihkan dan perbarui cache optimasi
+        // 5. Bersihkan dan perbarui cache optimasi
         try {
             \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         } catch (\Throwable $e) {}
@@ -95,6 +109,7 @@ Route::get('deploy-migrate-{secret}', function (\Illuminate\Http\Request $reques
             'message'        => 'Migrasi dan inisialisasi database berhasil!',
             'migrate_output' => $migrateOutput,
             'seed_output'    => $seedOutput,
+            'reset_output'   => $resetOutput,
         ]);
     } catch (\Throwable $e) {
         return response()->json([
