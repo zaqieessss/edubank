@@ -655,11 +655,12 @@
         excludedStudents.set(id, { id, full_name: fullName, student_id_number: nis, class_name: className });
         renderExcludedList();
 
-        // Refresh dropdown state
+        // Kosongkan input dan langsung hilangkan dropdown saran pencarian agar tidak menghalangi
         const input = document.getElementById('excludedStudentSearch');
-        if (input && input.value.trim().length > 0) {
-            input.dispatchEvent(new Event('input'));
+        if (input) {
+            input.value = '';
         }
+        clearSearchResults();
     }
 
     function removeExcludedStudent(id) {
