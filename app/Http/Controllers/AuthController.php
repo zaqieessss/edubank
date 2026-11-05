@@ -67,7 +67,11 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('success', 'Anda telah berhasil logout.');
+        $message = $request->query('timeout')
+            ? 'Sesi Anda telah berakhir otomatis karena tidak ada aktivitas selama 30 menit. Silakan login kembali.'
+            : 'Anda telah berhasil logout.';
+
+        return redirect()->route('login')->with('success', $message);
     }
 
     public function showForgotPassword()

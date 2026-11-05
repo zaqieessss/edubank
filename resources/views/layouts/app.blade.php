@@ -446,6 +446,79 @@
                 setInterval(tick, 1000);
             }
             document.addEventListener('DOMContentLoaded', initLiveRealtimeClock);
+
+            // Auto-Logout Setelah 30 Menit Tidak Ada Interaksi / Meninggalkan Halaman (Teller & Admin)
+            function initIdleTimeout() {
+                const IDLE_TIMEOUT_MS = 30 * 60 * 1000; // 30 Menit (1.800.000 ms)
+                const STORAGE_KEY = 'edubank_last_active_time';
+                const LOGOUT_URL = "{{ route('logout') }}?timeout=1";
+                let isLoggingOut = false;
+
+                function recordActivity() {
+                    if (isLoggingOut) return;
+                    const now = Date.now();
+                    try {
+                        localStorage.setItem(STORAGE_KEY, String(now));
+                    } catch (e) {}
+                }
+
+                function checkTimeout() {
+                    if (isLoggingOut) return;
+                    let lastActive = Date.now();
+                    try {
+                        const stored = localStorage.getItem(STORAGE_KEY);
+                        if (stored) {
+                            lastActive = parseInt(stored, 10);
+                        } else {
+                            localStorage.setItem(STORAGE_KEY, String(lastActive));
+                        }
+                    } catch (e) {}
+
+                    const idleElapsed = Date.now() - lastActive;
+                    if (idleElapsed >= IDLE_TIMEOUT_MS) {
+                        isLoggingOut = true;
+                        try {
+                            localStorage.removeItem(STORAGE_KEY);
+                        } catch (e) {}
+                        window.location.href = LOGOUT_URL;
+                    }
+                }
+
+                // Inisialisasi waktu saat halaman dibuka
+                recordActivity();
+
+                // Deteksi interaksi pengguna (throttled agar performa tetap ringan)
+                let throttleTimer = null;
+                const events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click', 'wheel'];
+                events.forEach(eventType => {
+                    window.addEventListener(eventType, () => {
+                        if (!throttleTimer) {
+                            throttleTimer = setTimeout(() => {
+                                recordActivity();
+                                throttleTimer = null;
+                            }, 3000);
+                        }
+                    }, { passive: true });
+                });
+
+                // Cek berkala setiap 5 detik
+                setInterval(checkTimeout, 5000);
+
+                // Jika pengguna meninggalkan halaman / tab, cek langsung saat tab aktif kembali
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'visible') {
+                        checkTimeout();
+                    }
+                });
+
+                // Sinkronisasi antar-tab browser
+                window.addEventListener('storage', (e) => {
+                    if (e.key === STORAGE_KEY) {
+                        // Waktu aktif diperbarui di tab lain
+                    }
+                });
+            }
+            document.addEventListener('DOMContentLoaded', initIdleTimeout);
         })();
     </script>
 </body>
