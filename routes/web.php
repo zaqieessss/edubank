@@ -131,5 +131,12 @@ Route::middleware(['auth', 'role:teller'])->prefix('teller')->name('teller.')->g
 Route::middleware(['auth', 'role:saver'])->prefix('saver')->name('saver.')->group(function () {
     Route::get('/dashboard', [SaverDashboardController::class, 'index'])->name('dashboard');
     Route::get('/mutation', [SaverDashboardController::class, 'mutation'])->name('mutation');
+    Route::get('/profile', [SaverDashboardController::class, 'profile'])->name('profile');
     Route::post('/pin', [SaverDashboardController::class, 'updatePin'])->name('pin.update');
+    Route::post('/password', [SaverDashboardController::class, 'updatePassword'])->name('password.update');
+
+    // In-App Realtime PIN Authorization (Push Notification for Teller Withdrawal)
+    Route::get('/pin-authorization/pending', [SaverDashboardController::class, 'checkPendingPin'])->name('pin.pending');
+    Route::post('/pin-authorization/{id}/verify', [SaverDashboardController::class, 'verifyPinAuthorization'])->name('pin.verify');
+    Route::post('/pin-authorization/{id}/reject', [SaverDashboardController::class, 'rejectPinAuthorization'])->name('pin.reject');
 });

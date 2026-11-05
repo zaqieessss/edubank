@@ -25,30 +25,38 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email'    => ['required', 'email'],
+        $request->validate([
+            'email'    => ['required', 'string'],
             'password' => ['required', 'string'],
         ], [
-            'email.required'    => 'Email wajib diisi.',
-            'email.email'       => 'Format email tidak valid.',
+            'email.required'    => 'Email atau Nomor Rekening wajib diisi.',
             'password.required' => 'Password wajib diisi.',
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $user = Auth::user();
+        $loginInput = trim($request->input('email'));
 
+        // Cek login via email atau nomor rekening nasabah
+        $user = User::where('email', $loginInput)->first();
+        if (!$user) {
+            $saver = \App\Models\Saver::where('account_number', $loginInput)->first();
+            if ($saver && $saver->user) {
+                $user = $saver->user;
+            }
+        }
+
+        if ($user && Hash::check($request->password, $user->password)) {
             if ($user->status !== 'active') {
-                Auth::logout();
                 return back()->withErrors(['email' => 'Akun Anda sedang dinonaktifkan oleh administrator.']);
             }
 
+            Auth::login($user, $request->boolean('remember'));
             $request->session()->regenerate();
 
             return $this->redirectBasedOnRole($user->role);
         }
 
         return back()->withErrors([
-            'email' => 'Email atau password yang Anda masukkan salah.',
+            'email' => 'Email/Nomor Rekening atau password yang Anda masukkan salah.',
         ])->onlyInput('email');
     }
 

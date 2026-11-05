@@ -1,457 +1,380 @@
-@extends('layouts.app')
+@extends('layouts.saver')
 
-@section('title', 'Tabungan Digital Siswa - ' . $saver->full_name)
-@section('page_title', 'Tabungan Saya')
+@section('title', 'Beranda Tabungan Siswa')
+
+@php
+    $hour = now()->hour;
+    if ($hour >= 4 && $hour < 11) {
+        $greeting = 'Selamat Pagi';
+    } elseif ($hour >= 11 && $hour < 15) {
+        $greeting = 'Selamat Siang';
+    } elseif ($hour >= 15 && $hour < 18) {
+        $greeting = 'Selamat Sore';
+    } else {
+        $greeting = 'Selamat Malam';
+    }
+
+    $rawAccount = (string) $saver->account_number;
+    $spacedAccount = trim(chunk_split($rawAccount, 4, ' '));
+@endphp
 
 @section('content')
-<div class="h-full flex flex-col justify-between gap-4 pb-0.5">
+<div class="px-5 pt-5 pb-6 space-y-5">
 
     <!-- ========================================================================= -->
-    <!-- 1. WELCOME HERO CARD (Minimalis & Bersih)                                  -->
+    <!-- 1. TOP USER PROFILE HEADER (Identik Flutter HomeScreen)                   -->
     <!-- ========================================================================= -->
-    <div class="relative w-full rounded-[24px] bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white p-5 md:p-6 shadow-sm border border-slate-800/60 overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
-        <!-- Subtle Ambient Glow -->
-        <div class="absolute -left-10 -top-10 w-44 h-44 bg-blue-500/15 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <!-- Dynamic Avatar with Royal Blue Gradient & Glow -->
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 border-2 border-white shadow-md shadow-blue-600/30 flex items-center justify-center text-white font-black text-lg select-none shrink-0">
+                {{ strtoupper(substr($saver->full_name, 0, 1)) }}
+            </div>
+            
+            <!-- User Info: Greeting & Siswa Badge -->
+            <div class="flex flex-col">
+                <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-semibold text-slate-500">{{ $greeting }}</span>
+                    <span class="px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-600 text-[10px] font-bold">Siswa</span>
+                </div>
+                <h1 class="text-base font-extrabold text-slate-900 tracking-tight line-clamp-1">
+                    {{ $saver->full_name }}
+                </h1>
+            </div>
+        </div>
 
-        <div class="relative z-10 space-y-1">
-            <h2 class="text-xl md:text-2xl font-bold tracking-tight text-white">
-                Selamat Datang, {{ $saver->full_name }}
-            </h2>
-            <p class="text-xs text-slate-300 max-w-xl leading-relaxed">
-                Portal Tabungan Digital Siswa &bull; {{ $saver->class_name }} &bull; NIS: {{ $saver->student_id_number }}
+        <!-- Quick Action QR Button (Top Right Header) -->
+        <button type="button" 
+                onclick="openQrSheet()" 
+                class="w-10 h-10 rounded-2xl bg-white border border-slate-200/90 shadow-sm shadow-blue-900/5 flex items-center justify-center text-blue-600 hover:bg-slate-50 active:scale-95 transition-all cursor-pointer"
+                title="Tampilkan QR Rekening">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 2. VIRTUAL STUDENT CARD (Identik Flutter VirtualCardWidget)                -->
+    <!-- ========================================================================= -->
+    <div class="w-full rounded-[28px] bg-gradient-to-br from-[#1E3A8A] via-[#1D4ED8] to-[#2563EB] text-white p-6 shadow-xl shadow-blue-700/25 relative overflow-hidden select-none border border-white/10">
+        
+        <!-- Holographic Decorative Light Circles -->
+        <div class="absolute -top-12 -right-10 w-44 h-44 rounded-full bg-blue-300/20 blur-2xl pointer-events-none"></div>
+        <div class="absolute -bottom-14 -left-8 w-40 h-40 rounded-full bg-blue-200/15 blur-2xl pointer-events-none"></div>
+
+        <!-- Top Row: Logo, EMV Chip & Contactless -->
+        <div class="relative z-10 flex items-center justify-between pb-3">
+            <div class="flex items-center gap-2">
+                <img src="{{ asset('images/logo-white.png') }}" alt="Logo" class="w-7 h-7 object-contain drop-shadow-sm">
+                <div>
+                    <span class="text-xs font-black tracking-wider block leading-tight">EDUBANK</span>
+                    <span class="text-[9px] font-bold text-blue-200 uppercase tracking-widest block">Platinum Saver</span>
+                </div>
+            </div>
+
+            <!-- Contactless Icon & EMV Chip Illustration -->
+            <div class="flex items-center gap-2.5">
+                <!-- Contactless wave -->
+                <svg class="w-5 h-5 text-blue-200/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071a10 10 0 0114.142 0M1.393 9.393a15 15 0 0121.214 0"/>
+                </svg>
+                <!-- Gold Chip -->
+                <div class="w-8 h-6 rounded-md bg-gradient-to-tr from-amber-400 via-yellow-200 to-amber-300 border border-amber-300/60 shadow-xs relative flex items-center justify-center overflow-hidden">
+                    <div class="w-full h-[1px] bg-amber-600/40 absolute top-2"></div>
+                    <div class="w-full h-[1px] bg-amber-600/40 absolute bottom-2"></div>
+                    <div class="w-[1px] h-full bg-amber-600/40 absolute left-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Row: Saldo Tabungan with Show/Hide Eye Toggle -->
+        <div class="relative z-10 py-3">
+            <div class="flex items-center justify-between text-blue-100 text-[11px] font-medium mb-1">
+                <span>Saldo Rekening Tabungan</span>
+                <button type="button" 
+                        onclick="toggleCardBalance()" 
+                        class="text-blue-100 hover:text-white flex items-center gap-1 cursor-pointer">
+                    <svg id="cardEyeOpen" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    <svg id="cardEyeClosed" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>
+                    <span id="cardEyeLabel" class="text-[10px]">Sembunyikan</span>
+                </button>
+            </div>
+            
+            <p id="cardBalanceText" class="text-2xl md:text-3xl font-extrabold font-mono tracking-tight text-white drop-shadow-sm">
+                Rp {{ number_format($balance, 0, ',', '.') }}
+            </p>
+            <p id="cardBalanceHidden" class="text-2xl md:text-3xl font-extrabold font-mono tracking-tight text-white drop-shadow-sm hidden">
+                Rp ••••••••
             </p>
         </div>
 
-        <!-- Tombol Aksi Cepat -->
-        <div class="relative z-10 flex items-center gap-2.5 shrink-0">
-            <!-- Tombol Tampilkan QR Siswa -->
-            <button type="button" 
-                    onclick="openQrModal()" 
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm transition-all hover:shadow hover:scale-[1.01] active:scale-[0.99] cursor-pointer">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
-                <span>QR Rekening</span>
-            </button>
-
-            <!-- Tombol Ganti PIN -->
-            <button type="button" 
-                    onclick="openPinModal()" 
-                    class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/15 text-xs font-semibold backdrop-blur-md transition-all cursor-pointer">
-                <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
-                <span>Ubah PIN</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- ========================================================================= -->
-    <!-- 2. TIGA BENTO CARDS UTAMA (Saldo Utama, Limit Tarik, Arus Kas Bulan Ini)    -->
-    <!-- ========================================================================= -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 shrink-0">
-        
-        <!-- Kartu 1: Total Saldo Utama Tabungan -->
-        <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between">
-            <div class="flex items-center justify-between">
-                <span class="text-xs font-semibold text-slate-400 tracking-wide">
-                    Total Saldo Tabungan
-                </span>
-                <span class="text-[10px] font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
-                    {{ $saver->account_number }}
-                </span>
-            </div>
-            <div class="py-2">
-                <p class="text-2xl md:text-3xl font-extrabold text-blue-700 font-mono tracking-tight">
-                    Rp {{ number_format($saver->balance, 0, ',', '.') }}
+        <!-- Bottom Row: Card Details & Account Number -->
+        <div class="relative z-10 pt-2 border-t border-white/15 flex items-end justify-between">
+            <div>
+                <!-- Nomor Rekening with Copy -->
+                <div class="flex items-center gap-1.5 mb-1">
+                    <span class="text-xs font-mono font-bold tracking-wider text-blue-100">{{ $spacedAccount }}</span>
+                    <button type="button" onclick="copyToClipboard('{{ $saver->account_number }}')" class="text-blue-200 hover:text-white cursor-pointer" title="Salin Rekening">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                    </button>
+                </div>
+                <p class="text-xs font-bold text-white tracking-wide uppercase line-clamp-1">
+                    {{ $saver->full_name }}
+                </p>
+                <p class="text-[10px] text-blue-200">
+                    {{ $saver->class_name }} &bull; {{ $saver->major }}
                 </p>
             </div>
-            <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
-                <span>{{ $saver->major }} &bull; Angkatan {{ $saver->cohort }}</span>
-                <span class="text-emerald-600 font-bold">Terverifikasi</span>
-            </div>
-        </div>
 
-        <!-- Kartu 2: Saldo Mengendap & Saldo Dapat Ditarik -->
-        <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between">
-            <span class="text-xs font-semibold text-slate-400 tracking-wide">
-                Batas Penarikan Tunai di Loket
-            </span>
-            <div class="py-2 flex items-baseline gap-4">
-                <div>
-                    <span class="text-[10px] text-emerald-600 font-bold block uppercase">Siap Ditarik</span>
-                    <p class="text-lg md:text-xl font-extrabold text-emerald-700 font-mono">
-                        Rp {{ number_format($maxWithdrawable, 0, ',', '.') }}
-                    </p>
-                </div>
-                <div class="h-6 w-px bg-slate-200"></div>
-                <div>
-                    <span class="text-[10px] text-amber-600 font-bold block uppercase">Saldo Mengendap</span>
-                    <p class="text-lg md:text-xl font-extrabold text-slate-800 font-mono">
-                        Rp {{ number_format($holdingBalance, 0, ',', '.') }}
-                    </p>
-                </div>
+            <div class="text-right">
+                <span class="text-[9px] text-blue-200 uppercase block font-semibold">Berlaku</span>
+                <span class="text-[11px] font-mono font-bold text-white">06/28</span>
             </div>
-            <span class="text-[11px] text-slate-400 font-medium">
-                Saldo minimum wajib tinggal di rekening
-            </span>
-        </div>
-
-        <!-- Kartu 3: Arus Kas Tabungan Bulan Ini -->
-        <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] flex flex-col justify-between">
-            <div class="flex items-center justify-between">
-                <span class="text-xs font-semibold text-slate-400 tracking-wide">
-                    Aktivitas Tabungan Bulan Ini
-                </span>
-                <span class="text-[10px] font-bold text-slate-500">
-                    {{ now()->translatedFormat('F Y') }}
-                </span>
-            </div>
-            <div class="py-2 flex items-baseline gap-4">
-                <div>
-                    <span class="text-[10px] text-emerald-600 font-bold block uppercase">Setoran Masuk</span>
-                    <p class="text-lg md:text-xl font-extrabold text-emerald-700 font-mono">
-                        +Rp {{ number_format($monthlyDeposits, 0, ',', '.') }}
-                    </p>
-                </div>
-                <div class="h-6 w-px bg-slate-200"></div>
-                <div>
-                    <span class="text-[10px] text-rose-500 font-bold block uppercase">Penarikan Keluar</span>
-                    <p class="text-lg md:text-xl font-extrabold text-slate-800 font-mono">
-                        -Rp {{ number_format($monthlyWithdrawals, 0, ',', '.') }}
-                    </p>
-                </div>
-            </div>
-            <span class="text-[11px] text-slate-400 font-medium">
-                Total {{ $totalTransactionsCount }} mutasi sejak pembukaan rekening
-            </span>
         </div>
     </div>
 
     <!-- ========================================================================= -->
-    <!-- 3. MAIN TABLE BENTO BOX (Riwayat Mutasi Tabungan Terakhir)                 -->
+    <!-- 3. QUICK ACTION SHORTCUTS (4 Elegan Buttons)                             -->
     <!-- ========================================================================= -->
-    <div class="bg-white rounded-[24px] p-5 md:p-6 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between min-h-[380px]">
-        
-        <div class="flex-1 flex flex-col min-h-0">
-            <!-- Action Toolbar (Judul & Tautan ke Buku Tabungan Lengkap) -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 shrink-0">
-                <div>
-                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                        10 Riwayat Mutasi Transaksi Terakhir
-                    </h3>
-                    <p class="text-[11px] text-slate-400">Catatan transaksi setor & tarik tabungan Anda di loket sekolah.</p>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <a href="{{ route('saver.mutation') }}" 
-                       class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-                        <span>Buku Tabungan Lengkap &rarr;</span>
-                    </a>
-                </div>
+    <div class="grid grid-cols-4 gap-2.5">
+        <!-- Shortcut 1: QR Loket -->
+        <button type="button" 
+                onclick="openQrSheet()" 
+                class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs flex flex-col items-center gap-1.5 hover:bg-blue-50/50 hover:border-blue-200 active:scale-95 transition-all cursor-pointer">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
             </div>
+            <span class="text-[11px] font-bold text-slate-700">QR Loket</span>
+        </button>
 
-            <!-- Table Container -->
-            <div class="flex-1 overflow-x-auto mt-2">
-                <table class="w-full text-left text-xs">
-                    <thead>
-                        <tr class="border-b border-slate-100 text-[11px] font-semibold text-slate-400">
-                            <th class="py-2.5 px-3">No. Kwitansi</th>
-                            <th class="py-2.5 px-3">Tanggal & Waktu</th>
-                            <th class="py-2.5 px-3">Jenis Transaksi</th>
-                            <th class="py-2.5 px-3">Keterangan</th>
-                            <th class="py-2.5 px-3 text-right">Nominal</th>
-                            <th class="py-2.5 px-3 text-right">Saldo Akhir</th>
-                            <th class="py-2.5 px-3">Petugas Teller</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-50">
-                        @forelse($recentTransactions as $t)
-                            <tr class="hover:bg-slate-50/60 transition-colors">
-                                <td class="py-3 px-3 font-mono font-bold text-slate-800 text-[11px]">
-                                    {{ $t->receipt_number }}
-                                </td>
-                                <td class="py-3 px-3 text-slate-600 text-[11px]">
-                                    <div class="font-medium text-slate-800">{{ $t->transaction_date->format('d/m/Y') }}</div>
-                                    <div class="text-[10px] text-slate-400 font-mono">{{ $t->transaction_date->format('H:i:s') }} WIB</div>
-                                </td>
-                                <td class="py-3 px-3">
-                                    @if($t->transaction_type === 'deposit')
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                            Setoran
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200/80">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                                            Penarikan
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="py-3 px-3 text-slate-600 text-[11px]">
-                                    {{ $t->description ?: '-' }}
-                                </td>
-                                <td class="py-3 px-3 text-right font-mono font-extrabold text-[12px] {{ $t->transaction_type === 'deposit' ? 'text-emerald-700' : 'text-rose-600' }}">
-                                    {{ $t->transaction_type === 'deposit' ? '+' : '-' }}Rp {{ number_format($t->amount, 0, ',', '.') }}
-                                </td>
-                                <td class="py-3 px-3 text-right font-mono font-bold text-slate-900 text-[11px]">
-                                    Rp {{ number_format($t->balance_after, 0, ',', '.') }}
-                                </td>
-                                <td class="py-3 px-3 text-slate-600 text-[11px]">
-                                    <div class="font-medium text-slate-800">{{ $t->user?->name ?? 'Teller 01' }}</div>
-                                    <div class="text-[10px] text-slate-400">Loket SMKN 1 Bantul</div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="py-14 text-center text-slate-400">
-                                    <div class="flex flex-col items-center justify-center gap-1.5">
-                                        <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                                        <span class="text-xs font-medium">Belum ada riwayat transaksi pada rekening tabungan Anda</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+        <!-- Shortcut 2: Setor -->
+        <button type="button" 
+                onclick="openSetorModal()" 
+                class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs flex flex-col items-center gap-1.5 hover:bg-emerald-50/50 hover:border-emerald-200 active:scale-95 transition-all cursor-pointer">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
             </div>
+            <span class="text-[11px] font-bold text-slate-700">Setor</span>
+        </button>
+
+        <!-- Shortcut 3: Tarik -->
+        <button type="button" 
+                onclick="openTarikModal()" 
+                class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs flex flex-col items-center gap-1.5 hover:bg-rose-50/50 hover:border-rose-200 active:scale-95 transition-all cursor-pointer">
+            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+            </div>
+            <span class="text-[11px] font-bold text-slate-700">Tarik</span>
+        </button>
+
+        <!-- Shortcut 4: Mutasi -->
+        <a href="{{ route('saver.mutation') }}" 
+           class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs flex flex-col items-center gap-1.5 hover:bg-amber-50/50 hover:border-amber-200 active:scale-95 transition-all">
+            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+            </div>
+            <span class="text-[11px] font-bold text-slate-700">Mutasi</span>
+        </a>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 4. FINANCIAL INSIGHTS BENTO CARD (Identik Flutter Home Bento)              -->
+    <!-- ========================================================================= -->
+    <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs flex items-center divide-x divide-slate-100">
+        <!-- Setoran Bulan Ini -->
+        <div class="flex-1 pr-3 flex flex-col">
+            <div class="flex items-center gap-1.5 mb-1">
+                <div class="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                </div>
+                <span class="text-[11px] font-semibold text-slate-500">Setoran Bulan Ini</span>
+            </div>
+            <p class="text-sm font-extrabold font-mono text-emerald-600 pl-6">
+                +Rp {{ number_format($monthlyDeposits, 0, ',', '.') }}
+            </p>
         </div>
 
-        <!-- Subtle Footer Alignment -->
-        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 shrink-0">
-            <span>Rekening Resmi Siswa</span>
-            <span class="font-mono">Edubank SMKN 1 Bantul</span>
+        <!-- Penarikan Bulan Ini -->
+        <div class="flex-1 pl-3 flex flex-col">
+            <div class="flex items-center gap-1.5 mb-1">
+                <div class="w-5 h-5 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+                </div>
+                <span class="text-[11px] font-semibold text-slate-500">Penarikan Bulan Ini</span>
+            </div>
+            <p class="text-sm font-extrabold font-mono text-rose-600 pl-6">
+                -Rp {{ number_format($monthlyWithdrawals, 0, ',', '.') }}
+            </p>
         </div>
     </div>
-</div>
 
-<!-- ========================================================================= -->
-<!-- MODAL: QR Code Rekening Ukuran Besar & Elegan (Identik Milik Admin)        -->
-<!-- ========================================================================= -->
-<div id="qrModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4" onclick="if(event.target === this) closeQrModal()">
-    <div class="bg-white rounded-[28px] max-w-sm w-full p-6 shadow-2xl border border-slate-200/80 text-center animate-fade-in relative">
-        <button type="button" onclick="closeQrModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm cursor-pointer">&times;</button>
-        
-        <!-- Header Identitas Bank Mini -->
-        <div class="flex items-center justify-center gap-2 mb-4">
-            <div class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-            </div>
-            <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Edubank SMKN 1 Bantul</span>
-        </div>
-
-        <!-- Big QR Code Frame -->
-        <div class="w-64 h-64 mx-auto p-4 bg-white rounded-2xl border border-slate-200/80 shadow-inner flex items-center justify-center">
-            <img src="{{ $qrCodeDataUri }}" alt="QR Code Rekening" class="w-full h-full object-contain">
-        </div>
-
-        <!-- Student & Account Details -->
-        <div class="mt-4 space-y-0.5">
-            <p class="text-base font-bold text-slate-900 uppercase tracking-tight">{{ $saver->full_name }}</p>
-            <p class="text-sm font-mono font-bold text-blue-600">{{ $saver->account_number }}</p>
-            <p class="text-xs text-slate-500 font-medium">{{ $saver->class_name }} &bull; NIS: {{ $saver->student_id_number }}</p>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="flex items-center gap-2 mt-5">
-            <a href="{{ $qrCodeDataUri }}" download="QR_{{ $saver->account_number }}.png" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
-                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                <span>Unduh QR</span>
+    <!-- ========================================================================= -->
+    <!-- 5. RECENT TRANSACTIONS (Aktivitas Terakhir)                               -->
+    <!-- ========================================================================= -->
+    <div class="space-y-3 pt-1">
+        <div class="flex items-center justify-between">
+            <h2 class="text-sm font-bold text-slate-900 tracking-tight">Aktivitas Terakhir</h2>
+            <a href="{{ route('saver.mutation') }}" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-0.5">
+                <span>Lihat Semua</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </a>
-            <button type="button" onclick="closeQrModal()" class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer">
-                Tutup
-            </button>
         </div>
+
+        <div class="space-y-2.5">
+            @forelse($recentTransactions as $t)
+                @php
+                    $isDeposit = ($t->transaction_type === 'deposit');
+                @endphp
+                <div class="bg-white rounded-2xl p-3.5 border border-slate-200/70 shadow-xs flex items-center justify-between gap-3 hover:border-slate-300 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 {{ $isDeposit ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                @if($isDeposit)
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                                @else
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                                @endif
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800 line-clamp-1">
+                                {{ $isDeposit ? 'Setoran Tunai di Loket' : 'Penarikan Kas Tabungan' }}
+                            </p>
+                            <span class="text-[10px] text-slate-400 font-medium">
+                                {{ \Carbon\Carbon::parse($t->transaction_date)->translatedFormat('d M Y') }} &bull; {{ $t->created_at->format('H:i') }} WIB
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="text-right shrink-0">
+                        <span class="text-xs font-extrabold font-mono {{ $isDeposit ? 'text-emerald-600' : 'text-rose-600' }}">
+                            {{ $isDeposit ? '+' : '-' }}Rp {{ number_format($t->amount, 0, ',', '.') }}
+                        </span>
+                        <span class="block text-[9px] text-slate-400 font-medium capitalize">
+                            {{ $t->status ?? 'Sukses' }}
+                        </span>
+                    </div>
+                </div>
+            @empty
+                <div class="bg-white rounded-2xl p-8 border border-slate-200/80 text-center text-slate-400 space-y-2">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-400 mx-auto flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    </div>
+                    <p class="text-xs font-medium">Belum ada aktivitas transaksi.</p>
+                </div>
+            @endforelse
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal: Petunjuk Setoran Tunai -->
+<div id="setorModal" class="hidden fixed inset-0 z-50 items-end md:items-center justify-center bg-slate-900/60 backdrop-blur-xs p-0 md:p-4" onclick="if(event.target === this) closeSetorModal()">
+    <div class="w-full max-w-[400px] bg-white rounded-t-[32px] md:rounded-[28px] p-6 shadow-2xl space-y-4 border border-slate-100">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                </div>
+                <h3 class="text-sm font-bold text-slate-800">Petunjuk Setor Tunai</h3>
+            </div>
+            <button type="button" onclick="closeSetorModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-sm font-bold">&times;</button>
+        </div>
+        <div class="space-y-3 text-xs text-slate-600">
+            <div class="flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-blue-50 text-blue-600 font-bold text-[10px] flex items-center justify-center shrink-0">1</span>
+                <span>Bawa uang tunai fisik yang ingin disetorkan ke loket Bank Mini SMKN 1 Bantul.</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-blue-50 text-blue-600 font-bold text-[10px] flex items-center justify-center shrink-0">2</span>
+                <span>Tunjukkan <strong>QR Rekening</strong> Anda kepada petugas Teller untuk pemindaian otomatis.</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-blue-50 text-blue-600 font-bold text-[10px] flex items-center justify-center shrink-0">3</span>
+                <span>Teller memverifikasi dan mencetak struk transaksi. Saldo langsung bertambah secara instan!</span>
+            </div>
+        </div>
+        <button type="button" onclick="closeSetorModal()" class="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-semibold">Mengerti</button>
     </div>
 </div>
 
-<!-- ========================================================================= -->
-<!-- MODAL: Ganti PIN Keamanan Siswa (Centered Backdrop Blur)                  -->
-<!-- ========================================================================= -->
-<div id="pinModal" 
-     class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs"
-     onclick="if(event.target === this) closePinModal()">
-    
-    <div class="bg-white rounded-[28px] max-w-sm w-full p-6 border border-slate-200/80 shadow-2xl space-y-4 relative">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-            <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+<!-- Modal: Petunjuk Penarikan Tunai & Saldo Mengendap -->
+<div id="tarikModal" class="hidden fixed inset-0 z-50 items-end md:items-center justify-center bg-slate-900/60 backdrop-blur-xs p-0 md:p-4" onclick="if(event.target === this) closeTarikModal()">
+    <div class="w-full max-w-[400px] bg-white rounded-t-[32px] md:rounded-[28px] p-6 shadow-2xl space-y-4 border border-slate-100">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
                 </div>
-                <div>
-                    <h3 class="text-sm font-bold text-slate-800">Ubah PIN Keamanan</h3>
-                    <p class="text-[10px] text-slate-400">Wajib 6 digit angka rahasia</p>
-                </div>
+                <h3 class="text-sm font-bold text-slate-800">Batas Penarikan Tunai</h3>
             </div>
-            <button type="button" onclick="closePinModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm cursor-pointer">
-                &times;
-            </button>
+            <button type="button" onclick="closeTarikModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-sm font-bold">&times;</button>
         </div>
-
-        <form id="pinForm" method="POST" action="{{ route('saver.pin.update') }}" class="space-y-3.5">
-            @csrf
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">PIN Saat Ini (6 Digit) <span class="text-rose-500">*</span></label>
-                <input type="password" 
-                       name="current_pin" 
-                       maxlength="6" 
-                       pattern="[0-9]{6}" 
-                       placeholder="******" 
-                       required 
-                       class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-center text-base font-mono tracking-widest text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
+        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100 space-y-1.5 text-xs">
+            <div class="flex items-center justify-between">
+                <span class="text-slate-500">Maksimal Dapat Ditarik:</span>
+                <span class="font-mono font-bold text-emerald-600 text-sm">Rp {{ number_format($maxWithdrawable, 0, ',', '.') }}</span>
             </div>
-
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">PIN Baru (6 Digit) <span class="text-rose-500">*</span></label>
-                <input type="password" 
-                       name="new_pin" 
-                       id="new_pin"
-                       maxlength="6" 
-                       pattern="[0-9]{6}" 
-                       placeholder="******" 
-                       required 
-                       class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-center text-base font-mono tracking-widest text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
+            <div class="flex items-center justify-between">
+                <span class="text-slate-500">Saldo Wajib Mengendap:</span>
+                <span class="font-mono font-bold text-slate-700">Rp {{ number_format($holdingBalance, 0, ',', '.') }}</span>
             </div>
-
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Ulangi PIN Baru <span class="text-rose-500">*</span></label>
-                <input type="password" 
-                       name="new_pin_confirmation" 
-                       id="new_pin_confirmation"
-                       maxlength="6" 
-                       pattern="[0-9]{6}" 
-                       placeholder="******" 
-                       required 
-                       class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-center text-base font-mono tracking-widest text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20">
-            </div>
-
-            <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-                <button type="button" onclick="closePinModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold cursor-pointer">
-                    Batal
-                </button>
-                <button type="button" onclick="triggerPinConfirm()" class="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-sm cursor-pointer">
-                    Simpan PIN
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- ========================================================================= -->
-<!-- MODAL: Konfirmasi Simpan PIN (Centered Backdrop Blur)                     -->
-<!-- ========================================================================= -->
-<div id="confirmPinModal" 
-     class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs"
-     onclick="if(event.target === this) closeConfirmPinModal()">
-    
-    <div class="bg-white rounded-[24px] max-w-sm w-full p-6 border border-slate-200/80 shadow-2xl space-y-4 relative">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-            <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                </div>
-                <h3 class="text-sm font-bold text-slate-800">Konfirmasi Ubah PIN</h3>
-            </div>
-            <button type="button" onclick="closeConfirmPinModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm cursor-pointer">
-                &times;
-            </button>
         </div>
-
         <p class="text-xs text-slate-500 leading-relaxed">
-            Apakah Anda yakin ingin memperbarui 6 digit PIN keamanan transaksi tabungan Anda? Harap jaga kerahasiaan PIN ini dari orang lain.
+            Sesuai regulasi Bank Mini, saldo minimum Rp 10.000 wajib tersimpan di rekening sebagai saldo aktif buku tabungan.
         </p>
-
-        <div class="flex items-center justify-end gap-2 pt-2">
-            <button type="button" onclick="closeConfirmPinModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold cursor-pointer">
-                Periksa Lagi
-            </button>
-            <button type="button" onclick="submitPinForm()" class="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold shadow-xs cursor-pointer">
-                Ya, Perbarui PIN
-            </button>
-        </div>
+        <button type="button" onclick="closeTarikModal()" class="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-semibold">Mengerti</button>
     </div>
 </div>
 
 @push('scripts')
 <script>
-    // QR Modal Handlers (Identik Admin)
-    function openQrModal() {
-        const modal = document.getElementById('qrModal');
-        if (modal) {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+    let isBalanceHidden = false;
+    function toggleCardBalance() {
+        isBalanceHidden = !isBalanceHidden;
+        const balText = document.getElementById('cardBalanceText');
+        const balHidden = document.getElementById('cardBalanceHidden');
+        const eyeOpen = document.getElementById('cardEyeOpen');
+        const eyeClosed = document.getElementById('cardEyeClosed');
+        const eyeLabel = document.getElementById('cardEyeLabel');
+
+        if (isBalanceHidden) {
+            balText.classList.add('hidden');
+            balHidden.classList.remove('hidden');
+            eyeOpen.classList.add('hidden');
+            eyeClosed.classList.remove('hidden');
+            eyeLabel.innerText = 'Tampilkan';
+        } else {
+            balText.classList.remove('hidden');
+            balHidden.classList.add('hidden');
+            eyeOpen.classList.remove('hidden');
+            eyeClosed.classList.add('hidden');
+            eyeLabel.innerText = 'Sembunyikan';
         }
     }
 
-    function closeQrModal() {
-        const modal = document.getElementById('qrModal');
-        if (modal) {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
+    function openSetorModal() {
+        const m = document.getElementById('setorModal');
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+    }
+    function closeSetorModal() {
+        const m = document.getElementById('setorModal');
+        m.classList.add('hidden');
+        m.classList.remove('flex');
     }
 
-    // Fallback alias
-    function openQrCardModal() { openQrModal(); }
-    function closeQrCardModal() { closeQrModal(); }
-
-    // PIN Modal Handlers
-    function openPinModal() {
-        const modal = document.getElementById('pinModal');
-        if (modal) {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
+    function openTarikModal() {
+        const m = document.getElementById('tarikModal');
+        m.classList.remove('hidden');
+        m.classList.add('flex');
     }
-
-    function closePinModal() {
-        const modal = document.getElementById('pinModal');
-        if (modal) {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
+    function closeTarikModal() {
+        const m = document.getElementById('tarikModal');
+        m.classList.add('hidden');
+        m.classList.remove('flex');
     }
-
-    // Confirm PIN Handlers
-    function triggerPinConfirm() {
-        const form = document.getElementById('pinForm');
-        if (form && form.reportValidity()) {
-            const newPin = document.getElementById('new_pin').value;
-            const confirmPin = document.getElementById('new_pin_confirmation').value;
-            if (newPin !== confirmPin) {
-                alert('Konfirmasi PIN baru tidak cocok dengan PIN baru.');
-                return;
-            }
-            openConfirmPinModal();
-        }
-    }
-
-    function openConfirmPinModal() {
-        const modal = document.getElementById('confirmPinModal');
-        if (modal) {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-    }
-
-    function closeConfirmPinModal() {
-        const modal = document.getElementById('confirmPinModal');
-        if (modal) {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-    }
-
-    function submitPinForm() {
-        const form = document.getElementById('pinForm');
-        if (form) form.submit();
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeQrModal();
-            closePinModal();
-            closeConfirmPinModal();
-        }
-    });
 </script>
 @endpush
 @endsection

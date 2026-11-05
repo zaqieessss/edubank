@@ -135,21 +135,21 @@
             <form method="POST" action="{{ route('login.post') }}" class="space-y-5">
                 @csrf
 
-                <!-- Email Input -->
+                <!-- Email / Account Number Input -->
                 <div>
-                    <label for="email" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Alamat Email</label>
+                    <label for="email" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Email / No. Rekening</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206"/></svg>
                         </div>
-                        <input type="email" 
+                        <input type="text" 
                                id="email" 
                                name="email" 
                                value="{{ old('email') }}" 
                                required 
                                autofocus
                                class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-4 py-3.5 text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-xs"
-                               placeholder="nama@email.com">
+                               placeholder="nama@email.com atau No. Rekening">
                     </div>
                     @error('email')
                         <p class="text-xs text-rose-600 font-medium mt-1.5">{{ $message }}</p>
