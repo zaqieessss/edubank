@@ -178,13 +178,10 @@
             </div>
         </div>
 
-        <!-- Compact Pagination Footer (Pinned at bottom) -->
+        <!-- Compact Data Counter Footer (Pinned at bottom) -->
         <div class="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 shrink-0">
             <div>
-                Menampilkan <span class="font-bold text-slate-800">{{ $savers->firstItem() ?? 0 }}</span> - <span class="font-bold text-slate-800">{{ $savers->lastItem() ?? 0 }}</span> dari <span class="font-bold text-slate-800">{{ $savers->total() }}</span> nasabah
-            </div>
-            <div>
-                {{ $savers->links('pagination::tailwind') }}
+                Menampilkan <span class="font-bold text-slate-800">{{ $savers->count() }}</span> data dari <span class="font-bold text-slate-800">{{ number_format($totalSavers ?? $savers->count(), 0, ',', '.') }}</span> data
             </div>
         </div>
 

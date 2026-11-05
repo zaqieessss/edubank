@@ -226,7 +226,14 @@ class MemberService
                 }
 
                 $className = $data['class_name'] ?? ('X ' . $major . ' 1');
-                $cohort = $data['cohort'] ?? date('Y');
+                $cohort = trim((string)($data['cohort'] ?? ''));
+                if (empty($cohort) || in_array($cohort, ['2026', '2025', '2024'], true)) {
+                    $cohort = match ($gradeLevel) {
+                        '12' => '27',
+                        '11' => '28',
+                        default => '29',
+                    };
+                }
                 
                 $rawGender = strtolower($data['gender'] ?? 'male');
                 $gender = (in_array($rawGender, ['female', 'perempuan', 'p', 'f'], true)) ? 'female' : 'male';

@@ -118,6 +118,18 @@ Route::get('deploy-migrate-{secret}', function (\Illuminate\Http\Request $reques
             $importOutput = "Berhasil mengimpor {$res['imported']} siswa real, {$res['skipped']} dilewati, " . count($res['errors']) . " error. Total siswa di database: " . \App\Models\Member::count();
         }
 
+        // 6. Update Cohort / Angkatan (jika parameter ?update_cohort=1 disertakan)
+        $cohortOutput = 'Pembaruan angkatan dilewati.';
+        if ($request->query('update_cohort') === '1' || $request->has('update_cohort')) {
+            $c12 = \Illuminate\Support\Facades\DB::table('members')->where('grade_level', '12')->update(['cohort' => '27']);
+            $c11 = \Illuminate\Support\Facades\DB::table('members')->where('grade_level', '11')->update(['cohort' => '28']);
+            $c10 = \Illuminate\Support\Facades\DB::table('members')->where('grade_level', '10')->update(['cohort' => '29']);
+            \Illuminate\Support\Facades\DB::table('savers')->where('grade_level', '12')->update(['cohort' => '27']);
+            \Illuminate\Support\Facades\DB::table('savers')->where('grade_level', '11')->update(['cohort' => '28']);
+            \Illuminate\Support\Facades\DB::table('savers')->where('grade_level', '10')->update(['cohort' => '29']);
+            $cohortOutput = "Angkatan berhasil disinkronkan: Kelas 12 -> Angkatan 27 ({$c12} siswa), Kelas 11 -> Angkatan 28 ({$c11} siswa), Kelas 10 -> Angkatan 29 ({$c10} siswa).";
+        }
+
         // 5. Sambungkan symlink storage publik
         try {
             \Illuminate\Support\Facades\Artisan::call('storage:link');
@@ -136,6 +148,7 @@ Route::get('deploy-migrate-{secret}', function (\Illuminate\Http\Request $reques
             'reset_output'   => $resetOutput,
             'purge_output'   => $purgeOutput,
             'import_output'  => $importOutput,
+            'cohort_output'  => $cohortOutput,
         ]);
     } catch (\Throwable $e) {
         return response()->json([

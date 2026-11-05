@@ -39,9 +39,10 @@ class SaverController extends Controller
             });
         }
 
-        $savers = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
+        $totalSavers = $query->count();
+        $savers = $query->orderBy('id', 'desc')->take(20)->get();
 
-        return view('admin.savers.index', compact('savers'));
+        return view('admin.savers.index', compact('savers', 'totalSavers'));
     }
 
     public function create()

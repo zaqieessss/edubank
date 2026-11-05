@@ -42,12 +42,13 @@ class MemberController extends Controller
             });
         }
 
-        $members = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
+        $totalMembers = $query->count();
+        $members = $query->orderBy('id', 'desc')->take(20)->get();
 
         $majors = Major::cases();
         $grades = GradeLevel::cases();
 
-        return view('admin.members.index', compact('members', 'majors', 'grades'));
+        return view('admin.members.index', compact('members', 'totalMembers', 'majors', 'grades'));
     }
 
     public function create()

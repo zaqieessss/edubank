@@ -210,7 +210,7 @@
                                 </td>
                                 <td class="py-3 px-3">
                                     <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md text-[10px] font-bold">
-                                        {{ $m->cohort }}
+                                        Angkatan {{ $m->cohort }}
                                     </span>
                                 </td>
                                 <td class="py-3 px-3 text-slate-600 capitalize">
@@ -282,13 +282,10 @@
             </div>
         </div>
 
-        <!-- Compact Pagination Footer (Pinned at bottom) -->
+        <!-- Compact Data Counter Footer (Pinned at bottom) -->
         <div class="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 shrink-0">
             <div>
-                Menampilkan <span class="font-bold text-slate-800">{{ $members->firstItem() ?? 0 }}</span> - <span class="font-bold text-slate-800">{{ $members->lastItem() ?? 0 }}</span> dari <span class="font-bold text-slate-800">{{ $members->total() }}</span> siswa
-            </div>
-            <div>
-                {{ $members->links() }}
+                Menampilkan <span class="font-bold text-slate-800">{{ $members->count() }}</span> data dari <span class="font-bold text-slate-800">{{ number_format($totalMembers ?? $members->count(), 0, ',', '.') }}</span> data
             </div>
         </div>
     </div>
