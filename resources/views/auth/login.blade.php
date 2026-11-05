@@ -216,10 +216,7 @@
             <!-- Bottom Left Info -->
             <div class="relative z-10 pt-6 text-[11px] text-slate-400 flex items-center justify-between border-t border-white/10 mt-6">
                 <span>Teller &bull; Administrator &bull; Siswa</span>
-                <span class="font-mono text-emerald-400 font-semibold flex items-center gap-1">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    SSL 256-Bit
-                </span>
+                <span class="text-slate-400/80 font-medium">&copy; {{ date('Y') }}</span>
             </div>
         </div>
 
@@ -315,7 +312,7 @@
 
                 <!-- Action Button -->
                 <button type="submit" 
-                        class="w-full bg-gradient-to-r from-blue-600 via-blue-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 text-white font-bold text-xs sm:text-sm py-3.5 rounded-xl shadow-md shadow-blue-600/25 transition-all hover:shadow-lg hover:shadow-emerald-600/30 active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-2">
+                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm py-3.5 rounded-xl shadow-sm transition-all hover:shadow-md active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-2">
                     <span>Masuk ke Dashboard</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </button>
