@@ -50,120 +50,53 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-
-        /* 3D Floating Ambient Animations for Admin & Teller */
-        @keyframes float3d-app-1 {
-            0%, 100% {
-                transform: translateY(0px) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-10px) rotate(1deg);
-            }
-        }
-        @keyframes float3d-app-2 {
-            0%, 100% {
-                transform: translateY(0px) rotate(0deg);
-            }
-            50% {
-                transform: translateY(12px) rotate(-1.2deg);
-            }
-        }
-        .anim-3d-app-1 {
-            animation: float3d-app-1 20s ease-in-out infinite;
-            transform-origin: center;
-        }
-        .anim-3d-app-2 {
-            animation: float3d-app-2 22s ease-in-out infinite;
-            transform-origin: center;
-        }
     </style>
     @stack('styles')
 </head>
 <body class="h-screen w-screen p-0 flex overflow-hidden bg-[#F8FAFC] relative selection:bg-blue-600 selection:text-white">
 
     <!-- ========================================================================= -->
-    <!-- 3D AMBIENT BACKGROUND SCENE LAYER (Admin & Teller Pages)                  -->
+    <!-- AMBIENT BLURRED BACKGROUND ILLUSTRATION LAYER (Admin & Teller Pages)      -->
     <!-- ========================================================================= -->
     <div class="fixed inset-0 pointer-events-none select-none overflow-hidden z-0">
-        <!-- Soft Radial Aurora Glow Orbs (Subtle Depth Lighting) -->
-        <div class="absolute -top-32 -left-32 w-[650px] h-[650px] rounded-full bg-gradient-to-br from-blue-400/18 via-sky-300/12 to-transparent blur-[120px]"></div>
-        <div class="absolute top-1/4 -right-36 w-[600px] h-[600px] rounded-full bg-gradient-to-bl from-indigo-400/14 via-purple-300/10 to-transparent blur-[130px]"></div>
-        <div class="absolute -bottom-36 left-1/3 w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-emerald-400/15 via-teal-300/10 to-transparent blur-[140px]"></div>
+        <!-- Soft Radial Aurora Glow Orbs (Subtle Blur Effect) -->
+        <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-400/20 via-sky-300/15 to-transparent blur-[120px]"></div>
+        <div class="absolute top-1/4 -right-36 w-[550px] h-[550px] rounded-full bg-gradient-to-bl from-indigo-400/15 via-purple-300/12 to-transparent blur-[130px]"></div>
+        <div class="absolute -bottom-36 left-1/3 w-[650px] h-[650px] rounded-full bg-gradient-to-tr from-emerald-400/16 via-teal-300/12 to-transparent blur-[140px]"></div>
 
-        <!-- 3D Volumetric Torus (Top Left with Soft Blur for Depth) -->
-        <div class="absolute -top-36 -left-36 md:-top-44 md:-left-44 w-[680px] h-[680px] md:w-[820px] md:h-[820px] opacity-40 blur-[2px] anim-3d-app-1">
-            <svg class="w-full h-full" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <radialGradient id="appTorusGradTL" cx="36%" cy="30%" r="68%">
-                        <stop offset="0%" stop-color="#7DD3FC" />
-                        <stop offset="25%" stop-color="#38BDF8" />
-                        <stop offset="60%" stop-color="#2563EB" />
-                        <stop offset="85%" stop-color="#1D4ED8" />
-                        <stop offset="100%" stop-color="#0F2454" />
-                    </radialGradient>
-                    <linearGradient id="appSpecularTL" x1="20%" y1="0%" x2="80%" y2="60%">
-                        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8" />
-                        <stop offset="45%" stop-color="#BAE6FD" stop-opacity="0.35" />
-                        <stop offset="100%" stop-color="#38BDF8" stop-opacity="0" />
-                    </linearGradient>
-                </defs>
-                <ellipse cx="400" cy="400" rx="380" ry="365" stroke="#38BDF8" stroke-opacity="0.25" stroke-width="1.2" transform="rotate(-15 400 400)" />
-                <ellipse cx="400" cy="400" rx="320" ry="305" stroke="#60A5FA" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="6 10" transform="rotate(-15 400 400)" />
-                <!-- Torus Body -->
-                <path d="M 400,150 A 250,250 0 1,0 400,650 A 250,250 0 1,0 400,150 Z M 400,235 A 165,165 0 1,1 400,565 A 165,165 0 1,1 400,235 Z" 
-                      fill="url(#appTorusGradTL)" />
-                <!-- 3D Specular Ridge -->
-                <path d="M 215,240 A 230,230 0 0,1 550,200" stroke="url(#appSpecularTL)" stroke-width="10" stroke-linecap="round" />
-                <path d="M 250,250 A 230,230 0 0,1 515,215" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.8" />
+        <!-- Concentric Orbital Geometric Rings with Soft Blur (Top Left) -->
+        <div class="absolute -top-28 -left-28 w-[720px] h-[720px] opacity-45 blur-[1px]">
+            <svg class="w-full h-full text-blue-500/20" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="400" cy="400" r="375" stroke="currentColor" stroke-width="1.2" stroke-dasharray="8 12" />
+                <circle cx="400" cy="400" r="305" stroke="currentColor" stroke-width="1.8" />
+                <circle cx="400" cy="400" r="235" stroke="currentColor" stroke-width="1" stroke-dasharray="4 6" />
+                <circle cx="400" cy="400" r="165" stroke="currentColor" stroke-width="2.2" />
+                <circle cx="400" cy="400" r="95" stroke="currentColor" stroke-width="1.5" />
+                <circle cx="400" cy="95" r="5" fill="#3B82F6" opacity="0.7" />
+                <circle cx="705" cy="400" r="4" fill="#10B981" opacity="0.7" />
+                <circle cx="400" cy="635" r="5" fill="#0EA5E9" opacity="0.7" />
+                <circle cx="165" cy="400" r="4" fill="#6366F1" opacity="0.7" />
             </svg>
         </div>
 
-        <!-- 3D Volumetric Torus (Bottom Right with Soft Blur) -->
-        <div class="absolute -bottom-40 -right-40 md:-bottom-48 md:-right-48 w-[640px] h-[640px] md:w-[780px] md:h-[780px] opacity-40 blur-[2px] anim-3d-app-2">
-            <svg class="w-full h-full" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <radialGradient id="appTorusGradBR" cx="38%" cy="32%" r="66%">
-                        <stop offset="0%" stop-color="#6EE7B7" />
-                        <stop offset="25%" stop-color="#10B981" />
-                        <stop offset="60%" stop-color="#0D9488" />
-                        <stop offset="85%" stop-color="#0284C7" />
-                        <stop offset="100%" stop-color="#0F172A" />
-                    </radialGradient>
-                    <linearGradient id="appSpecularBR" x1="15%" y1="10%" x2="85%" y2="70%">
-                        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8" />
-                        <stop offset="50%" stop-color="#A7F3D0" stop-opacity="0.4" />
-                        <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
-                    </linearGradient>
-                </defs>
-                <ellipse cx="400" cy="400" rx="375" ry="360" stroke="#10B981" stroke-opacity="0.22" stroke-width="1.2" transform="rotate(20 400 400)" />
-                <ellipse cx="400" cy="400" rx="315" ry="300" stroke="#14B8A6" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="6 10" transform="rotate(20 400 400)" />
-                <!-- Torus Body -->
-                <path d="M 400,165 A 235,235 0 1,0 400,635 A 235,235 0 1,0 400,165 Z M 400,250 A 150,150 0 1,1 400,550 A 150,150 0 1,1 400,250 Z" 
-                      fill="url(#appTorusGradBR)" />
-                <!-- Specular Ridge -->
-                <path d="M 225,255 A 215,215 0 0,1 545,215" stroke="url(#appSpecularBR)" stroke-width="9" stroke-linecap="round" />
-            </svg>
-        </div>
-
-        <!-- Floating 3D Ambient Glass Sphere (Subtle Depth Detail) -->
-        <div class="absolute top-1/3 right-1/4 w-16 h-16 opacity-35 blur-[1.5px] hidden lg:block">
-            <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <radialGradient id="appSphereGrad" cx="32%" cy="28%" r="65%">
-                        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
-                        <stop offset="25%" stop-color="#7DD3FC" stop-opacity="0.8" />
-                        <stop offset="60%" stop-color="#2563EB" stop-opacity="0.75" />
-                        <stop offset="100%" stop-color="#0F172A" stop-opacity="0.85" />
-                    </radialGradient>
-                </defs>
-                <circle cx="50" cy="50" r="42" fill="url(#appSphereGrad)" />
+        <!-- Concentric Orbital Geometric Rings with Soft Blur (Bottom Right) -->
+        <div class="absolute -bottom-32 -right-32 w-[760px] h-[760px] opacity-45 blur-[1px]">
+            <svg class="w-full h-full text-emerald-500/20" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="400" cy="400" r="365" stroke="currentColor" stroke-width="1.2" />
+                <circle cx="400" cy="400" r="290" stroke="currentColor" stroke-width="1.8" stroke-dasharray="6 10" />
+                <circle cx="400" cy="400" r="215" stroke="currentColor" stroke-width="1" />
+                <circle cx="400" cy="400" r="140" stroke="currentColor" stroke-width="2" stroke-dasharray="4 6" />
+                <circle cx="400" cy="400" r="70" stroke="currentColor" stroke-width="1.5" />
+                <circle cx="400" cy="110" r="4.5" fill="#10B981" opacity="0.7" />
+                <circle cx="615" cy="400" r="4" fill="#14B8A6" opacity="0.7" />
+                <circle cx="400" cy="690" r="5" fill="#3B82F6" opacity="0.7" />
             </svg>
         </div>
 
         <!-- Subtle Dot Matrix Pattern -->
-        <svg class="absolute inset-0 w-full h-full text-slate-400/20 opacity-30" xmlns="http://www.w3.org/2000/svg">
+        <svg class="absolute inset-0 w-full h-full text-slate-400/25 opacity-35" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <pattern id="appBgDots" x="0" y="0" width="36" height="36" patternUnits="userSpaceOnUse">
+                <pattern id="appBgDots" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
                     <circle cx="2" cy="2" r="1" fill="currentColor" />
                 </pattern>
             </defs>
