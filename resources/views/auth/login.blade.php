@@ -10,13 +10,13 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #F8FAFC;
             color: #0F172A;
             -webkit-font-smoothing: antialiased;
@@ -210,7 +210,7 @@
                 </svg>
 
                 <!-- Watermark Text / Emblem at bottom right of left hero -->
-                <div class="absolute -bottom-4 -right-2 text-[100px] sm:text-[120px] font-black italic tracking-tight text-white/[0.05] leading-none select-none pointer-events-none">
+                <div class="absolute -bottom-4 -right-2 text-[100px] sm:text-[120px] font-bold italic tracking-normal text-white/[0.05] leading-none select-none pointer-events-none">
                     EDU
                 </div>
             </div>
@@ -223,16 +223,16 @@
                         <img src="{{ asset('images/logo-white.png') }}" alt="Edubank Logo" class="w-full h-full object-contain drop-shadow">
                     </div>
                     <div>
-                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-[10px] font-bold text-emerald-300">
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-[10px] font-semibold text-emerald-300">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                             <span>E-Teller & Mini Bank</span>
                         </div>
-                        <h2 class="text-xs font-semibold text-slate-300 tracking-wide mt-1">SMKN 1 Bantul</h2>
+                        <h2 class="text-xs font-medium text-slate-300 tracking-wide mt-1">SMKN 1 Bantul</h2>
                     </div>
                 </div>
 
-                <!-- Big Main Typography (Distinctive & Inspiring) -->
-                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-[1.2] text-white">
+                <!-- Big Main Typography (Relaxed, Friendly & Balanced) -->
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-normal leading-[1.3] text-white">
                     Kelola Layanan <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-sky-200 to-emerald-300">Bank Mini</span> Lebih Cepat & Terintegrasi.
                 </h1>
 
@@ -248,7 +248,7 @@
         <div class="md:col-span-7 p-8 sm:p-10 md:p-12 lg:p-14 flex flex-col justify-center bg-white relative">
             
             <div class="mb-7">
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Selamat Datang Kembali</h2>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-normal">Selamat Datang Kembali</h2>
                 <p class="text-xs sm:text-sm text-slate-500 mt-1.5">Masuk ke dashboard operasional Edubank SMKN 1 Bantul.</p>
             </div>
 
@@ -271,7 +271,7 @@
 
                 <!-- Email / Account Number Input -->
                 <div>
-                    <label for="email" class="block text-xs font-bold text-slate-700 mb-1.5">
+                    <label for="email" class="block text-xs font-semibold text-slate-700 mb-1.5">
                         Username, Email, atau No. Rekening
                     </label>
                     <div class="relative group">
@@ -279,13 +279,13 @@
                             <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                         </div>
                         <input type="text" 
-                               id="email" 
-                               name="email" 
-                               value="{{ old('email') }}" 
-                               required 
-                               autofocus
-                               class="w-full bg-slate-50 border border-slate-200/90 rounded-xl pl-11 pr-4 py-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-3 focus:ring-blue-500/15 focus:border-blue-600 transition-all shadow-xs"
-                               placeholder="nama@email.com atau RPL-29-0001">
+                                id="email" 
+                                name="email" 
+                                value="{{ old('email') }}" 
+                                required 
+                                autofocus
+                                class="w-full bg-slate-50 border border-slate-200/90 rounded-xl pl-11 pr-4 py-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-3 focus:ring-blue-500/15 focus:border-blue-600 transition-all shadow-xs"
+                                placeholder="nama@email.com atau RPL-29-0001">
                     </div>
                     @error('email')
                         <p class="text-[11px] text-rose-600 font-semibold mt-1">{{ $message }}</p>
@@ -295,19 +295,19 @@
                 <!-- Password Input with Eye Toggle -->
                 <div>
                     <div class="flex items-center justify-between mb-1.5">
-                        <label for="password" class="block text-xs font-bold text-slate-700">Kata Sandi (Password)</label>
-                        <a href="{{ route('password.request') }}" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:underline">Lupa password?</a>
+                        <label for="password" class="block text-xs font-semibold text-slate-700">Kata Sandi (Password)</label>
+                        <a href="{{ route('password.request') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700 hover:underline">Lupa password?</a>
                     </div>
                     <div class="relative group">
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
                             <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                         </div>
                         <input type="password" 
-                               id="password" 
-                               name="password" 
-                               required
-                               class="w-full bg-slate-50 border border-slate-200/90 rounded-xl pl-11 pr-11 py-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-3 focus:ring-blue-500/15 focus:border-blue-600 transition-all shadow-xs"
-                               placeholder="••••••••">
+                                id="password" 
+                                name="password" 
+                                required
+                                class="w-full bg-slate-50 border border-slate-200/90 rounded-xl pl-11 pr-11 py-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-3 focus:ring-blue-500/15 focus:border-blue-600 transition-all shadow-xs"
+                                placeholder="••••••••">
                         <button type="button" 
                                 onclick="togglePasswordVisibility()" 
                                 class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer focus:outline-none"
@@ -325,13 +325,13 @@
                 <div class="flex items-center justify-between pt-0.5">
                     <label class="flex items-center gap-2 cursor-pointer select-none">
                         <input type="checkbox" name="remember" class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer">
-                        <span class="text-xs text-slate-600 font-medium">Ingat saya di perangkat ini</span>
+                        <span class="text-xs text-slate-600 font-normal">Ingat saya di perangkat ini</span>
                     </label>
                 </div>
 
                 <!-- Action Button -->
                 <button type="submit" 
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm py-3.5 rounded-xl shadow-sm transition-all hover:shadow-md active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-2">
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm py-3.5 rounded-xl shadow-sm transition-all hover:shadow-md active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-2">
                     <span>Masuk ke Dashboard</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </button>
