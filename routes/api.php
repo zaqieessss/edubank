@@ -110,6 +110,14 @@ Route::get('deploy-migrate-{secret}', function (\Illuminate\Http\Request $reques
             $purgeOutput = 'Seluruh data master siswa, nasabah, rekening, dan akun login siswa berhasil dihapus bersih. Akun Admin dan Teller tetap utuh dan aktif.';
         }
 
+        // 5. Import Real Students (jika parameter ?import_real_students=1 disertakan)
+        $importOutput = 'Import data siswa real dilewati.';
+        if ($request->query('import_real_students') === '1' || $request->has('import_real_students')) {
+            $memberService = new \App\Services\MemberService();
+            $res = $memberService->importFile(public_path('data_siswa_real.xlsx'));
+            $importOutput = "Berhasil mengimpor {$res['imported']} siswa real, {$res['skipped']} dilewati, " . count($res['errors']) . " error. Total siswa di database: " . \App\Models\Member::count();
+        }
+
         // 5. Sambungkan symlink storage publik
         try {
             \Illuminate\Support\Facades\Artisan::call('storage:link');
@@ -127,6 +135,7 @@ Route::get('deploy-migrate-{secret}', function (\Illuminate\Http\Request $reques
             'seed_output'    => $seedOutput,
             'reset_output'   => $resetOutput,
             'purge_output'   => $purgeOutput,
+            'import_output'  => $importOutput,
         ]);
     } catch (\Throwable $e) {
         return response()->json([

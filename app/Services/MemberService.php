@@ -210,6 +210,15 @@ class MemberService
                 $email = $data['email'] ?? null;
                 $fullName = $data['full_name'] ?? null;
                 $major = strtoupper($data['major'] ?? '');
+                if ($major === 'AK') {
+                    $major = 'AKL';
+                }
+                if ($major === 'MPLB') {
+                    $major = 'MP';
+                }
+                if ($major === 'BDP') {
+                    $major = 'BR';
+                }
                 $gradeLevel = (string) ($data['grade_level'] ?? '10');
                 $gradeLevel = str_replace(['kelas', 'tingkat', ' '], '', strtolower($gradeLevel));
                 if (!in_array($gradeLevel, ['10', '11', '12', 'alumni'], true)) {
