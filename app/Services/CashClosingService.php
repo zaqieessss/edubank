@@ -180,15 +180,16 @@ class CashClosingService
      */
     public function approveClosing(DailyClosing $closing, int $adminId): DailyClosing
     {
-        if ($closing->difference !== 0) {
-            throw new Exception("Laporan belum seimbang (selisih: Rp " . number_format($closing->difference, 0, ',', '.') . "). Selesaikan dispute terlebih dahulu sebelum approval.");
-        }
-
         return DB::transaction(function () use ($closing, $adminId) {
+            $physicalCash = $closing->physical_cash ?? $closing->system_balance;
+            $difference = $physicalCash - (int) $closing->system_balance;
+
             $closing->update([
-                'admin_id'     => $adminId,
-                'status'       => 'approved',
-                'vault_status' => 'transferred_to_vault',
+                'admin_id'      => $adminId,
+                'status'        => 'approved',
+                'vault_status'  => 'transferred_to_vault',
+                'physical_cash' => $physicalCash,
+                'difference'    => $difference,
             ]);
 
             return $closing;

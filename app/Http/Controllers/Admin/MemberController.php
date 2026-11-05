@@ -151,8 +151,19 @@ class MemberController extends Controller
         return back()->with('success', 'Data siswa berhasil dihapus.');
     }
 
-    public function downloadTemplate(): StreamedResponse
+    public function downloadTemplate(Request $request): StreamedResponse
     {
+        $format = strtolower((string) $request->query('format', 'csv'));
+
+        if ($format === 'excel' || $format === 'xlsx') {
+            $xlsxContent = $this->memberService->generateTemplateXlsx();
+            return response()->streamDownload(function () use ($xlsxContent) {
+                echo $xlsxContent;
+            }, 'template_siswa_smkn1bantul.xlsx', [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
+        }
+
         $csvContent = $this->memberService->generateTemplateCsv();
 
         return response()->streamDownload(function () use ($csvContent) {
@@ -164,16 +175,23 @@ class MemberController extends Controller
 
     public function import(Request $request)
     {
-        $request->validate([
-            'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
-        ], [
-            'csv_file.required' => 'Pilih file CSV terlebih dahulu.',
-            'csv_file.mimes'    => 'File harus berformat CSV.',
-            'csv_file.max'      => 'Ukuran file CSV maksimal 5 MB.',
-        ]);
+        $file = $request->file('import_file') ?? $request->file('csv_file') ?? $request->file('file');
+
+        if (!$file || !$file->isValid()) {
+            return back()->with('error', 'Silakan pilih berkas Excel (.xlsx, .xls) atau CSV (.csv) terlebih dahulu.');
+        }
+
+        $ext = strtolower($file->getClientOriginalExtension());
+        if (!in_array($ext, ['csv', 'txt', 'xlsx', 'xls'], true)) {
+            return back()->with('error', 'Format berkas tidak didukung. Harap unggah berkas Excel (.xlsx, .xls) atau CSV (.csv).');
+        }
+
+        if ($file->getSize() > 10 * 1024 * 1024) {
+            return back()->with('error', 'Ukuran berkas maksimal 10 MB.');
+        }
 
         try {
-            $result = $this->memberService->importCsv($request->file('csv_file')->getRealPath());
+            $result = $this->memberService->importFile($file->getRealPath());
 
             $message = "Import selesai! {$result['imported']} siswa berhasil ditambahkan, {$result['skipped']} data dilewati (duplikat/invalid).";
 

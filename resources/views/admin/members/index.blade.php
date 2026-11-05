@@ -141,18 +141,24 @@
                                 Operasi Data Massal
                             </div>
 
-                            <!-- Download Template -->
-                            <a href="{{ route('admin.members.template') }}" class="flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                            <!-- Download Template Excel -->
+                            <a href="{{ route('admin.members.template', ['format' => 'excel']) }}" class="flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 transition-colors">
+                                <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                <span>Download Template Excel (.xlsx)</span>
+                            </a>
+
+                            <!-- Download Template CSV -->
+                            <a href="{{ route('admin.members.template', ['format' => 'csv']) }}" class="flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors">
                                 <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                                 <span>Download Template CSV</span>
                             </a>
 
-                            <!-- Import CSV -->
+                            <!-- Import Siswa (Excel & CSV) -->
                             <button type="button" 
                                     onclick="closeBatchMenu(); document.getElementById('importModal').classList.remove('hidden');" 
-                                    class="w-full text-left flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors">
-                                <svg class="w-4 h-4 text-indigo-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                                <span>Import Siswa (CSV)</span>
+                                    class="w-full text-left flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition-colors">
+                                <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                                <span>Import Siswa (Excel / CSV)</span>
                             </button>
 
                             <div class="border-t border-slate-100 my-1"></div>
@@ -301,7 +307,10 @@
                 <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
                 </div>
-                <h3 class="text-sm font-bold text-slate-800">Import Data Siswa (CSV)</h3>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-800">Import Data Siswa (Excel & CSV)</h3>
+                    <p class="text-[11px] text-slate-400">Mendukung format .xlsx, .xls, dan .csv</p>
+                </div>
             </div>
             <button type="button" onclick="document.getElementById('importModal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm">
                 &times;
@@ -310,10 +319,26 @@
         <form method="POST" action="{{ route('admin.members.import') }}" enctype="multipart/form-data" class="space-y-4">
             @csrf
             <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Pilih File CSV / Excel Siswa</label>
-                <input type="file" name="csv_file" accept=".csv,text/csv,.txt" required class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer border border-slate-200 rounded-xl p-1">
-                <p class="text-[11px] text-slate-400 mt-1">Header kolom: <code class="font-mono text-slate-700">student_id_number, full_name, grade_level, class_name, major, cohort, gender, email, phone_number, address</code>.</p>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Pilih File Excel / CSV Siswa</label>
+                <input type="file" name="import_file" accept=".xlsx,.xls,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" required class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer border border-slate-200 rounded-xl p-1">
+                <p class="text-[11px] text-slate-400 mt-1.5">Kolom: <code class="font-mono text-slate-700">student_id_number, full_name, grade_level, class_name, major, cohort, gender, email, phone_number, address</code>.</p>
             </div>
+
+            <!-- Download Templates Box -->
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-600">
+                <span class="font-medium text-slate-700 block mb-1">Belum punya formatnya? Unduh template:</span>
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('admin.members.template', ['format' => 'excel']) }}" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-semibold text-[11px] transition-colors">
+                        <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Template Excel (.xlsx)
+                    </a>
+                    <a href="{{ route('admin.members.template', ['format' => 'csv']) }}" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-200 text-slate-700 hover:bg-slate-300 font-semibold text-[11px] transition-colors">
+                        <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Template CSV
+                    </a>
+                </div>
+            </div>
+
             <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
                 <button type="button" onclick="document.getElementById('importModal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-all cursor-pointer">Batal</button>
                 <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">Mulai Import</button>

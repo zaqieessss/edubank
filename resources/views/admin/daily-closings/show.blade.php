@@ -225,10 +225,10 @@
         </div>
 
         <!-- Action Footer (Pinned at Bottom) -->
-        @if($dailyClosing->status === 'submitted' || $dailyClosing->status === 'discrepancy')
+        @if($dailyClosing->status !== 'approved')
             <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
                 <p class="text-xs text-slate-400 max-w-xl">
-                    Pastikan fisik uang tunai sebesar <strong class="text-slate-800 font-mono">Rp {{ number_format($dailyClosing->physical_cash, 0, ',', '.') }}</strong> telah dihitung nyata di laci kas sebelum melakukan verifikasi brankas atau penolakan.
+                    Pastikan fisik uang tunai sebesar <strong class="text-slate-800 font-mono">Rp {{ number_format($dailyClosing->physical_cash ?? $dailyClosing->system_balance, 0, ',', '.') }}</strong> telah dihitung nyata di laci kas sebelum melakukan verifikasi brankas atau penolakan.
                 </p>
 
                 <div class="flex items-center gap-3 shrink-0">
@@ -243,13 +243,13 @@
                     <!-- Tombol Approve -->
                     <button type="button" 
                             onclick="openApproveModal()" 
-                            class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
+                            class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                        <span>Verifikasi & Masukkan ke Brankas</span>
+                        <span>Setujui & Masukkan ke Brankas</span>
                     </button>
                 </div>
             </div>
-        @elseif($dailyClosing->status === 'approved')
+        @else
             <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
                 <div class="flex items-center gap-2 text-xs text-emerald-700 font-medium">
                     <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -324,7 +324,7 @@
             </div>
 
             <p class="text-xs text-slate-500 leading-relaxed">
-                Apakah Anda yakin telah menerima dan menghitung fisik uang tunai sebesar <strong class="text-slate-800 font-mono">Rp {{ number_format($dailyClosing->physical_cash, 0, ',', '.') }}</strong> dari teller untuk dimasukkan ke Brankas Utama (Vault)?
+                Apakah Anda yakin telah menerima dan menghitung fisik uang tunai sebesar <strong class="text-slate-800 font-mono">Rp {{ number_format($dailyClosing->physical_cash ?? $dailyClosing->system_balance, 0, ',', '.') }}</strong> dari teller untuk dimasukkan ke Brankas Utama (Vault)?
             </p>
 
             <form method="POST" action="{{ route('admin.daily-closings.approve', $dailyClosing->id) }}" class="pt-2">

@@ -10,10 +10,17 @@ use Illuminate\Support\Facades\DB;
 
 class MemberService
 {
+    protected SpreadsheetService $spreadsheetService;
+
+    public function __construct(?SpreadsheetService $spreadsheetService = null)
+    {
+        $this->spreadsheetService = $spreadsheetService ?? new SpreadsheetService();
+    }
+
     /**
-     * Generate official sample CSV template for school student import.
+     * Sample student template definitions.
      */
-    public function generateTemplateCsv(): string
+    protected function getTemplateData(): array
     {
         $headers = [
             'student_id_number',
@@ -67,6 +74,16 @@ class MemberService
             ],
         ];
 
+        return [$headers, $samples];
+    }
+
+    /**
+     * Generate official sample CSV template for school student import.
+     */
+    public function generateTemplateCsv(): string
+    {
+        [$headers, $samples] = $this->getTemplateData();
+
         $output = fopen('php://temp', 'r+');
         fputcsv($output, $headers);
         foreach ($samples as $row) {
@@ -80,45 +97,93 @@ class MemberService
     }
 
     /**
-     * Import multiple students from CSV file into members table.
+     * Generate official sample Excel (.xlsx) template for school student import.
+     */
+    public function generateTemplateXlsx(): string
+    {
+        [$headers, $samples] = $this->getTemplateData();
+        return $this->spreadsheetService->generateXlsx($headers, $samples);
+    }
+
+    /**
+     * Import multiple students from CSV or Excel file into members table.
      *
      * @param string $filePath
      * @return array Summary of import ['imported' => count, 'skipped' => count, 'errors' => []]
      * @throws Exception
      */
-    public function importCsv(string $filePath): array
+    public function importFile(string $filePath): array
     {
-        if (!file_exists($filePath)) {
-            throw new Exception("File CSV tidak ditemukan: {$filePath}");
+        $rows = $this->spreadsheetService->parse($filePath);
+
+        if (empty($rows)) {
+            throw new Exception('Berkas Excel / CSV kosong atau tidak ada data yang ditemukan.');
         }
 
-        $content = file_get_contents($filePath);
-        // Strip UTF-8 BOM if present (added by Excel)
-        $bom = pack('H*', 'EFBBBF');
-        $content = preg_replace("/^$bom/", '', $content);
-
-        // Auto-detect delimiter: count commas vs semicolons in the first line
-        $firstLine = strtok($content, "\r\n");
-        $commaCount = substr_count($firstLine, ',');
-        $semicolonCount = substr_count($firstLine, ';');
-        $delimiter = ($semicolonCount > $commaCount) ? ';' : ',';
-
-        $file = fopen('php://memory', 'r+');
-        fwrite($file, $content);
-        rewind($file);
-
-        $header = fgetcsv($file, 0, $delimiter);
-
-        if (!$header) {
-            fclose($file);
-            throw new Exception('File CSV kosong atau tidak valid.');
+        $rawHeader = array_shift($rows);
+        if (empty($rawHeader)) {
+            throw new Exception('Baris pertama (header kolom) kosong.');
         }
 
-        // Normalize header names (lowercase, strip BOM/spaces)
-        $headerMap = array_map(function ($col) {
-            $cleaned = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $col);
-            return strtolower(trim($cleaned));
-        }, $header);
+        // Map column aliases to standard fields
+        $aliasMap = [
+            'student_id_number' => 'student_id_number',
+            'nis'               => 'student_id_number',
+            'nisn'              => 'student_id_number',
+            'no_induk'          => 'student_id_number',
+            'nomor_induk'       => 'student_id_number',
+
+            'full_name'         => 'full_name',
+            'nama'              => 'full_name',
+            'nama_lengkap'      => 'full_name',
+            'nama_siswa'        => 'full_name',
+            'name'              => 'full_name',
+
+            'grade_level'       => 'grade_level',
+            'tingkat'           => 'grade_level',
+            'tingkat_kelas'     => 'grade_level',
+            'kelas_tingkat'     => 'grade_level',
+
+            'class_name'        => 'class_name',
+            'kelas'             => 'class_name',
+            'rombel'            => 'class_name',
+            'nama_kelas'        => 'class_name',
+
+            'major'             => 'major',
+            'jurusan'           => 'major',
+            'program_keahlian'  => 'major',
+            'kompetensi_keahlian'=> 'major',
+
+            'cohort'            => 'cohort',
+            'angkatan'          => 'cohort',
+            'tahun_masuk'       => 'cohort',
+            'tahun_ajaran'      => 'cohort',
+
+            'gender'            => 'gender',
+            'jenis_kelamin'     => 'gender',
+            'jk'                => 'gender',
+
+            'email'             => 'email',
+            'surel'             => 'email',
+            'e-mail'            => 'email',
+
+            'phone_number'      => 'phone_number',
+            'telepon'           => 'phone_number',
+            'no_hp'             => 'phone_number',
+            'no_telp'           => 'phone_number',
+            'hp'                => 'phone_number',
+
+            'address'           => 'address',
+            'alamat'            => 'address',
+        ];
+
+        $headerMap = [];
+        foreach ($rawHeader as $idx => $colName) {
+            $cleaned = strtolower(trim((string) preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $colName)));
+            $cleaned = str_replace([' ', '-', '.'], '_', $cleaned);
+            $canonical = $aliasMap[$cleaned] ?? $cleaned;
+            $headerMap[$idx] = $canonical;
+        }
 
         $imported = 0;
         $skipped  = 0;
@@ -129,23 +194,34 @@ class MemberService
 
         DB::beginTransaction();
         try {
-            while (($row = fgetcsv($file, 0, $delimiter)) !== false) {
+            foreach ($rows as $row) {
                 $rowNumber++;
 
-                if (count($row) < count($headerMap) || empty(array_filter($row))) {
+                if (empty(array_filter($row, fn($v) => trim((string)$v) !== ''))) {
                     continue; // Skip empty rows
                 }
 
-                $data = array_combine($headerMap, array_map('trim', $row));
+                $data = [];
+                foreach ($headerMap as $idx => $key) {
+                    $data[$key] = isset($row[$idx]) ? trim((string)$row[$idx]) : null;
+                }
 
                 $nis = $data['student_id_number'] ?? null;
                 $email = $data['email'] ?? null;
                 $fullName = $data['full_name'] ?? null;
                 $major = strtoupper($data['major'] ?? '');
-                $gradeLevel = $data['grade_level'] ?? '10';
-                $className = $data['class_name'] ?? 'X ' . $major . ' 1';
+                $gradeLevel = (string) ($data['grade_level'] ?? '10');
+                $gradeLevel = str_replace(['kelas', 'tingkat', ' '], '', strtolower($gradeLevel));
+                if (!in_array($gradeLevel, ['10', '11', '12', 'alumni'], true)) {
+                    $gradeLevel = '10';
+                }
+
+                $className = $data['class_name'] ?? ('X ' . $major . ' 1');
                 $cohort = $data['cohort'] ?? date('Y');
-                $gender = strtolower($data['gender'] ?? 'male') === 'female' ? 'female' : 'male';
+                
+                $rawGender = strtolower($data['gender'] ?? 'male');
+                $gender = (in_array($rawGender, ['female', 'perempuan', 'p', 'f'], true)) ? 'female' : 'male';
+                
                 $phone = $data['phone_number'] ?? null;
                 $address = $data['address'] ?? null;
 
@@ -170,16 +246,16 @@ class MemberService
                 }
 
                 Member::create([
-                    'student_id_number' => $nis,
-                    'full_name' => $fullName,
-                    'grade_level' => in_array($gradeLevel, ['10', '11', '12', 'alumni']) ? $gradeLevel : '10',
-                    'class_name' => $className,
-                    'major' => $major,
-                    'cohort' => $cohort,
-                    'gender' => $gender,
-                    'email' => $email,
-                    'phone_number' => $phone,
-                    'address' => $address,
+                    'student_id_number'   => $nis,
+                    'full_name'           => $fullName,
+                    'grade_level'         => $gradeLevel,
+                    'class_name'          => $className,
+                    'major'               => $major,
+                    'cohort'              => $cohort,
+                    'gender'              => $gender,
+                    'email'               => $email,
+                    'phone_number'        => $phone,
+                    'address'             => $address,
                     'registration_status' => 'unregistered',
                 ]);
 
@@ -187,7 +263,6 @@ class MemberService
             }
 
             DB::commit();
-            fclose($file);
 
             return [
                 'imported' => $imported,
@@ -196,9 +271,16 @@ class MemberService
             ];
         } catch (Exception $e) {
             DB::rollBack();
-            fclose($file);
             throw $e;
         }
+    }
+
+    /**
+     * Backward-compatible alias for importFile.
+     */
+    public function importCsv(string $filePath): array
+    {
+        return $this->importFile($filePath);
     }
 
     /**

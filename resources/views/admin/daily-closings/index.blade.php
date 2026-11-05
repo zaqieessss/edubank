@@ -142,9 +142,18 @@
                                 <td class="py-3 px-3 text-right">
                                     <div class="flex items-center justify-end gap-1.5">
                                         <a href="{{ route('admin.daily-closings.show', $c->id) }}" 
-                                           class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-[10px] font-semibold transition-all shadow-xs flex items-center gap-1">
+                                           class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-[10px] font-semibold transition-all flex items-center gap-1">
                                             <span>Periksa</span>
                                         </a>
+                                        @if($c->status !== 'approved')
+                                            <form method="POST" action="{{ route('admin.daily-closings.approve', $c->id) }}" onsubmit="return confirm('Verifikasi & setujui laporan penutupan kas teller {{ addslashes($c->teller?->name ?? 'Teller') }} senilai Rp {{ number_format($c->physical_cash ?? $c->system_balance, 0, ',', '.') }}?')">
+                                                @csrf
+                                                <button type="submit" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-semibold transition-all shadow-xs flex items-center gap-1 cursor-pointer">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                                    <span>Setujui</span>
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
