@@ -42,7 +42,7 @@
             </span>
             <div class="mt-2 flex items-baseline gap-2">
                 <span class="text-2xl font-bold tracking-tight text-slate-900">
-                    {{ number_format($members->total(), 0, ',', '.') }}
+                    {{ number_format($totalMembers ?? $members->count(), 0, ',', '.') }}
                 </span>
                 <span class="text-xs text-slate-400 font-medium">Siswa</span>
             </div>
