@@ -4,7 +4,7 @@
 @section('page_title', 'Dashboard Loket')
 
 @section('content')
-<div class="min-h-full flex flex-col gap-4 pb-4">
+<div class="h-full flex flex-col justify-between gap-3 md:gap-4 pb-0.5">
 
     <!-- ========================================================================= -->
     <!-- 1. WELCOME HERO CARD (Serasi dengan Dashboard Admin)                      -->
@@ -169,16 +169,16 @@
     <!-- ========================================================================= -->
     <!-- 3. TABEL TRANSAKSI TERAKHIR (Memanjang Elegan Sejajar Bawah Sidebar)       -->
     <!-- ========================================================================= -->
-    <div class="bg-white rounded-[24px] p-5 md:p-6 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex flex-col justify-between">
+    <div class="bg-white rounded-[24px] p-5 md:p-6 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between min-h-[380px]">
         
-        <div>
-            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+        <div class="flex-1 flex flex-col min-h-0">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3 shrink-0">
                 <div>
                     <h3 class="text-sm font-bold text-slate-800">
                         Aktivitas Transaksi Terakhir di Loket
                     </h3>
                     <p class="text-[11px] text-slate-400 mt-0.5">
-                        Daftar transaksi siswa yang baru saja Anda otorisasi.
+                        Daftar transaksi siswa yang baru saja Anda otorisasi (maksimal 20 transaksi terakhir).
                     </p>
                 </div>
                 <a href="{{ route('teller.transactions.index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors">
@@ -186,11 +186,11 @@
                 </a>
             </div>
 
-            <!-- Table Wrapper (Anti Overflow & Anti Text-Wrapping) -->
-            <div class="overflow-x-auto rounded-xl border border-slate-100/80">
+            <!-- Table Wrapper (Anti Overflow & Scrollable Sejajar Bawah Sidebar) -->
+            <div class="flex-1 overflow-auto rounded-xl border border-slate-100/80 min-h-0">
                 <table class="w-full text-left border-collapse text-xs">
-                    <thead>
-                        <tr class="bg-slate-50/70 border-b border-slate-100 text-[11px] font-semibold text-slate-500">
+                    <thead class="sticky top-0 bg-slate-50/95 backdrop-blur-xs z-10">
+                        <tr class="border-b border-slate-100 text-[11px] font-semibold text-slate-500 shadow-xs">
                             <th class="py-3 px-3.5 whitespace-nowrap">Waktu</th>
                             <th class="py-3 px-3.5 whitespace-nowrap">No. Kwitansi</th>
                             <th class="py-3 px-3.5 whitespace-nowrap">Nasabah (Siswa)</th>
@@ -250,8 +250,10 @@
         </div>
 
         <!-- Subtle Footer Alignment -->
-        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 mt-3">
-            <span>Loket Pelayanan Teller</span>
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 mt-3 shrink-0">
+            <div>
+                Menampilkan <span class="font-bold text-slate-700">{{ $recentTransactions->count() }}</span> data transaksi terakhir di loket
+            </div>
             <span class="font-mono">Edubank SMKN 1 Bantul</span>
         </div>
 

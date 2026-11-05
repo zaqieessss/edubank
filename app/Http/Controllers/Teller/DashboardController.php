@@ -28,7 +28,7 @@ class DashboardController extends Controller
         $recentTransactions = Transaction::with('saver')
             ->where('user_id', $tellerId)
             ->orderBy('id', 'desc')
-            ->take(8)
+            ->take(20)
             ->get();
 
         return view('teller.dashboard', compact('summary', 'recentTransactions', 'todayClosing'));
