@@ -142,7 +142,7 @@
         <!-- ===================================================================== -->
         <!-- LEFT HERO (5 Cols): Sapphire & Emerald Fintech Branding               -->
         <!-- ===================================================================== -->
-        <div class="md:col-span-5 bg-gradient-to-br from-[#061224] via-[#0B2349] to-[#0E356A] p-8 sm:p-10 md:p-12 text-white flex flex-col justify-between relative overflow-hidden">
+        <div class="md:col-span-5 bg-gradient-to-br from-[#061224] via-[#0B2349] to-[#0E356A] p-8 sm:p-10 md:p-12 text-white flex flex-col justify-center relative overflow-hidden">
             
             <!-- Internal Ambient Mesh & Graphic Accents -->
             <div class="absolute inset-0 overflow-hidden pointer-events-none select-none">
@@ -187,36 +187,6 @@
                 <p class="text-xs sm:text-sm text-slate-300/85 mt-4 leading-relaxed font-normal">
                     Satu portal cerdas untuk layanan transaksi loket Teller, pengawasan kas harian Administrator, dan kemudahan pemantauan saldo tabungan siswa.
                 </p>
-
-                <!-- Feature High-Trust Pills -->
-                <div class="mt-7 space-y-2.5 pt-5 border-t border-white/10 text-xs text-slate-200">
-                    <div class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-lg bg-blue-500/20 border border-blue-400/30 text-blue-300 flex items-center justify-center shrink-0">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                        </div>
-                        <span class="font-medium text-slate-200/90">Pencatatan Setor, Tarik & Closing Real-Time</span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 flex items-center justify-center shrink-0">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                        </div>
-                        <span class="font-medium text-slate-200/90">Proteksi PIN Otorisasi & Jurnal Akuntansi</span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-lg bg-sky-500/20 border border-sky-400/30 text-sky-300 flex items-center justify-center shrink-0">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-                        </div>
-                        <span class="font-medium text-slate-200/90">Akses Fleksibel: Web Responsif & Aplikasi Mobile</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bottom Left Info -->
-            <div class="relative z-10 pt-6 text-[11px] text-slate-400 flex items-center justify-between border-t border-white/10 mt-6">
-                <span>Teller &bull; Administrator &bull; Siswa</span>
-                <span class="text-slate-400/80 font-medium">&copy; {{ date('Y') }}</span>
             </div>
         </div>
 
@@ -312,7 +282,7 @@
 
                 <!-- Action Button -->
                 <button type="submit" 
-                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm py-3.5 rounded-xl shadow-sm transition-all hover:shadow-md active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-2">
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm py-3.5 rounded-xl shadow-sm transition-all hover:shadow-md active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-2">
                     <span>Masuk ke Dashboard</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </button>
