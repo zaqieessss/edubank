@@ -209,8 +209,8 @@
                     <circle cx="150" cy="150" r="70" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" />
                 </svg>
 
-                <!-- Watermark Text / Emblem at bottom right of left hero (Uncut & Italic) -->
-                <div class="absolute bottom-4 right-6 sm:bottom-6 sm:right-8 text-7xl sm:text-8xl lg:text-[96px] font-black italic tracking-wide text-white/[0.07] leading-none select-none pointer-events-none">
+                <!-- Watermark Text / Emblem at bottom right of left hero (Rotated & Slightly Bleeding) -->
+                <div class="absolute bottom-1 -right-2 sm:bottom-2 sm:-right-3 text-7xl sm:text-8xl lg:text-[105px] font-black tracking-wider text-white/[0.06] leading-none select-none pointer-events-none transform -rotate-[10deg] origin-bottom-right">
                     EDU
                 </div>
             </div>
