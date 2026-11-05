@@ -23,115 +23,242 @@
             overflow-x: hidden;
         }
 
-        /* Subtle ambient pulse animation for background illustration rings */
-        @keyframes float-pulse {
+        /* 3D Floating Animations */
+        @keyframes float3d-slow {
             0%, 100% {
-                transform: scale(1) rotate(0deg);
-                opacity: 0.85;
+                transform: translateY(0px) rotate(0deg);
             }
             50% {
-                transform: scale(1.04) rotate(3deg);
-                opacity: 1;
+                transform: translateY(-12px) rotate(1.2deg);
             }
         }
-        @keyframes float-pulse-reverse {
+        @keyframes float3d-reverse {
             0%, 100% {
-                transform: scale(1) rotate(0deg);
-                opacity: 0.8;
+                transform: translateY(0px) rotate(0deg);
             }
             50% {
-                transform: scale(1.05) rotate(-3deg);
-                opacity: 1;
+                transform: translateY(14px) rotate(-1.5deg);
             }
         }
-        .anim-ring-tl {
-            animation: float-pulse 14s ease-in-out infinite;
+        @keyframes orb-float-1 {
+            0%, 100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+            50% {
+                transform: translate(8px, -14px) scale(1.04);
+            }
+        }
+        @keyframes orb-float-2 {
+            0%, 100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+            50% {
+                transform: translate(-10px, 12px) scale(0.97);
+            }
+        }
+        .anim-3d-top {
+            animation: float3d-slow 16s ease-in-out infinite;
             transform-origin: center;
         }
-        .anim-ring-br {
-            animation: float-pulse-reverse 16s ease-in-out infinite;
+        .anim-3d-bottom {
+            animation: float3d-reverse 18s ease-in-out infinite;
             transform-origin: center;
+        }
+        .anim-orb-1 {
+            animation: orb-float-1 12s ease-in-out infinite;
+        }
+        .anim-orb-2 {
+            animation: orb-float-2 15s ease-in-out infinite;
         }
     </style>
 </head>
 <body class="min-h-screen p-4 sm:p-6 md:p-10 lg:p-12 flex items-center justify-center bg-[#F8FAFC] relative selection:bg-blue-600 selection:text-white">
 
     <!-- ========================================================================= -->
-    <!-- BACKGROUND ILLUSTRATION LAYER (Di Belakang Card Sesuai Referensi)         -->
+    <!-- 3D BACKGROUND SCENE LAYER (Sleek Volumetric Torus & 3D Glass Orbs)        -->
     <!-- ========================================================================= -->
     <div class="fixed inset-0 pointer-events-none select-none overflow-hidden z-0">
+        
+        <!-- Subtle Ambient Light Wash on Canvas -->
+        <div class="absolute inset-0 bg-radial-at-c from-blue-50/40 via-transparent to-transparent"></div>
+
         <!-- Delicate dot matrix canvas background -->
-        <svg class="absolute inset-0 w-full h-full text-slate-300/40 opacity-60" xmlns="http://www.w3.org/2000/svg">
+        <svg class="absolute inset-0 w-full h-full text-slate-300/35 opacity-40" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <pattern id="bgDots" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+                <pattern id="bgDots" x="0" y="0" width="36" height="36" patternUnits="userSpaceOnUse">
                     <circle cx="2" cy="2" r="1.1" fill="currentColor" />
                 </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#bgDots)" />
         </svg>
 
-        <!-- TOP-LEFT ILLUSTRATION: Multi-ring concentric circles with glowing aura -->
-        <div class="absolute -top-36 -left-36 md:-top-44 md:-left-44 w-[480px] h-[480px] md:w-[680px] md:h-[680px] anim-ring-tl">
-            <!-- Ambient Radial Glow -->
-            <div class="absolute inset-16 rounded-full bg-gradient-to-tr from-blue-500/18 via-sky-400/22 to-emerald-400/15 blur-3xl"></div>
+        <!-- TOP 3D TORUS & ORBITAL RINGS (Emerging behind card) -->
+        <div class="absolute -top-44 left-1/2 -translate-x-1/2 md:-top-56 md:left-[35%] w-[680px] h-[680px] md:w-[860px] md:h-[860px] anim-3d-top">
+            <!-- Ambient Radial Glow Halo -->
+            <div class="absolute inset-20 rounded-full bg-gradient-to-tr from-blue-500/22 via-sky-400/25 to-teal-400/18 blur-[90px]"></div>
 
-            <svg class="w-full h-full text-blue-500/20" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Outer Concentric Rings -->
-                <circle cx="300" cy="300" r="280" stroke="currentColor" stroke-width="1.2" stroke-dasharray="6 8" class="text-blue-400/30" />
-                <circle cx="300" cy="300" r="235" stroke="currentColor" stroke-width="1.5" class="text-blue-500/25" />
-                <circle cx="300" cy="300" r="190" stroke="currentColor" stroke-width="1" stroke-dasharray="3 5" class="text-emerald-500/30" />
-                <circle cx="300" cy="300" r="150" stroke="currentColor" stroke-width="2" class="text-blue-600/35" />
-                <circle cx="300" cy="300" r="110" stroke="currentColor" stroke-width="1.2" class="text-sky-400/35" />
-                <circle cx="300" cy="300" r="70" fill="url(#tlCoreGradient)" opacity="0.65" />
-
-                <!-- Crosshairs and Data Nodes -->
-                <line x1="300" y1="20" x2="300" y2="580" stroke="currentColor" stroke-width="0.8" stroke-dasharray="4 4" class="text-blue-300/30" />
-                <line x1="20" y1="300" x2="580" y2="300" stroke="currentColor" stroke-width="0.8" stroke-dasharray="4 4" class="text-blue-300/30" />
-                <circle cx="300" cy="65" r="4" fill="#3B82F6" />
-                <circle cx="535" cy="300" r="3.5" fill="#10B981" />
-                <circle cx="300" cy="490" r="4" fill="#0EA5E9" />
-                <circle cx="150" cy="300" r="3.5" fill="#6366F1" />
-
-                <!-- Gradient Defs -->
+            <svg class="w-full h-full" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <radialGradient id="tlCoreGradient" cx="0.5" cy="0.5" r="0.5" fx="0.5" fy="0.5">
-                        <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.45" />
-                        <stop offset="70%" stop-color="#2563EB" stop-opacity="0.2" />
-                        <stop offset="100%" stop-color="#1D4ED8" stop-opacity="0" />
+                    <!-- 3D Drop Shadow -->
+                    <filter id="torusShadowTop" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="0" dy="26" stdDeviation="30" flood-color="#1E3A8A" flood-opacity="0.18" />
+                    </filter>
+                    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+                        <feGaussianBlur stdDeviation="6" />
+                    </filter>
+
+                    <!-- Torus Volumetric Shading (Cylindrical gradient simulating curved surface) -->
+                    <radialGradient id="torus3DTop" cx="36%" cy="30%" r="68%">
+                        <stop offset="0%" stop-color="#7DD3FC" />
+                        <stop offset="22%" stop-color="#38BDF8" />
+                        <stop offset="55%" stop-color="#2563EB" />
+                        <stop offset="85%" stop-color="#1D4ED8" />
+                        <stop offset="100%" stop-color="#0F2454" />
                     </radialGradient>
+
+                    <!-- Specular Rim Highlight Gradient -->
+                    <linearGradient id="specularRimTop" x1="20%" y1="0%" x2="80%" y2="60%">
+                        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85" />
+                        <stop offset="40%" stop-color="#BAE6FD" stop-opacity="0.45" />
+                        <stop offset="100%" stop-color="#38BDF8" stop-opacity="0" />
+                    </linearGradient>
+
+                    <!-- Secondary Reflected Light (Bottom bounce) -->
+                    <linearGradient id="bounceRimTop" x1="80%" y1="100%" x2="20%" y2="50%">
+                        <stop offset="0%" stop-color="#34D399" stop-opacity="0.4" />
+                        <stop offset="60%" stop-color="#38BDF8" stop-opacity="0.15" />
+                        <stop offset="100%" stop-color="#1E40AF" stop-opacity="0" />
+                    </linearGradient>
                 </defs>
+
+                <!-- Thin Concentric Perspective Orbital Rings -->
+                <ellipse cx="400" cy="400" rx="385" ry="370" stroke="#38BDF8" stroke-opacity="0.22" stroke-width="1.2" transform="rotate(-12 400 400)" />
+                <ellipse cx="400" cy="400" rx="340" ry="325" stroke="#60A5FA" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="8 12" transform="rotate(-12 400 400)" />
+                <ellipse cx="400" cy="400" rx="290" ry="275" stroke="#93C5FD" stroke-opacity="0.25" stroke-width="1.4" transform="rotate(-12 400 400)" />
+
+                <!-- The 3D Volumetric Torus Body (Donut) -->
+                <path d="M 400,145 A 255,255 0 1,0 400,655 A 255,255 0 1,0 400,145 Z M 400,230 A 170,170 0 1,1 400,570 A 170,170 0 1,1 400,230 Z" 
+                      fill="url(#torus3DTop)" 
+                      filter="url(#torusShadowTop)" />
+
+                <!-- 3D Specular Highlight Ridge (Creates realistic curved light reflection) -->
+                <path d="M 210,235 A 235,235 0 0,1 555,195" 
+                      stroke="url(#specularRimTop)" 
+                      stroke-width="12" 
+                      stroke-linecap="round" 
+                      filter="url(#softGlow)" />
+                <path d="M 245,245 A 235,235 0 0,1 520,210" 
+                      stroke="#FFFFFF" 
+                      stroke-width="3.5" 
+                      stroke-linecap="round" 
+                      opacity="0.85" />
+
+                <!-- Subtle Inner Rim Specular Arc -->
+                <path d="M 400,235 A 165,165 0 0,1 555,365" 
+                      stroke="#BAE6FD" 
+                      stroke-width="3" 
+                      stroke-linecap="round" 
+                      opacity="0.5" />
+
+                <!-- Bottom Ambient Bounce Light Arc -->
+                <path d="M 240,580 A 245,245 0 0,0 550,560" 
+                      stroke="url(#bounceRimTop)" 
+                      stroke-width="7" 
+                      stroke-linecap="round" />
             </svg>
         </div>
 
-        <!-- BOTTOM-RIGHT ILLUSTRATION: Concentric orbital rings with emerald & sapphire aura -->
-        <div class="absolute -bottom-40 -right-40 md:-bottom-52 md:-right-52 w-[520px] h-[520px] md:w-[720px] md:h-[720px] anim-ring-br">
-            <!-- Ambient Radial Glow -->
-            <div class="absolute inset-16 rounded-full bg-gradient-to-br from-emerald-500/20 via-teal-400/22 to-blue-500/18 blur-3xl"></div>
+        <!-- BOTTOM-RIGHT 3D TORUS SECTION & ORBITAL HALO -->
+        <div class="absolute -bottom-48 -right-40 md:-bottom-64 md:-right-52 w-[640px] h-[640px] md:w-[820px] md:h-[820px] anim-3d-bottom">
+            <!-- Ambient Radial Glow Halo -->
+            <div class="absolute inset-20 rounded-full bg-gradient-to-br from-emerald-500/22 via-teal-400/24 to-blue-500/20 blur-[95px]"></div>
 
-            <svg class="w-full h-full text-emerald-500/25" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Concentric Wave Rings -->
-                <circle cx="300" cy="300" r="285" stroke="currentColor" stroke-width="1.2" class="text-emerald-400/25" />
-                <circle cx="300" cy="300" r="240" stroke="currentColor" stroke-width="1.5" stroke-dasharray="5 7" class="text-teal-500/30" />
-                <circle cx="300" cy="300" r="195" stroke="currentColor" stroke-width="1" class="text-sky-500/25" />
-                <circle cx="300" cy="300" r="145" stroke="currentColor" stroke-width="2" class="text-emerald-600/35" />
-                <circle cx="300" cy="300" r="95" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 4" class="text-teal-400/35" />
-                <circle cx="300" cy="300" r="55" fill="url(#brCoreGradient)" opacity="0.7" />
-
-                <!-- Orbital Nodes -->
-                <circle cx="300" cy="105" r="4.5" fill="#10B981" />
-                <circle cx="495" cy="300" r="3.5" fill="#0EA5E9" />
-                <circle cx="105" cy="300" r="4" fill="#14B8A6" />
-                <circle cx="300" cy="540" r="3.5" fill="#3B82F6" />
-
+            <svg class="w-full h-full" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <radialGradient id="brCoreGradient" cx="0.5" cy="0.5" r="0.5">
-                        <stop offset="0%" stop-color="#10B981" stop-opacity="0.4" />
-                        <stop offset="70%" stop-color="#059669" stop-opacity="0.18" />
-                        <stop offset="100%" stop-color="#047857" stop-opacity="0" />
+                    <filter id="torusShadowBR" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="0" dy="24" stdDeviation="28" flood-color="#047857" flood-opacity="0.16" />
+                    </filter>
+                    
+                    <!-- 3D Emerald to Sapphire Torus Gradient -->
+                    <radialGradient id="torus3DBR" cx="38%" cy="32%" r="66%">
+                        <stop offset="0%" stop-color="#6EE7B7" />
+                        <stop offset="25%" stop-color="#10B981" />
+                        <stop offset="58%" stop-color="#0D9488" />
+                        <stop offset="85%" stop-color="#0284C7" />
+                        <stop offset="100%" stop-color="#0F172A" />
                     </radialGradient>
+
+                    <linearGradient id="specularRimBR" x1="15%" y1="10%" x2="85%" y2="70%">
+                        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85" />
+                        <stop offset="45%" stop-color="#A7F3D0" stop-opacity="0.5" />
+                        <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
+                    </linearGradient>
                 </defs>
+
+                <!-- Concentric Perspective Orbital Rings -->
+                <ellipse cx="400" cy="400" rx="380" ry="365" stroke="#10B981" stroke-opacity="0.2" stroke-width="1.2" transform="rotate(18 400 400)" />
+                <ellipse cx="400" cy="400" rx="330" ry="315" stroke="#14B8A6" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="6 10" transform="rotate(18 400 400)" />
+                <ellipse cx="400" cy="400" rx="280" ry="265" stroke="#38BDF8" stroke-opacity="0.22" stroke-width="1.4" transform="rotate(18 400 400)" />
+
+                <!-- The 3D Volumetric Torus Body -->
+                <path d="M 400,160 A 240,240 0 1,0 400,640 A 240,240 0 1,0 400,160 Z M 400,245 A 155,155 0 1,1 400,555 A 155,155 0 1,1 400,245 Z" 
+                      fill="url(#torus3DBR)" 
+                      filter="url(#torusShadowBR)" />
+
+                <!-- Specular Highlight Ridge -->
+                <path d="M 220,250 A 220,220 0 0,1 550,210" 
+                      stroke="url(#specularRimBR)" 
+                      stroke-width="10" 
+                      stroke-linecap="round" 
+                      filter="url(#softGlow)" />
+                <path d="M 255,260 A 220,220 0 0,1 510,225" 
+                      stroke="#FFFFFF" 
+                      stroke-width="3" 
+                      stroke-linecap="round" 
+                      opacity="0.85" />
             </svg>
         </div>
+
+        <!-- FLOATING 3D GLASS ORB 1 (Top Right - Depth of Field) -->
+        <div class="absolute top-16 right-12 md:top-24 md:right-28 w-20 h-20 md:w-24 md:h-24 anim-orb-1 hidden sm:block">
+            <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="glassSphere1" cx="32%" cy="28%" r="65%">
+                        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+                        <stop offset="18%" stop-color="#BAE6FD" stop-opacity="0.9" />
+                        <stop offset="50%" stop-color="#38BDF8" stop-opacity="0.7" />
+                        <stop offset="80%" stop-color="#2563EB" stop-opacity="0.85" />
+                        <stop offset="100%" stop-color="#0F172A" stop-opacity="0.9" />
+                    </radialGradient>
+                    <filter id="orbShadow1" x="-40%" y="-40%" width="180%" height="180%">
+                        <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#0284C7" flood-opacity="0.25" />
+                    </filter>
+                </defs>
+                <circle cx="50" cy="50" r="42" fill="url(#glassSphere1)" filter="url(#orbShadow1)" />
+                <ellipse cx="36" cy="30" rx="10" ry="6" fill="#FFFFFF" opacity="0.8" transform="rotate(-25 36 30)" />
+            </svg>
+        </div>
+
+        <!-- FLOATING 3D GLASS ORB 2 (Bottom Left - Depth of Field) -->
+        <div class="absolute bottom-20 left-10 md:bottom-28 md:left-24 w-14 h-14 md:w-16 md:h-16 anim-orb-2 hidden sm:block">
+            <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="glassSphere2" cx="30%" cy="28%" r="65%">
+                        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+                        <stop offset="22%" stop-color="#A7F3D0" stop-opacity="0.85" />
+                        <stop offset="55%" stop-color="#10B981" stop-opacity="0.75" />
+                        <stop offset="85%" stop-color="#0284C7" stop-opacity="0.85" />
+                        <stop offset="100%" stop-color="#064E3B" stop-opacity="0.95" />
+                    </radialGradient>
+                    <filter id="orbShadow2" x="-40%" y="-40%" width="180%" height="180%">
+                        <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#047857" flood-opacity="0.22" />
+                    </filter>
+                </defs>
+                <circle cx="50" cy="50" r="40" fill="url(#glassSphere2)" filter="url(#orbShadow2)" />
+                <ellipse cx="38" cy="32" rx="8" ry="5" fill="#FFFFFF" opacity="0.75" transform="rotate(-25 38 32)" />
+            </svg>
+        </div>
+
     </div>
 
     <!-- ========================================================================= -->

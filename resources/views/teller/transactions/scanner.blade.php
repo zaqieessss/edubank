@@ -112,20 +112,25 @@
 
         <!-- Fallback Manual Input -->
         <div class="pt-4 border-t border-slate-100 max-w-xl mx-auto w-full">
-            <p class="text-center text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-                Atau Masukkan Nomor Rekening / NIS Secara Manual
-            </p>
+            <div class="text-center mb-2.5">
+                <p class="text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                    Atau Masukkan Nomor Rekening / NIS Siswa Secara Manual
+                </p>
+                <p class="text-[11px] text-slate-400 mt-0.5">
+                    Format No. Rekening: <span class="font-mono font-bold text-slate-600">RPL-29-0001</span> atau <span class="font-mono font-bold text-slate-600">AKL-27-0001</span>
+                </p>
+            </div>
             <form id="manualForm" method="POST" action="{{ route('teller.transactions.search') }}" class="flex items-center gap-2 max-w-md mx-auto">
                 @csrf
                 <div class="relative flex-1">
                     <input type="text" 
                            id="queryInput" 
                            name="query" 
-                           placeholder="Contoh: RPL-2026-0001 atau NIS: 20260101" 
+                           placeholder="Contoh: RPL-29-0001 atau NIS: 18910" 
                            required 
-                           class="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs text-slate-800 font-mono font-bold focus:bg-white focus:ring-2 focus:ring-blue-500/20">
+                           class="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs text-slate-800 font-mono font-bold focus:bg-white focus:ring-2 focus:ring-blue-500/20 uppercase tracking-wide">
                 </div>
-                <button type="submit" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-sm transition-all hover:shadow shrink-0">
+                <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all hover:shadow shrink-0">
                     Buka Loket
                 </button>
             </form>
