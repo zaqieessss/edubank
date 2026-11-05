@@ -94,12 +94,28 @@ Route::get('deploy-migrate-{secret}', function (\Illuminate\Http\Request $reques
             $resetOutput = 'Seluruh riwayat transaksi, laporan closing kas teller, jurnal akuntansi, dan otorisasi PIN berhasil dikosongkan. Saldo rekening kembali menjadi Rp 0. Akun user dan master siswa tetap utuh.';
         }
 
-        // 4. Sambungkan symlink storage publik
+        // 4. Purge All Students, Savers, Accounts, & Student Users (jika parameter ?purge_students=1 disertakan)
+        $purgeOutput = 'Pembersihan data siswa dilewati.';
+        if ($request->query('purge_students') === '1' || $request->has('purge_students')) {
+            \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            \Illuminate\Support\Facades\DB::table('transactions')->truncate();
+            \Illuminate\Support\Facades\DB::table('daily_closings')->truncate();
+            \Illuminate\Support\Facades\DB::table('accounting_journals')->truncate();
+            \Illuminate\Support\Facades\DB::table('pin_authorization_requests')->truncate();
+            \Illuminate\Support\Facades\DB::table('accounts')->truncate();
+            \Illuminate\Support\Facades\DB::table('savers')->truncate();
+            \Illuminate\Support\Facades\DB::table('members')->truncate();
+            \Illuminate\Support\Facades\DB::table('users')->where('role', 'saver')->delete();
+            \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+            $purgeOutput = 'Seluruh data master siswa, nasabah, rekening, dan akun login siswa berhasil dihapus bersih. Akun Admin dan Teller tetap utuh dan aktif.';
+        }
+
+        // 5. Sambungkan symlink storage publik
         try {
             \Illuminate\Support\Facades\Artisan::call('storage:link');
         } catch (\Throwable $e) {}
 
-        // 5. Bersihkan dan perbarui cache optimasi
+        // 6. Bersihkan dan perbarui cache optimasi
         try {
             \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         } catch (\Throwable $e) {}
@@ -110,6 +126,7 @@ Route::get('deploy-migrate-{secret}', function (\Illuminate\Http\Request $reques
             'migrate_output' => $migrateOutput,
             'seed_output'    => $seedOutput,
             'reset_output'   => $resetOutput,
+            'purge_output'   => $purgeOutput,
         ]);
     } catch (\Throwable $e) {
         return response()->json([
