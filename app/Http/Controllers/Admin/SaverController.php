@@ -40,7 +40,7 @@ class SaverController extends Controller
         }
 
         $totalSavers = $query->count();
-        $savers = $query->orderBy('id', 'desc')->take(20)->get();
+        $savers = $query->orderBy('full_name', 'asc')->take(20)->get();
 
         return view('admin.savers.index', compact('savers', 'totalSavers'));
     }

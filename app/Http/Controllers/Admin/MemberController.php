@@ -43,7 +43,7 @@ class MemberController extends Controller
         }
 
         $totalMembers = $query->count();
-        $members = $query->orderBy('id', 'desc')->take(20)->get();
+        $members = $query->orderBy('full_name', 'asc')->take(20)->get();
 
         $majors = Major::cases();
         $grades = GradeLevel::cases();
