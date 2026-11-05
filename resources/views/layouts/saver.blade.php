@@ -61,6 +61,21 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
         }
+
+        /* Non-rotating elegant entry for Floating QR Loket button */
+        @keyframes qrFabIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .animate-qr-fab {
+            animation: qrFabIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
     </style>
     @stack('styles')
 </head>
@@ -96,13 +111,32 @@
         </main>
 
         <!-- ========================================================================= -->
+        <!-- FLOATING QR LOKET BUTTON (HANYA MUNCUL DI BERANDA / DASHBOARD)            -->
+        <!-- Penempatan: Di atas bottom navbar sebelah kanan, muncul elegan           -->
+        <!-- ========================================================================= -->
+        @if(request()->routeIs('saver.dashboard'))
+            <div class="fixed bottom-[80px] right-5 md:right-auto md:left-1/2 md:translate-x-[64px] z-40 select-none animate-qr-fab">
+                <button type="button" 
+                        onclick="openQrSheet()" 
+                        class="group flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-full bg-gradient-to-r from-[#1E3A8A] to-[#2563EB] text-white border border-white/25 shadow-[0_10px_25px_-3px_rgba(37,99,235,0.45)] hover:shadow-blue-600/50 active:scale-95 transition-all cursor-pointer">
+                    <div class="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center text-white shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-extrabold tracking-wide text-white drop-shadow-xs">QR Loket</span>
+                </button>
+            </div>
+        @endif
+
+        <!-- ========================================================================= -->
         <!-- FLOATING BOTTOM NAVIGATION DOCK (Identik Flutter MainNavigationScreen)      -->
         <!-- ========================================================================= -->
-        <nav class="fixed bottom-3 inset-x-3 md:inset-x-auto md:w-[406px] z-40 glass-dock rounded-[28px] border border-slate-200/90 shadow-[0_12px_36px_-6px_rgba(30,58,138,0.18)] px-5 py-2 flex items-center justify-between select-none">
+        <nav class="fixed bottom-3 inset-x-3 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[406px] z-40 glass-dock rounded-[28px] border border-slate-200/90 shadow-[0_12px_36px_-6px_rgba(30,58,138,0.18)] px-4 py-2 flex items-center justify-around select-none">
             
             <!-- 1. Beranda (Home) -->
             <a href="{{ route('saver.dashboard') }}" 
-               class="flex flex-col items-center gap-0.5 py-1 px-3 rounded-2xl transition-all {{ request()->routeIs('saver.dashboard') ? 'text-blue-600 font-bold' : 'text-slate-400 hover:text-slate-600 font-medium' }}">
+               class="flex-1 flex flex-col items-center gap-0.5 py-1 px-2 rounded-2xl transition-all {{ request()->routeIs('saver.dashboard') ? 'text-blue-600 font-bold' : 'text-slate-400 hover:text-slate-600 font-medium' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="{{ request()->routeIs('saver.dashboard') ? '2.4' : '1.8' }}" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                 </svg>
@@ -114,7 +148,7 @@
 
             <!-- 2. Mutasi (Riwayat Transaksi) -->
             <a href="{{ route('saver.mutation') }}" 
-               class="flex flex-col items-center gap-0.5 py-1 px-3 rounded-2xl transition-all {{ request()->routeIs('saver.mutation') ? 'text-blue-600 font-bold' : 'text-slate-400 hover:text-slate-600 font-medium' }}">
+               class="flex-1 flex flex-col items-center gap-0.5 py-1 px-2 rounded-2xl transition-all {{ request()->routeIs('saver.mutation') ? 'text-blue-600 font-bold' : 'text-slate-400 hover:text-slate-600 font-medium' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="{{ request()->routeIs('saver.mutation') ? '2.4' : '1.8' }}" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
                 </svg>
@@ -124,19 +158,9 @@
                 @endif
             </a>
 
-            <!-- 3. CENTER FLOATING BUTTON: QR Loket (Identik Flutter FAB) -->
-            <button type="button" 
-                    onclick="openQrSheet()" 
-                    class="-mt-6 w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-700 via-blue-600 to-blue-500 text-white shadow-lg shadow-blue-600/35 flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer border-2 border-white"
-                    title="QR Loket Teller">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
-                </svg>
-            </button>
-
-            <!-- 4. Profil & Keamanan -->
+            <!-- 3. Profil & Keamanan -->
             <a href="{{ route('saver.profile') }}" 
-               class="flex flex-col items-center gap-0.5 py-1 px-3 rounded-2xl transition-all {{ request()->routeIs('saver.profile') ? 'text-blue-600 font-bold' : 'text-slate-400 hover:text-slate-600 font-medium' }}">
+               class="flex-1 flex flex-col items-center gap-0.5 py-1 px-2 rounded-2xl transition-all {{ request()->routeIs('saver.profile') ? 'text-blue-600 font-bold' : 'text-slate-400 hover:text-slate-600 font-medium' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="{{ request()->routeIs('saver.profile') ? '2.4' : '1.8' }}" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                 </svg>

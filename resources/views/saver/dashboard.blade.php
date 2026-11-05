@@ -135,46 +135,36 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- 3. QUICK ACTION SHORTCUTS (4 Elegan Buttons)                             -->
+    <!-- 3. QUICK ACTION SHORTCUTS (3 Elegan Buttons: Setor, Tarik, Mutasi)        -->
     <!-- ========================================================================= -->
-    <div class="grid grid-cols-4 gap-2.5">
-        <!-- Shortcut 1: QR Loket -->
-        <button type="button" 
-                onclick="openQrSheet()" 
-                class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs flex flex-col items-center gap-1.5 hover:bg-blue-50/50 hover:border-blue-200 active:scale-95 transition-all cursor-pointer">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
-            </div>
-            <span class="text-[11px] font-bold text-slate-700">QR Loket</span>
-        </button>
-
-        <!-- Shortcut 2: Setor -->
+    <div class="grid grid-cols-3 gap-3">
+        <!-- Shortcut 1: Setor -->
         <button type="button" 
                 onclick="openSetorModal()" 
-                class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs flex flex-col items-center gap-1.5 hover:bg-emerald-50/50 hover:border-emerald-200 active:scale-95 transition-all cursor-pointer">
+                class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs flex flex-col items-center gap-2 hover:bg-emerald-50/50 hover:border-emerald-200 active:scale-95 transition-all cursor-pointer">
             <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
             </div>
-            <span class="text-[11px] font-bold text-slate-700">Setor</span>
+            <span class="text-xs font-bold text-slate-700">Setor</span>
         </button>
 
-        <!-- Shortcut 3: Tarik -->
+        <!-- Shortcut 2: Tarik -->
         <button type="button" 
                 onclick="openTarikModal()" 
-                class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs flex flex-col items-center gap-1.5 hover:bg-rose-50/50 hover:border-rose-200 active:scale-95 transition-all cursor-pointer">
+                class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs flex flex-col items-center gap-2 hover:bg-rose-50/50 hover:border-rose-200 active:scale-95 transition-all cursor-pointer">
             <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
             </div>
-            <span class="text-[11px] font-bold text-slate-700">Tarik</span>
+            <span class="text-xs font-bold text-slate-700">Tarik</span>
         </button>
 
-        <!-- Shortcut 4: Mutasi -->
+        <!-- Shortcut 3: Mutasi -->
         <a href="{{ route('saver.mutation') }}" 
-           class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs flex flex-col items-center gap-1.5 hover:bg-amber-50/50 hover:border-amber-200 active:scale-95 transition-all">
+           class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs flex flex-col items-center gap-2 hover:bg-amber-50/50 hover:border-amber-200 active:scale-95 transition-all">
             <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
             </div>
-            <span class="text-[11px] font-bold text-slate-700">Mutasi</span>
+            <span class="text-xs font-bold text-slate-700">Mutasi</span>
         </a>
     </div>
 
