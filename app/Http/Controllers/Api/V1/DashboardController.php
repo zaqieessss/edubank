@@ -38,7 +38,7 @@ class DashboardController extends Controller
             ->sum('amount');
 
         $monthlyOut = (int) $saver->transactions()
-            ->where('transaction_type', 'withdraw')
+            ->whereIn('transaction_type', ['withdraw', 'withdrawal'])
             ->whereBetween('transaction_date', [$startOfMonth, $endOfMonth])
             ->sum('amount');
 
@@ -52,7 +52,7 @@ class DashboardController extends Controller
             ->sum('amount');
 
         $weeklyOut = (int) $saver->transactions()
-            ->where('transaction_type', 'withdraw')
+            ->whereIn('transaction_type', ['withdraw', 'withdrawal'])
             ->whereBetween('transaction_date', [$startOfWeek, $endOfWeek])
             ->sum('amount');
 
@@ -67,7 +67,7 @@ class DashboardController extends Controller
                 return [
                     'id'               => $trx->id,
                     'transaction_code' => $trx->transaction_code,
-                    'type'             => $trx->transaction_type,
+                    'type'             => ($trx->transaction_type === 'withdrawal') ? 'withdraw' : $trx->transaction_type,
                     'amount'           => (int) $trx->amount,
                     'balance_after'    => (int) $trx->balance_after,
                     'description'      => $trx->description,

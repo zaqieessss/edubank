@@ -21,9 +21,14 @@ class TransactionController extends Controller
 
         $query = $saver->transactions()->with('user:id,name');
 
-        // Filter tipe: 'deposit' atau 'withdraw'
-        if ($request->filled('type') && in_array($request->type, ['deposit', 'withdraw'])) {
-            $query->where('transaction_type', $request->type);
+        // Filter tipe: 'deposit' atau 'withdraw' / 'withdrawal'
+        if ($request->filled('type')) {
+            $filterType = strtolower($request->type);
+            if ($filterType === 'deposit') {
+                $query->where('transaction_type', 'deposit');
+            } elseif ($filterType === 'withdraw' || $filterType === 'withdrawal') {
+                $query->whereIn('transaction_type', ['withdraw', 'withdrawal']);
+            }
         }
 
         // Filter rentang tanggal
@@ -42,7 +47,7 @@ class TransactionController extends Controller
             return [
                 'id'               => $trx->id,
                 'transaction_code' => $trx->transaction_code,
-                'type'             => $trx->transaction_type,
+                'type'             => ($trx->transaction_type === 'withdrawal') ? 'withdraw' : $trx->transaction_type,
                 'amount'           => (int) $trx->amount,
                 'balance_before'   => (int) $trx->balance_before,
                 'balance_after'    => (int) $trx->balance_after,
@@ -86,7 +91,7 @@ class TransactionController extends Controller
             'data' => [
                 'id'               => $trx->id,
                 'transaction_code' => $trx->transaction_code,
-                'type'             => $trx->transaction_type,
+                'type'             => ($trx->transaction_type === 'withdrawal') ? 'withdraw' : $trx->transaction_type,
                 'amount'           => (int) $trx->amount,
                 'balance_before'   => (int) $trx->balance_before,
                 'balance_after'    => (int) $trx->balance_after,

@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center justify-between sm:justify-end gap-3">
             <div class="text-left sm:text-right">
                 <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Nomor Rekening</span>
                 <span class="font-mono font-extrabold text-blue-700 text-sm">{{ $saver->account_number }}</span>
