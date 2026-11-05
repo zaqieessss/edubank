@@ -23,39 +23,41 @@
             overflow-x: hidden;
         }
 
-        /* Symmetrical 3D Breathing Animations */
-        @keyframes symm-breathe-top {
+        /* Symmetrically Balanced 3D Ambient Animations */
+        @keyframes balance-float-tl {
             0%, 100% {
-                transform: translate(-50%, 0) scale(1);
-                opacity: 0.92;
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.9;
             }
             50% {
-                transform: translate(-50%, -8px) scale(1.02);
+                transform: translate(6px, -8px) rotate(1deg);
                 opacity: 1;
             }
         }
-        @keyframes symm-breathe-bottom {
+        @keyframes balance-float-br {
             0%, 100% {
-                transform: translate(-50%, 0) scale(1);
-                opacity: 0.92;
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.9;
             }
             50% {
-                transform: translate(-50%, 8px) scale(1.02);
+                transform: translate(-6px, 8px) rotate(-1deg);
                 opacity: 1;
             }
         }
-        .anim-symm-top {
-            animation: symm-breathe-top 14s ease-in-out infinite;
+        .anim-balance-tl {
+            animation: balance-float-tl 16s ease-in-out infinite;
+            transform-origin: center;
         }
-        .anim-symm-bottom {
-            animation: symm-breathe-bottom 14s ease-in-out infinite;
+        .anim-balance-br {
+            animation: balance-float-br 16s ease-in-out infinite;
+            transform-origin: center;
         }
     </style>
 </head>
 <body class="min-h-screen p-4 sm:p-6 md:p-10 lg:p-12 flex items-center justify-center bg-[#F8FAFC] relative selection:bg-blue-600 selection:text-white">
 
     <!-- ========================================================================= -->
-    <!-- SYMMETRICAL 3D BACKGROUND LAYER (Framing Card Symmetrically Top & Bottom) -->
+    <!-- BALANCED 3D BACKGROUND LAYER (Keseimbangan Proporsional Kiri & Kanan)      -->
     <!-- ========================================================================= -->
     <div class="fixed inset-0 pointer-events-none select-none overflow-hidden z-0">
         
@@ -72,23 +74,23 @@
             <rect width="100%" height="100%" fill="url(#bgDots)" />
         </svg>
 
-        <!-- TOP SYMMETRICAL 3D TORUS & CONCENTRIC HALO (Centered Horizontally) -->
-        <div class="absolute -top-52 md:-top-72 left-1/2 w-[760px] h-[760px] md:w-[980px] md:h-[980px] anim-symm-top">
+        <!-- TOP-LEFT 3D TORUS & HALO (Seimbang membingkai panel kiri hero) -->
+        <div class="absolute -top-36 -left-28 md:-top-44 md:-left-36 w-[640px] h-[640px] md:w-[780px] md:h-[780px] anim-balance-tl">
             <!-- Symmetrical Ambient Glow Halo -->
-            <div class="absolute inset-24 rounded-full bg-gradient-to-b from-blue-500/28 via-sky-400/22 to-transparent blur-[100px]"></div>
+            <div class="absolute inset-20 rounded-full bg-gradient-to-tr from-blue-500/25 via-sky-400/22 to-teal-400/15 blur-[95px]"></div>
 
-            <svg class="w-full h-full" viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-full h-full" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <!-- 3D Drop Shadow -->
-                    <filter id="symmShadowTop" x="-20%" y="-20%" width="140%" height="140%">
+                    <filter id="shadowTL" x="-20%" y="-20%" width="140%" height="140%">
                         <feDropShadow dx="0" dy="24" stdDeviation="28" flood-color="#1E3A8A" flood-opacity="0.16" />
                     </filter>
-                    <filter id="softGlowTop" x="-30%" y="-30%" width="160%" height="160%">
+                    <filter id="softGlowTL" x="-30%" y="-30%" width="160%" height="160%">
                         <feGaussianBlur stdDeviation="6" />
                     </filter>
 
-                    <!-- Symmetrical Volumetric Torus Gradient -->
-                    <radialGradient id="torusSymmTop" cx="50%" cy="28%" r="68%">
+                    <!-- Volumetric Torus Gradient -->
+                    <radialGradient id="torusGradTL" cx="42%" cy="34%" r="66%">
                         <stop offset="0%" stop-color="#7DD3FC" />
                         <stop offset="25%" stop-color="#38BDF8" />
                         <stop offset="55%" stop-color="#2563EB" />
@@ -96,54 +98,54 @@
                         <stop offset="100%" stop-color="#0B2349" />
                     </radialGradient>
 
-                    <!-- Symmetrical Specular Highlight Gradient -->
-                    <linearGradient id="specularSymmTop" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <!-- Specular Highlight Gradient -->
+                    <linearGradient id="specularGradTL" x1="10%" y1="0%" x2="90%" y2="80%">
                         <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
                         <stop offset="40%" stop-color="#BAE6FD" stop-opacity="0.4" />
                         <stop offset="100%" stop-color="#38BDF8" stop-opacity="0" />
                     </linearGradient>
                 </defs>
 
-                <!-- Symmetrical Concentric Outer Rings -->
-                <circle cx="450" cy="450" r="410" stroke="#38BDF8" stroke-opacity="0.22" stroke-width="1.2" />
-                <circle cx="450" cy="450" r="340" stroke="#60A5FA" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="8 12" />
-                <circle cx="450" cy="450" r="270" stroke="#93C5FD" stroke-opacity="0.2" stroke-width="1.2" />
+                <!-- Concentric Outer Rings (Keseimbangan Lengkungan Sisi Kiri) -->
+                <circle cx="400" cy="400" r="370" stroke="#38BDF8" stroke-opacity="0.22" stroke-width="1.2" />
+                <circle cx="400" cy="400" r="310" stroke="#60A5FA" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="8 12" />
+                <circle cx="400" cy="400" r="250" stroke="#93C5FD" stroke-opacity="0.2" stroke-width="1.2" />
 
-                <!-- The 3D Volumetric Torus Body (Perfect Symmetrical Donut) -->
-                <path d="M 450,180 A 270,270 0 1,0 450,720 A 270,270 0 1,0 450,180 Z M 450,270 A 180,180 0 1,1 450,630 A 180,180 0 1,1 450,270 Z" 
-                      fill="url(#torusSymmTop)" 
-                      filter="url(#symmShadowTop)" />
+                <!-- The 3D Volumetric Torus Body -->
+                <path d="M 400,150 A 250,250 0 1,0 400,650 A 250,250 0 1,0 400,150 Z M 400,235 A 165,165 0 1,1 400,565 A 165,165 0 1,1 400,235 Z" 
+                      fill="url(#torusGradTL)" 
+                      filter="url(#shadowTL)" />
 
-                <!-- 3D Specular Highlight Ridge (Symmetrically Arching over Top Crest) -->
-                <path d="M 265,320 A 225,225 0 0,1 635,320" 
-                      stroke="url(#specularSymmTop)" 
+                <!-- 3D Specular Highlight Ridge -->
+                <path d="M 230,280 A 210,210 0 0,1 540,240" 
+                      stroke="url(#specularGradTL)" 
                       stroke-width="11" 
                       stroke-linecap="round" 
-                      filter="url(#softGlowTop)" />
-                <path d="M 310,290 A 225,225 0 0,1 590,290" 
+                      filter="url(#softGlowTL)" />
+                <path d="M 265,270 A 210,210 0 0,1 505,245" 
                       stroke="#FFFFFF" 
                       stroke-width="3.5" 
                       stroke-linecap="round" 
-                      opacity="0.9" />
+                      opacity="0.85" />
             </svg>
         </div>
 
-        <!-- BOTTOM SYMMETRICAL 3D TORUS & CONCENTRIC HALO (Centered Horizontally) -->
-        <div class="absolute -bottom-52 md:-bottom-72 left-1/2 w-[760px] h-[760px] md:w-[980px] md:h-[980px] anim-symm-bottom">
+        <!-- BOTTOM-RIGHT 3D TORUS & HALO (Seimbang membingkai panel kanan form) -->
+        <div class="absolute -bottom-36 -right-28 md:-bottom-44 md:-right-36 w-[640px] h-[640px] md:w-[780px] md:h-[780px] anim-balance-br">
             <!-- Symmetrical Ambient Glow Halo -->
-            <div class="absolute inset-24 rounded-full bg-gradient-to-t from-emerald-500/26 via-teal-400/20 to-transparent blur-[100px]"></div>
+            <div class="absolute inset-20 rounded-full bg-gradient-to-br from-emerald-500/25 via-teal-400/22 to-blue-500/18 blur-[95px]"></div>
 
-            <svg class="w-full h-full" viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-full h-full" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <filter id="symmShadowBottom" x="-20%" y="-20%" width="140%" height="140%">
+                    <filter id="shadowBR" x="-20%" y="-20%" width="140%" height="140%">
                         <feDropShadow dx="0" dy="-20" stdDeviation="28" flood-color="#047857" flood-opacity="0.15" />
                     </filter>
-                    <filter id="softGlowBottom" x="-30%" y="-30%" width="160%" height="160%">
+                    <filter id="softGlowBR" x="-30%" y="-30%" width="160%" height="160%">
                         <feGaussianBlur stdDeviation="6" />
                     </filter>
 
-                    <!-- Symmetrical Volumetric Emerald to Sapphire Torus Gradient -->
-                    <radialGradient id="torusSymmBottom" cx="50%" cy="72%" r="68%">
+                    <!-- Volumetric Emerald to Sapphire Torus Gradient -->
+                    <radialGradient id="torusGradBR" cx="58%" cy="66%" r="66%">
                         <stop offset="0%" stop-color="#6EE7B7" />
                         <stop offset="25%" stop-color="#10B981" />
                         <stop offset="55%" stop-color="#0D9488" />
@@ -151,34 +153,34 @@
                         <stop offset="100%" stop-color="#0B2349" />
                     </radialGradient>
 
-                    <linearGradient id="specularSymmBottom" x1="0%" y1="100%" x2="0%" y2="0%">
+                    <linearGradient id="specularGradBR" x1="10%" y1="100%" x2="90%" y2="20%">
                         <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
                         <stop offset="40%" stop-color="#A7F3D0" stop-opacity="0.4" />
                         <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
                     </linearGradient>
                 </defs>
 
-                <!-- Symmetrical Concentric Outer Rings -->
-                <circle cx="450" cy="450" r="410" stroke="#10B981" stroke-opacity="0.22" stroke-width="1.2" />
-                <circle cx="450" cy="450" r="340" stroke="#14B8A6" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="8 12" />
-                <circle cx="450" cy="450" r="270" stroke="#38BDF8" stroke-opacity="0.2" stroke-width="1.2" />
+                <!-- Concentric Outer Rings (Keseimbangan Lengkungan Sisi Kanan) -->
+                <circle cx="400" cy="400" r="370" stroke="#10B981" stroke-opacity="0.22" stroke-width="1.2" />
+                <circle cx="400" cy="400" r="310" stroke="#14B8A6" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="8 12" />
+                <circle cx="400" cy="400" r="250" stroke="#38BDF8" stroke-opacity="0.2" stroke-width="1.2" />
 
                 <!-- The 3D Volumetric Torus Body -->
-                <path d="M 450,180 A 270,270 0 1,0 450,720 A 270,270 0 1,0 450,180 Z M 450,270 A 180,180 0 1,1 450,630 A 180,180 0 1,1 450,270 Z" 
-                      fill="url(#torusSymmBottom)" 
-                      filter="url(#symmShadowBottom)" />
+                <path d="M 400,150 A 250,250 0 1,0 400,650 A 250,250 0 1,0 400,150 Z M 400,235 A 165,165 0 1,1 400,565 A 165,165 0 1,1 400,235 Z" 
+                      fill="url(#torusGradBR)" 
+                      filter="url(#shadowBR)" />
 
-                <!-- 3D Specular Highlight Ridge (Symmetrically Arching over Bottom Crest) -->
-                <path d="M 265,580 A 225,225 0 0,0 635,580" 
-                      stroke="url(#specularSymmBottom)" 
+                <!-- 3D Specular Highlight Ridge -->
+                <path d="M 260,560 A 210,210 0 0,0 570,520" 
+                      stroke="url(#specularGradBR)" 
                       stroke-width="11" 
                       stroke-linecap="round" 
-                      filter="url(#softGlowBottom)" />
-                <path d="M 310,610 A 225,225 0 0,0 590,610" 
+                      filter="url(#softGlowBR)" />
+                <path d="M 295,555 A 210,210 0 0,0 535,530" 
                       stroke="#FFFFFF" 
                       stroke-width="3.5" 
                       stroke-linecap="round" 
-                      opacity="0.9" />
+                      opacity="0.85" />
             </svg>
         </div>
 
