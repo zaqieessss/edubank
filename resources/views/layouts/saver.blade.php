@@ -17,20 +17,32 @@
     <link rel="icon" type="image/png" href="{{ asset('images/logo-blue.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/logo-blue.png') }}">
 
-    <!-- Google Fonts: Plus Jakarta Sans -->
+    <!-- Google Fonts: Nunito (Friendly Rounded) & JetBrains Mono (Serious Financial Monospace) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS & Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-font-smoothing: antialiased;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+        }
+
+        /* Dedicated Monospace for Technical, Financial Records & Account Numbers (Serious & Professional) */
+        .font-mono {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+            font-feature-settings: "tnum" 1, "zero" 1;
+        }
+
+        /* Tabular figures for strictly aligned accounting figures */
+        .tabular-nums, [data-amount] {
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: "tnum" 1;
         }
 
         /* Ambient Canvas Aura matching Flutter Home Screen */
