@@ -37,111 +37,102 @@
 <body class="h-screen w-screen overflow-hidden flex items-center justify-center bg-[#F0F6FF] selection:bg-blue-600 selection:text-white p-4 sm:p-6 lg:p-8 relative">
 
     <!-- ========================================================================= -->
-    <!-- BRIGHT 3D BACKGROUND (Tema Dasar Edubank: Biru Cerah, Sky, Bersih & Statis) -->
+    <!-- BRIGHT 3D HORIZON & AMBIENT GLASS WAVES BACKGROUND (Tema Dasar Edubank)   -->
     <!-- ========================================================================= -->
     <div class="fixed inset-0 pointer-events-none select-none overflow-hidden z-0">
         
-        <!-- Radiant Ambient Aurora Glow (Bright Edubank Palette) -->
-        <div class="absolute -top-24 -left-24 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-blue-400/25 via-sky-300/20 to-transparent blur-[110px]"></div>
-        <div class="absolute -bottom-28 -right-28 w-[550px] h-[550px] rounded-full bg-gradient-to-tl from-sky-400/25 via-blue-400/20 to-transparent blur-[120px]"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-blue-200/20 blur-[140px]"></div>
+        <!-- Radiant Ambient Mesh Backdrop -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#F0F6FF] via-[#F5F8FF] to-[#EBF3FC]"></div>
 
-        <!-- TOP-RIGHT: Static 3D Glossy Sapphire & Cyan Sphere (Tema Biru Edubank) -->
-        <div class="absolute -top-16 -right-16 sm:-top-24 sm:-right-24 w-[360px] h-[360px] sm:w-[480px] sm:h-[480px] opacity-85">
-            <svg class="w-full h-full" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <!-- Bright 3D Edubank Sphere Gradient -->
-                    <radialGradient id="edubank3DSphere" cx="35%" cy="30%" r="65%">
-                        <stop offset="0%" stop-color="#FFFFFF" />
-                        <stop offset="22%" stop-color="#BAE6FD" />
-                        <stop offset="50%" stop-color="#38BDF8" />
-                        <stop offset="78%" stop-color="#2563EB" />
-                        <stop offset="100%" stop-color="#1D4ED8" />
-                    </radialGradient>
+        <!-- Soft Radiant Ambient Glow Lights (Cerah & Bersih) -->
+        <div class="absolute -top-32 left-1/4 w-[650px] h-[650px] rounded-full bg-blue-400/20 blur-[130px]"></div>
+        <div class="absolute -bottom-32 right-1/4 w-[650px] h-[650px] rounded-full bg-sky-300/25 blur-[140px]"></div>
+        <div class="absolute top-1/3 -right-20 w-[450px] h-[450px] rounded-full bg-cyan-200/30 blur-[120px]"></div>
 
-                    <!-- Soft Drop Shadow -->
-                    <filter id="sphereCleanShadow" x="-25%" y="-25%" width="150%" height="150%">
-                        <feDropShadow dx="-10" dy="20" stdDeviation="28" flood-color="#1D4ED8" flood-opacity="0.15" />
-                    </filter>
+        <!-- Architectural 3D Glass Waves with Specular Lighting -->
+        <svg class="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- 3D Wave 1 Gradient -->
+                <linearGradient id="waveGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.32" />
+                    <stop offset="40%" stop-color="#60A5FA" stop-opacity="0.22" />
+                    <stop offset="80%" stop-color="#2563EB" stop-opacity="0.12" />
+                    <stop offset="100%" stop-color="#1D4ED8" stop-opacity="0.04" />
+                </linearGradient>
 
-                    <!-- Gloss Specular Highlight -->
-                    <linearGradient id="glossHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
-                        <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.2" />
-                        <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
-                    </linearGradient>
-                </defs>
+                <!-- 3D Wave 2 (Deep Frosted Glass) -->
+                <linearGradient id="waveGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#0284C7" stop-opacity="0.22" />
+                    <stop offset="50%" stop-color="#38BDF8" stop-opacity="0.18" />
+                    <stop offset="100%" stop-color="#93C5FD" stop-opacity="0.08" />
+                </linearGradient>
 
-                <!-- 3D Outer Halo Ring -->
-                <circle cx="300" cy="300" r="245" stroke="#38BDF8" stroke-opacity="0.25" stroke-width="2" />
-                <circle cx="300" cy="300" r="265" stroke="#60A5FA" stroke-opacity="0.15" stroke-width="1.5" stroke-dasharray="6 8" />
+                <!-- Specular Edge Shimmer -->
+                <linearGradient id="edgeShimmer" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85" />
+                    <stop offset="50%" stop-color="#BAE6FD" stop-opacity="0.95" />
+                    <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.15" />
+                </linearGradient>
+                
+                <filter id="softDepth" x="-10%" y="-10%" width="120%" height="120%">
+                    <feDropShadow dx="0" dy="16" stdDeviation="22" flood-color="#1E40AF" flood-opacity="0.08" />
+                </filter>
+            </defs>
 
-                <!-- The 3D Sphere -->
-                <circle cx="300" cy="300" r="200" fill="url(#edubank3DSphere)" filter="url(#sphereCleanShadow)" />
+            <!-- Wave Layer 1 (Back Depth) -->
+            <path d="M -100 250 C 300 120, 600 480, 1100 260 C 1300 170, 1500 220, 1600 280 L 1600 900 L -100 900 Z" 
+                  fill="url(#waveGrad1)" />
 
-                <!-- Specular Reflection -->
-                <ellipse cx="240" cy="210" rx="75" ry="45" transform="rotate(-30 240 210)" fill="url(#glossHighlight)" />
-            </svg>
-        </div>
+            <!-- Wave Layer 2 (3D Horizon with Specular Rim) -->
+            <path d="M -100 450 C 350 320, 750 680, 1200 440 C 1380 340, 1520 380, 1600 420 L 1600 900 L -100 900 Z" 
+                  fill="url(#waveGrad2)" 
+                  filter="url(#softDepth)" />
 
-        <!-- BOTTOM-LEFT: Static 3D Sky-Blue Torus Ring (Bersih, Cerah & Statis) -->
-        <div class="absolute -bottom-20 -left-20 sm:-bottom-28 sm:-left-28 w-[350px] h-[350px] sm:w-[460px] sm:h-[460px] opacity-75">
-            <svg class="w-full h-full" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <radialGradient id="edubank3DRing" cx="36%" cy="32%" r="68%">
-                        <stop offset="0%" stop-color="#FFFFFF" />
-                        <stop offset="25%" stop-color="#E0F2FE" />
-                        <stop offset="58%" stop-color="#7DD3FC" />
-                        <stop offset="85%" stop-color="#0284C7" />
-                        <stop offset="100%" stop-color="#0369A1" />
-                    </radialGradient>
-                    <filter id="ringCleanShadow" x="-25%" y="-25%" width="150%" height="150%">
-                        <feDropShadow dx="12" dy="20" stdDeviation="26" flood-color="#0284C7" flood-opacity="0.12" />
-                    </filter>
-                </defs>
+            <!-- Crisp Specular Light Line along Wave 2 Crest -->
+            <path d="M -100 450 C 350 320, 750 680, 1200 440 C 1380 340, 1520 380, 1600 420" 
+                  stroke="url(#edgeShimmer)" 
+                  stroke-width="2.5" 
+                  stroke-linecap="round" />
+                  
+            <!-- Crisp Specular Light Line along Wave 1 Crest -->
+            <path d="M -100 250 C 300 120, 600 480, 1100 260 C 1300 170, 1500 220, 1600 280" 
+                  stroke="#FFFFFF" 
+                  stroke-opacity="0.45" 
+                  stroke-width="1.5" />
+        </svg>
 
-                <!-- Concentric Delicate Orbit -->
-                <circle cx="300" cy="300" r="255" stroke="#0284C7" stroke-opacity="0.2" stroke-width="1.5" />
-
-                <!-- Smooth 3D Torus Ring -->
-                <path d="M 300,110 A 190,190 0 1,0 300,490 A 190,190 0 1,0 300,110 Z M 300,195 A 105,105 0 1,1 300,405 A 105,105 0 1,1 300,195 Z" 
-                      fill="url(#edubank3DRing)" 
-                      filter="url(#ringCleanShadow)" />
-            </svg>
-        </div>
+        <!-- Subtle Dot Grid in Background (Very Faint & Crisp) -->
+        <svg class="absolute inset-0 w-full h-full text-blue-900/10 opacity-20" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="bgMicroDots" x="0" y="0" width="36" height="36" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1" fill="currentColor" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#bgMicroDots)" />
+        </svg>
 
     </div>
 
     <!-- ========================================================================= -->
     <!-- MAIN LOGIN CARD (Static, Perfectly Balanced, High Whitespace)             -->
     <!-- ========================================================================= -->
-    <div class="relative w-full max-w-4xl max-h-[92vh] sm:max-h-[580px] bg-white rounded-3xl border border-blue-100/80 shadow-[0_20px_60px_-15px_rgba(37,99,235,0.12)] overflow-hidden grid grid-cols-1 md:grid-cols-12 z-10">
+    <div class="relative w-full max-w-4xl max-h-[92vh] sm:max-h-[560px] bg-white rounded-3xl border border-blue-100/90 shadow-[0_20px_60px_-15px_rgba(37,99,235,0.12)] overflow-hidden grid grid-cols-1 md:grid-cols-12 z-10">
 
         <!-- ===================================================================== -->
-        <!-- LEFT HERO (5 Cols): Clean, Elegan & Cerah Sesuai Tema Edubank          -->
+        <!-- LEFT HERO (5 Cols): Clean, Elegan & Banyak Whitespace                  -->
         <!-- ===================================================================== -->
-        <div class="hidden md:flex md:col-span-5 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-8 lg:p-11 text-white flex-col justify-between relative overflow-hidden select-none">
+        <div class="hidden md:flex md:col-span-5 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-8 sm:p-10 lg:p-12 text-white flex-col justify-center relative overflow-hidden select-none">
             
             <!-- Soft Internal Ambient Light -->
-            <div class="absolute -top-16 -left-16 w-56 h-56 bg-sky-300/25 rounded-full blur-2xl pointer-events-none"></div>
-            <div class="absolute -bottom-16 -right-16 w-56 h-56 bg-indigo-400/20 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -top-16 -left-16 w-56 h-56 bg-sky-300/25 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-16 -right-16 w-56 h-56 bg-indigo-400/20 rounded-full blur-3xl pointer-events-none"></div>
 
-            <!-- Subtle Grid Accent -->
-            <div class="absolute inset-0 pointer-events-none opacity-10">
-                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <pattern id="cardGrid" width="28" height="28" patternUnits="userSpaceOnUse">
-                            <path d="M 28 0 L 0 0 0 28" fill="none" stroke="white" stroke-width="0.5" />
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#cardGrid)" />
-                </svg>
-            </div>
-
-            <!-- TOP BRAND HEADER -->
-            <div class="relative z-10">
+            <!-- Content Area with Generous Whitespace -->
+            <div class="relative z-10 space-y-6">
+                
+                <!-- Top Brand Capsule -->
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 p-2 shadow-sm inline-flex items-center justify-center">
+                    <div class="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 p-2.5 shadow-sm inline-flex items-center justify-center">
                         <img src="{{ asset('images/logo-white.png') }}" alt="Edubank Logo" class="w-full h-full object-contain">
                     </div>
                     <div>
@@ -149,50 +140,22 @@
                             <span class="font-bold text-base tracking-wide text-white">Edubank</span>
                             <span class="px-2 py-0.5 rounded-full bg-white/20 border border-white/30 text-[9px] font-semibold text-white">Bank Mini</span>
                         </div>
-                        <p class="text-xs text-blue-100 font-medium">SMKN 1 Bantul</p>
+                        <p class="text-xs text-blue-100 font-medium mt-0.5">SMKN 1 Bantul</p>
                     </div>
                 </div>
-            </div>
 
-            <!-- CENTER CONTENT: TYPOGRAPHY & CLEAN FEATURE PILLS (Tanpa Ilustrasi Kartu) -->
-            <div class="relative z-10 my-auto py-6">
-                <h1 class="text-2xl lg:text-3xl font-bold tracking-tight text-white leading-snug">
-                    Kelola Layanan <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-blue-200">Bank Mini</span> Lebih Cepat & Terintegrasi
-                </h1>
-                
-                <p class="text-xs sm:text-sm text-blue-100/90 mt-3.5 leading-relaxed font-normal">
-                    Satu portal cerdas untuk layanan transaksi loket Teller, pengawasan kas harian Administrator, dan kemudahan pemantauan saldo tabungan siswa.
-                </p>
-
-                <!-- Clean Minimalist Key Highlights (Sederhana & Elegan) -->
-                <div class="mt-6 space-y-2.5">
-                    <div class="flex items-center gap-2.5 text-xs text-white/95">
-                        <div class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                            <svg class="w-3 h-3 text-sky-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                        </div>
-                        <span class="font-medium">Layanan Transaksi Loket Real-Time</span>
-                    </div>
-
-                    <div class="flex items-center gap-2.5 text-xs text-white/95">
-                        <div class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                            <svg class="w-3 h-3 text-sky-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                        </div>
-                        <span class="font-medium">Rekapitulasi Kas & Jurnal Otomatis</span>
-                    </div>
-
-                    <div class="flex items-center gap-2.5 text-xs text-white/95">
-                        <div class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                            <svg class="w-3 h-3 text-sky-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                        </div>
-                        <span class="font-medium">Monitoring Saldo & Tabungan Siswa</span>
-                    </div>
+                <!-- Clean Typography Heading & Description -->
+                <div class="pt-3">
+                    <h1 class="text-2xl lg:text-3xl font-bold tracking-tight text-white leading-snug">
+                        Kelola Layanan <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-blue-200">Bank Mini</span> Lebih Cepat & Terintegrasi
+                    </h1>
+                    
+                    <p class="text-xs sm:text-sm text-blue-100/90 mt-4 leading-relaxed font-normal">
+                        Satu portal cerdas untuk layanan transaksi loket Teller, pengawasan kas harian Administrator, dan kemudahan pemantauan saldo tabungan siswa.
+                    </p>
                 </div>
-            </div>
 
-            <!-- BOTTOM FOOTER NOTE -->
-            <div class="relative z-10 text-xs text-blue-200/90 font-medium">
-                © 2026 Edubank SMKN 1 Bantul
             </div>
 
         </div>
