@@ -54,7 +54,8 @@ class AccountService
         int $initialDeposit = 10000,
         string $pin = '123456',
         int $processedByUserId = 1,
-        ?string $password = null
+        ?string $password = null,
+        ?string $email = null
     ): Saver {
         if ($member->registration_status === 'registered') {
             throw new Exception("Siswa {$member->full_name} sudah memiliki rekening tabungan aktif.");
@@ -68,24 +69,36 @@ class AccountService
             throw new Exception('PIN keamanan harus berupa 6 digit angka.');
         }
 
-        return DB::transaction(function () use ($member, $initialDeposit, $pin, $processedByUserId, $password) {
+        return DB::transaction(function () use ($member, $initialDeposit, $pin, $processedByUserId, $password, $email) {
+            // Update email jika diisi dan berbeda dari email bawaan member
+            $accountEmail = trim($email ?: $member->email);
+            if ($accountEmail !== $member->email) {
+                $member->update(['email' => $accountEmail]);
+            }
+
             // 1. Generate Account Number
             $accountNumber = $this->generateAccountNumber($member->major, $member->cohort);
 
             // 2. Create User login account for student (if not exists)
-            $user = User::where('email', $member->email)->first();
+            $user = User::where('email', $accountEmail)->first();
+            if (!$user && $member->user_id) {
+                $user = User::find($member->user_id);
+            }
+
             $accountPassword = $password ?: $pin;
             if (!$user) {
                 $user = User::create([
-                    'name' => $member->full_name,
-                    'email' => $member->email,
+                    'name'     => $member->full_name,
+                    'email'    => $accountEmail,
                     'password' => Hash::make($accountPassword),
-                    'role' => 'saver',
-                    'status' => 'active',
+                    'role'     => 'saver',
+                    'status'   => 'active',
                 ]);
             } else {
                 $user->update([
-                    'role' => 'saver',
+                    'name'     => $member->full_name,
+                    'email'    => $accountEmail,
+                    'role'     => 'saver',
                     'password' => Hash::make($accountPassword),
                 ]);
             }
@@ -123,8 +136,12 @@ class AccountService
                 'qr_code_path'    => $qrCodePath,
             ]);
 
-            // 5. Update Member Status
-            $member->update(['registration_status' => 'registered']);
+            // 5. Update Member Status and User ID link
+            $member->update([
+                'registration_status' => 'registered',
+                'user_id'             => $user->id,
+                'email'               => $accountEmail,
+            ]);
 
             // 6. Record Initial Deposit Transaction
             $transactionCode = 'TRX-' . date('Ymd') . '-' . str_pad((string) (Transaction::count() + 1), 4, '0', STR_PAD_LEFT);

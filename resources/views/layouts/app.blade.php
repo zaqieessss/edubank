@@ -37,21 +37,25 @@
             font-feature-settings: "tnum" 1;
         }
 
-        /* Custom Scrollbar for Dense Tables */
+        /* Modern Thin Floating Custom Scrollbar (Clean, Sleek & Elegant) */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148, 163, 184, 0.45) transparent;
+        }
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
         ::-webkit-scrollbar-track {
-            background: rgba(241, 245, 249, 0.6);
-            border-radius: 9999px;
+            background: transparent;
         }
         ::-webkit-scrollbar-thumb {
-            background: #CBD5E1;
+            background: rgba(148, 163, 184, 0.35);
             border-radius: 9999px;
+            transition: background 0.2s ease-in-out;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #94A3B8;
+            background: rgba(59, 130, 246, 0.65);
         }
 
         /* Utility: Hide Scrollbar but keep scrollability */

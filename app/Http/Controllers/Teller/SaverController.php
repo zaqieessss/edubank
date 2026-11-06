@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Teller;
 use App\Http\Controllers\Controller;
 use App\Models\Member;
 use App\Models\Saver;
+use App\Models\User;
 use App\Services\AccountService;
 use App\Services\QrCodeService;
 use Exception;
@@ -60,10 +61,14 @@ class SaverController extends Controller
     {
         $validated = $request->validate([
             'member_id'       => ['required', 'exists:members,id'],
+            'email'           => ['required', 'string', 'email', 'max:255'],
             'initial_deposit' => ['required', 'integer', 'min:10000'],
             'security_pin'    => ['required', 'digits:6'],
             'password'        => ['required', 'string', 'min:6', 'confirmed'],
         ], [
+            'member_id.required'  => 'Silakan pilih siswa calon nasabah terlebih dahulu.',
+            'email.required'      => 'Email akun siswa wajib diisi.',
+            'email.email'         => 'Format alamat email tidak valid.',
             'initial_deposit.min' => 'Setoran awal buka rekening minimal Rp 10.000.',
             'security_pin.digits' => 'PIN keamanan harus berupa 6 digit angka.',
             'password.required'   => 'Kata sandi akun login siswa wajib diisi.',
@@ -72,6 +77,19 @@ class SaverController extends Controller
         ]);
 
         $member = Member::findOrFail($validated['member_id']);
+        $newEmail = trim($validated['email']);
+
+        // Pastikan email unik di tabel users (kecuali akun milik member itu sendiri jika sudah terlink)
+        $existingUser = User::where('email', $newEmail)->first();
+        if ($existingUser && $existingUser->id !== $member->user_id) {
+            return back()->withInput()->withErrors(['email' => "Email {$newEmail} sudah terdaftar pada akun login lain."]);
+        }
+
+        // Pastikan email unik di tabel members
+        $existingMember = Member::where('email', $newEmail)->where('id', '!=', $member->id)->first();
+        if ($existingMember) {
+            return back()->withInput()->withErrors(['email' => "Email {$newEmail} sudah digunakan oleh data siswa {$existingMember->full_name}."]);
+        }
 
         try {
             $saver = $this->accountService->openAccount(
@@ -79,7 +97,8 @@ class SaverController extends Controller
                 initialDeposit: (int) $validated['initial_deposit'],
                 pin: $validated['security_pin'],
                 processedByUserId: Auth::id(),
-                password: $validated['password']
+                password: $validated['password'],
+                email: $newEmail
             );
 
             return redirect()->route('teller.savers.show', $saver)

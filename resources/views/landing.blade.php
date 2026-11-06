@@ -29,19 +29,25 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Custom Scrollbar Edubank */
+        /* Modern Thin Floating Custom Scrollbar (Clean & Sleek) */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148, 163, 184, 0.45) transparent;
+        }
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 5px;
+            height: 5px;
         }
         ::-webkit-scrollbar-track {
-            background: #F1F5F9;
+            background: transparent;
         }
         ::-webkit-scrollbar-thumb {
-            background: #CBD5E1;
+            background: rgba(148, 163, 184, 0.35);
             border-radius: 9999px;
+            transition: background 0.2s ease-in-out;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #94A3B8;
+            background: rgba(59, 130, 246, 0.65);
         }
     </style>
 </head>

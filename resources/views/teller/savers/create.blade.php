@@ -71,6 +71,7 @@
                                         data-major="{{ $m->major }}"
                                         data-class="{{ $m->class_name }}"
                                         data-cohort="{{ $m->cohort }}"
+                                        data-email="{{ $m->email }}"
                                         {{ (old('member_id') == $m->id || request('member_id') == $m->id) ? 'selected' : '' }}>
                                     [NIS: {{ $m->student_id_number }}] {{ $m->full_name }} — {{ $m->class_name }} ({{ $m->major }})
                                 </option>
@@ -140,6 +141,38 @@
                         <span class="text-[10px] uppercase font-bold text-slate-400 block">Format No. Rekening</span>
                         <span id="prev_acc" class="font-mono font-bold text-blue-600">-</span>
                     </div>
+                </div>
+
+                <!-- Email Akun Siswa (Bisa Langsung Disesuaikan/Diubah) -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label for="email_input" class="block text-xs font-bold text-slate-800">
+                            Email Akun Siswa (Untuk Login & Notifikasi) *
+                        </label>
+                        <span class="text-[10px] text-blue-600 bg-blue-50 border border-blue-200/60 px-2 py-0.5 rounded-full font-medium">
+                            Dapat diubah langsung tanpa ke menu Manajemen
+                        </span>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206"/>
+                            </svg>
+                        </div>
+                        <input type="email" 
+                               name="email" 
+                               id="email_input" 
+                               value="{{ old('email') }}" 
+                               required 
+                               placeholder="contoh: siswa@edubank.web.id atau email pribadi siswa" 
+                               class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs font-medium text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-1">
+                        Secara otomatis memuat email terdaftar siswa. Anda dapat langsung mengeditnya jika email masih default atau siswa ingin memakai email aktif miliknya.
+                    </p>
+                    @error('email')
+                        <p class="text-[11px] text-rose-500 mt-1 font-semibold">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Grid Baris: Setoran Awal, PIN Keamanan & Password Akun Mobile -->
@@ -364,6 +397,13 @@
     const prevCohort   = document.getElementById('prev_cohort');
     const prevAcc      = document.getElementById('prev_acc');
 
+    const emailInput = document.getElementById('email_input');
+    if (emailInput) {
+        emailInput.addEventListener('input', function() {
+            this.dataset.manuallyEdited = 'true';
+        });
+    }
+
     function updatePreview() {
         if (!memberSelect) return;
         const opt = memberSelect.options[memberSelect.selectedIndex];
@@ -373,12 +413,19 @@
             prevClass.innerText  = opt.dataset.class || '-';
             prevCohort.innerText = opt.dataset.cohort || '-';
             prevAcc.innerText    = `${opt.dataset.major || 'XXX'}-${opt.dataset.cohort || '2026'}-XXXX`;
+
+            if (emailInput && (!emailInput.value || !emailInput.dataset.manuallyEdited)) {
+                emailInput.value = opt.dataset.email || '';
+            }
         } else {
             prevName.innerText   = '-';
             prevMajor.innerText  = '-';
             prevClass.innerText  = '-';
             prevCohort.innerText = '-';
             prevAcc.innerText    = '-';
+            if (emailInput && !emailInput.dataset.manuallyEdited) {
+                emailInput.value = '';
+            }
         }
     }
 
@@ -398,6 +445,7 @@
                     major: opt.dataset.major || '',
                     className: opt.dataset.class || '',
                     cohort: opt.dataset.cohort || '',
+                    email: opt.dataset.email || '',
                 });
             }
 
@@ -446,6 +494,10 @@
                 searchInput.value = `[NIS: ${student.nis}] ${student.name} — ${student.className}`;
                 if (clearBtn) clearBtn.classList.remove('hidden');
                 dropdownMenu.classList.add('hidden');
+                if (emailInput) {
+                    emailInput.value = student.email || '';
+                    delete emailInput.dataset.manuallyEdited;
+                }
                 memberSelect.dispatchEvent(new Event('change'));
             }
 
