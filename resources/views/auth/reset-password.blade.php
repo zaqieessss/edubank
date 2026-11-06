@@ -37,72 +37,69 @@
 <body class="h-screen w-screen overflow-hidden flex items-center justify-center bg-[#F0F6FF] selection:bg-blue-600 selection:text-white p-4 sm:p-6 lg:p-8 relative">
 
     <!-- ========================================================================= -->
-    <!-- BRIGHT 3D AMBIENT STUDIO CANVAS (Tema Dasar Edubank: Bersih, Cerah & Statis)-->
+    <!-- BRIGHT ARCHITECTURAL ISOMETRIC TECH BACKDROP (Cerah, Bersih & Statis)     -->
     <!-- ========================================================================= -->
     <div class="fixed inset-0 pointer-events-none select-none overflow-hidden z-0">
-        <!-- Radiant Studio Backdrop -->
-        <div class="absolute inset-0 bg-gradient-to-br from-[#F0F6FF] via-[#F8FAFD] to-[#EAF2FC]"></div>
+        <!-- Base Gradient Canvas -->
+        <div class="absolute inset-0 bg-gradient-to-tr from-[#EDF5FD] via-[#F4F8FD] to-[#E8F2FC]"></div>
 
-        <!-- Soft Diffused Light Washes -->
-        <div class="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-blue-400/20 blur-[130px]"></div>
-        <div class="absolute -bottom-40 -right-40 w-[650px] h-[650px] rounded-full bg-sky-300/25 blur-[140px]"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-indigo-200/15 blur-[150px]"></div>
+        <!-- Radiant Ambient Light Centers -->
+        <div class="absolute -top-32 left-1/3 w-[600px] h-[600px] rounded-full bg-blue-400/20 blur-[130px]"></div>
+        <div class="absolute -bottom-32 right-1/4 w-[650px] h-[650px] rounded-full bg-sky-300/22 blur-[140px]"></div>
+        <div class="absolute top-1/2 -left-20 w-[450px] h-[450px] rounded-full bg-indigo-200/18 blur-[120px]"></div>
 
-        <!-- Static 3D Frosted Crystal / Sphere (Top-Right) -->
-        <div class="absolute -top-12 -right-12 sm:-top-16 sm:-right-16 w-80 h-80 sm:w-96 sm:h-96 opacity-80">
-            <svg class="w-full h-full" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <radialGradient id="studioSphere" cx="35%" cy="30%" r="65%">
-                        <stop offset="0%" stop-color="#FFFFFF" />
-                        <stop offset="25%" stop-color="#BAE6FD" />
-                        <stop offset="60%" stop-color="#38BDF8" />
-                        <stop offset="88%" stop-color="#2563EB" />
-                        <stop offset="100%" stop-color="#1D4ED8" />
-                    </radialGradient>
-                    <linearGradient id="studioSpecular" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
-                        <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.2" />
-                        <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
-                    </linearGradient>
-                    <filter id="studioDropShadow" x="-20%" y="-20%" width="140%" height="140%">
-                        <feDropShadow dx="-10" dy="18" stdDeviation="24" flood-color="#1E40AF" flood-opacity="0.12" />
-                    </filter>
-                </defs>
-                <circle cx="200" cy="200" r="140" fill="url(#studioSphere)" filter="url(#studioDropShadow)" />
-                <ellipse cx="155" cy="135" rx="55" ry="32" transform="rotate(-30 155 135)" fill="url(#studioSpecular)" />
-            </svg>
-        </div>
-
-        <!-- Static 3D Smooth Frosted Torus (Bottom-Left) -->
-        <div class="absolute -bottom-16 -left-16 sm:-bottom-20 sm:-left-20 w-80 h-80 sm:w-96 sm:h-96 opacity-70">
-            <svg class="w-full h-full" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <radialGradient id="torusGrad" cx="38%" cy="32%" r="65%">
-                        <stop offset="0%" stop-color="#FFFFFF" />
-                        <stop offset="25%" stop-color="#E0F2FE" />
-                        <stop offset="60%" stop-color="#7DD3FC" />
-                        <stop offset="85%" stop-color="#0284C7" />
-                        <stop offset="100%" stop-color="#0369A1" />
-                    </radialGradient>
-                    <filter id="torusShadow" x="-20%" y="-20%" width="140%" height="140%">
-                        <feDropShadow dx="12" dy="16" stdDeviation="22" flood-color="#0284C7" flood-opacity="0.10" />
-                    </filter>
-                </defs>
-                <path d="M 200,60 A 140,140 0 1,0 200,340 A 140,140 0 1,0 200,60 Z M 200,120 A 80,80 0 1,1 200,280 A 80,80 0 1,1 200,120 Z" 
-                      fill="url(#torusGrad)" 
-                      filter="url(#torusShadow)" />
-            </svg>
-        </div>
-
-        <!-- Subtle Ambient Dot Matrix (Faint & Clean) -->
-        <svg class="absolute inset-0 w-full h-full text-blue-900/10 opacity-20" xmlns="http://www.w3.org/2000/svg">
+        <!-- Architectural Isometric Grid Pattern with Center Fade -->
+        <svg class="absolute inset-0 w-full h-full text-blue-600/15" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <pattern id="studioDots" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
-                    <circle cx="2" cy="2" r="1" fill="currentColor" />
+                <pattern id="resetIsoGrid" width="60" height="103.92" patternUnits="userSpaceOnUse">
+                    <path d="M 30 0 L 60 17.32 L 60 51.96 L 30 69.28 L 0 51.96 L 0 17.32 Z M 30 103.92 L 60 86.6 L 60 51.96 L 30 69.28 L 0 51.96 L 0 86.6 Z" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          stroke-width="0.8" 
+                          stroke-opacity="0.3" />
                 </pattern>
+                <radialGradient id="resetGridFade" cx="50%" cy="50%" r="55%">
+                    <stop offset="0%" stop-color="black" stop-opacity="0.05" />
+                    <stop offset="65%" stop-color="black" stop-opacity="0.5" />
+                    <stop offset="100%" stop-color="black" stop-opacity="0.85" />
+                </radialGradient>
+                <mask id="resetMask">
+                    <rect width="100%" height="100%" fill="url(#resetGridFade)" />
+                </mask>
             </defs>
-            <rect width="100%" height="100%" fill="url(#studioDots)" />
+            <rect width="100%" height="100%" fill="url(#resetIsoGrid)" mask="url(#resetMask)" />
         </svg>
+
+        <!-- Top-Right Prismatic Facet Accent -->
+        <div class="absolute -top-16 -right-16 w-80 h-80 sm:w-96 sm:h-96 opacity-60">
+            <svg class="w-full h-full" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="resetPrism1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#38BDF8" />
+                        <stop offset="100%" stop-color="#1D4ED8" />
+                    </linearGradient>
+                    <linearGradient id="resetPrism2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#93C5FD" />
+                        <stop offset="100%" stop-color="#2563EB" />
+                    </linearGradient>
+                    <linearGradient id="resetPrism3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#FFFFFF" />
+                        <stop offset="100%" stop-color="#60A5FA" />
+                    </linearGradient>
+                </defs>
+                <polygon points="150,20 280,95 280,245 150,170" fill="url(#resetPrism1)" opacity="0.4" />
+                <polygon points="150,20 20,95 20,245 150,170" fill="url(#resetPrism2)" opacity="0.6" />
+                <polygon points="20,95 150,20 280,95 150,170" fill="url(#resetPrism3)" opacity="0.8" />
+            </svg>
+        </div>
+
+        <!-- Bottom-Left Prismatic Facet Accent -->
+        <div class="absolute -bottom-16 -left-16 w-72 h-72 sm:w-88 sm:h-88 opacity-50">
+            <svg class="w-full h-full" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="150,30 270,100 270,240 150,170" fill="url(#resetPrism2)" opacity="0.5" />
+                <polygon points="150,30 30,100 30,240 150,170" fill="url(#resetPrism1)" opacity="0.7" />
+            </svg>
+        </div>
     </div>
 
     <!-- ========================================================================= -->
@@ -111,7 +108,7 @@
     <div class="relative w-full max-w-4xl max-h-[92vh] sm:max-h-[560px] bg-white rounded-3xl border border-blue-100/90 shadow-[0_20px_60px_-15px_rgba(37,99,235,0.12)] overflow-hidden grid grid-cols-1 md:grid-cols-12 z-10">
 
         <!-- ===================================================================== -->
-        <!-- LEFT HERO (5 Cols): Clean, Elegan, Banyak Whitespace & Mini Ilustrasi  -->
+        <!-- LEFT HERO (5 Cols): Clean, Elegan, Banyak Whitespace & Ilustrasi Grafis-->
         <!-- ===================================================================== -->
         <div class="hidden md:flex md:col-span-5 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-8 sm:p-10 lg:p-12 text-white flex-col justify-center relative overflow-hidden select-none">
             
@@ -148,37 +145,56 @@
                     </p>
                 </div>
 
-                <!-- Sedikit Ilustrasi Kecil (Compact, Clean & Elegan) -->
-                <div class="pt-2">
-                    <div class="relative w-36 h-22 rounded-2xl bg-gradient-to-tr from-white/15 via-white/10 to-white/5 border border-white/20 p-3 shadow-lg shadow-black/10 backdrop-blur-md overflow-hidden">
-                        <!-- Diagonal Sheen Accent -->
-                        <div class="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent pointer-events-none rounded-2xl"></div>
-                        <div class="absolute -right-4 -bottom-4 w-16 h-16 rounded-full bg-sky-300/20 blur-xl pointer-events-none"></div>
+                <!-- Ilustrasi Grafis (Fintech Growth & Secure Banking) -->
+                <div class="pt-3">
+                    <div class="w-full max-w-[240px] h-[85px] relative">
+                        <svg class="w-full h-full" viewBox="0 0 280 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="chartLineGradR" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.3" />
+                                    <stop offset="60%" stop-color="#38BDF8" />
+                                    <stop offset="100%" stop-color="#FFFFFF" />
+                                </linearGradient>
+                                <linearGradient id="barGrad1R" x1="0%" y1="100%" x2="0%" y2="0%">
+                                    <stop offset="0%" stop-color="#1E40AF" stop-opacity="0.2" />
+                                    <stop offset="100%" stop-color="#60A5FA" stop-opacity="0.6" />
+                                </linearGradient>
+                                <linearGradient id="barGrad2R" x1="0%" y1="100%" x2="0%" y2="0%">
+                                    <stop offset="0%" stop-color="#1E40AF" stop-opacity="0.3" />
+                                    <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.8" />
+                                </linearGradient>
+                                <linearGradient id="shieldGradR" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25" />
+                                    <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.05" />
+                                </linearGradient>
+                            </defs>
 
-                        <!-- Top Bar: Mini Gold Chip & Wireless Wave -->
-                        <div class="flex items-center justify-between mb-2 relative z-10">
-                            <div class="w-5.5 h-4 rounded bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 p-[1px] shadow-2xs border border-amber-300/60">
-                                <div class="w-full h-full border border-amber-800/20 rounded-[1px] flex items-center justify-center">
-                                    <div class="w-1.5 h-full border-x border-amber-800/30"></div>
-                                </div>
-                            </div>
-                            <svg class="w-3.5 h-3.5 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 16.5a5 5 0 010-9M12 19a8.5 8.5 0 000-14m3.5 16.5a12 12 0 000-19" />
-                            </svg>
-                        </div>
+                            <line x1="15" y1="20" x2="265" y2="20" stroke="white" stroke-opacity="0.08" stroke-dasharray="3 3" />
+                            <line x1="15" y1="50" x2="265" y2="50" stroke="white" stroke-opacity="0.08" stroke-dasharray="3 3" />
+                            <line x1="15" y1="80" x2="265" y2="80" stroke="white" stroke-opacity="0.12" />
 
-                        <!-- Middle: Masked Account Number -->
-                        <div class="text-[10px] font-mono tracking-wider text-slate-100 font-semibold mb-1 relative z-10">
-                            •••• •••• 2026
-                        </div>
+                            <rect x="35" y="55" width="16" height="25" rx="3.5" fill="url(#barGrad1R)" />
+                            <rect x="65" y="40" width="16" height="40" rx="3.5" fill="url(#barGrad1R)" />
+                            <rect x="95" y="28" width="16" height="52" rx="3.5" fill="url(#barGrad2R)" />
+                            <rect x="125" y="16" width="16" height="64" rx="3.5" fill="url(#barGrad2R)" />
 
-                        <!-- Bottom: Small Bank Tag -->
-                        <div class="flex items-center justify-between text-[8px] text-blue-100/90 font-medium relative z-10">
-                            <span>EDUBANK</span>
-                            <span class="text-emerald-300 flex items-center gap-0.5 font-bold">
-                                <span class="w-1 h-1 rounded-full bg-emerald-400 inline-block"></span> AKTIF
-                            </span>
-                        </div>
+                            <path d="M 25 68 Q 70 55, 105 35 T 150 12" stroke="url(#chartLineGradR)" stroke-width="2.2" stroke-linecap="round" />
+                            <circle cx="150" cy="12" r="4.5" fill="#38BDF8" />
+                            <circle cx="150" cy="12" r="2" fill="#FFFFFF" />
+
+                            <g transform="translate(185, 12)">
+                                <path d="M 28 4 C 44 4, 52 10, 52 24 C 52 40, 34 52, 28 56 C 22 52, 4 40, 4 24 C 4 10, 12 4, 28 4 Z" 
+                                      fill="url(#shieldGradR)" 
+                                      stroke="rgba(255,255,255,0.3)" 
+                                      stroke-width="1.2" />
+                                <path d="M 20 28 L 26 34 L 36 21" 
+                                      stroke="#FFFFFF" 
+                                      stroke-width="2.2" 
+                                      stroke-linecap="round" 
+                                      stroke-linejoin="round" />
+                                <circle cx="44" cy="10" r="3" fill="#10B981" />
+                            </g>
+                        </svg>
                     </div>
                 </div>
 
