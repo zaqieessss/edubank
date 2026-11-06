@@ -1,180 +1,283 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verifikasi OTP - Edubank SMKN 1 Bantul</title>
 
-    <!-- Favicon (Icon Tab Browser) -->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo-blue.png') }}">
 
+    <!-- Google Fonts: Nunito (Friendly Rounded) & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #F8FAFC;
+            background-color: #F0F6FF;
             color: #0F172A;
             -webkit-font-smoothing: antialiased;
         }
 
         .font-mono {
-            font-family: 'JetBrains Mono', monospace !important;
-            letter-spacing: 4px;
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+            font-feature-settings: "tnum" 1, "zero" 1;
         }
     </style>
 </head>
-<body class="min-h-screen p-3 md:p-6 flex items-center justify-center bg-[#F8FAFC]">
+<body class="h-screen w-screen overflow-hidden flex items-center justify-center bg-[#F0F6FF] selection:bg-blue-600 selection:text-white p-4 sm:p-6 lg:p-8 relative">
 
-    <!-- Container Form (Identik dengan Desain Form Login) -->
-    <div class="w-full max-w-4xl bg-white rounded-[32px] border border-slate-200/90 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.1)] overflow-hidden grid grid-cols-1 md:grid-cols-12 relative">
-        
-        <!-- LEFT HERO (5 Cols): Branding & Atmosphere (Midnight Sapphire & Geometric Art) -->
-        <div class="md:col-span-5 bg-gradient-to-br from-[#0B1528] via-[#102A54] to-[#1E3A8A] p-8 text-white flex flex-col justify-between relative overflow-hidden">
-            
-            <!-- Geometric Background Illustration Layer -->
-            <div class="absolute inset-0 overflow-hidden pointer-events-none select-none">
-                <!-- Ambient Sapphire Glows -->
-                <div class="absolute -top-16 -left-16 w-56 h-56 bg-blue-500/20 rounded-full blur-3xl"></div>
-                <div class="absolute -bottom-16 -right-16 w-56 h-56 bg-indigo-500/25 rounded-full blur-3xl"></div>
-                
-                <!-- Geometric Concentric Rings & Crosshair -->
-                <svg class="absolute -right-14 -top-14 w-64 h-64 text-blue-300/15" viewBox="0 0 300 300" fill="none">
-                    <circle cx="150" cy="150" r="135" stroke="currentColor" stroke-width="1" stroke-dasharray="4 6" opacity="0.4" />
-                    <circle cx="150" cy="150" r="100" stroke="currentColor" stroke-width="1.2" opacity="0.6" />
-                    <circle cx="150" cy="150" r="65" stroke="currentColor" stroke-width="1" stroke-dasharray="3 4" opacity="0.5" />
-                    <line x1="15" y1="150" x2="285" y2="150" stroke="currentColor" stroke-width="0.8" opacity="0.3" />
-                    <line x1="150" y1="15" x2="150" y2="285" stroke="currentColor" stroke-width="0.8" opacity="0.3" />
-                    <circle cx="150" cy="50" r="3" fill="#60A5FA" opacity="0.8" />
-                    <circle cx="250" cy="150" r="3" fill="#60A5FA" opacity="0.8" />
-                </svg>
+    <!-- ========================================================================= -->
+    <!-- BRIGHT 3D AMBIENT STUDIO CANVAS (Tema Dasar Edubank: Bersih, Cerah & Statis)-->
+    <!-- ========================================================================= -->
+    <div class="fixed inset-0 pointer-events-none select-none overflow-hidden z-0">
+        <!-- Radiant Studio Backdrop -->
+        <div class="absolute inset-0 bg-gradient-to-br from-[#F0F6FF] via-[#F8FAFD] to-[#EAF2FC]"></div>
 
-                <!-- Dot Pattern -->
-                <svg class="absolute -bottom-6 right-0 w-48 h-48 text-blue-200/10 opacity-70" viewBox="0 0 150 150" fill="none">
-                    <defs>
-                        <pattern id="otpDotPattern" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
-                            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
-                        </pattern>
-                    </defs>
-                    <rect width="150" height="150" fill="url(#otpDotPattern)" />
-                </svg>
+        <!-- Soft Diffused Light Washes -->
+        <div class="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-blue-400/20 blur-[130px]"></div>
+        <div class="absolute -bottom-40 -right-40 w-[650px] h-[650px] rounded-full bg-sky-300/25 blur-[140px]"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-indigo-200/15 blur-[150px]"></div>
 
-                <!-- Floating Polygon Accent -->
-                <div class="absolute top-1/2 right-2 -translate-y-1/2 w-20 h-20 border border-white/15 rounded-2xl rotate-45 bg-gradient-to-tr from-white/5 to-transparent backdrop-blur-xs opacity-50"></div>
-            </div>
-
-            <div class="relative z-10">
-                <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center mb-6 shadow-md">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                    </svg>
-                </div>
-                <h1 class="text-2xl font-extrabold mt-3 tracking-tight leading-snug">Edubank</h1>
-                <p class="text-xs text-blue-200 font-semibold mt-1 leading-relaxed">
-                    Bank Mini SMKN 1 Bantul
-                </p>
-            </div>
-
-            <!-- Steps Mini Checklist -->
-            <div class="relative z-10 space-y-2.5 pt-6 border-t border-white/15 text-[11px] text-blue-100 font-medium">
-                <div class="flex items-center gap-2 text-white/80">
-                    <span class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-xs">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                    </span>
-                    <span class="line-through text-blue-200/80">Masukkan alamat email terdaftar</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-full bg-blue-500 text-white flex items-center justify-center text-[10px] font-extrabold shadow-xs">2</span>
-                    <span class="font-bold text-white">Verifikasi 6 digit kode OTP email</span>
-                </div>
-                <div class="flex items-center gap-2 text-white/50">
-                    <span class="w-5 h-5 rounded-full bg-white/10 text-white/60 flex items-center justify-center text-[10px] font-bold">3</span>
-                    <span>Buat kata sandi baru yang aman</span>
-                </div>
-            </div>
-
-            <div class="relative z-10 pt-4 text-[10px] text-blue-300/70 font-medium">
-                &copy; {{ date('Y') }} SMKN 1 Bantul
-            </div>
+        <!-- Static 3D Frosted Crystal / Sphere (Top-Right) -->
+        <div class="absolute -top-12 -right-12 sm:-top-16 sm:-right-16 w-80 h-80 sm:w-96 sm:h-96 opacity-80">
+            <svg class="w-full h-full" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="studioSphere" cx="35%" cy="30%" r="65%">
+                        <stop offset="0%" stop-color="#FFFFFF" />
+                        <stop offset="25%" stop-color="#BAE6FD" />
+                        <stop offset="60%" stop-color="#38BDF8" />
+                        <stop offset="88%" stop-color="#2563EB" />
+                        <stop offset="100%" stop-color="#1D4ED8" />
+                    </radialGradient>
+                    <linearGradient id="studioSpecular" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+                        <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.2" />
+                        <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+                    </linearGradient>
+                    <filter id="studioDropShadow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="-10" dy="18" stdDeviation="24" flood-color="#1E40AF" flood-opacity="0.12" />
+                    </filter>
+                </defs>
+                <circle cx="200" cy="200" r="140" fill="url(#studioSphere)" filter="url(#studioDropShadow)" />
+                <ellipse cx="155" cy="135" rx="55" ry="32" transform="rotate(-30 155 135)" fill="url(#studioSpecular)" />
+            </svg>
         </div>
 
-        <!-- RIGHT FORM (7 Cols): Form Verifikasi OTP -->
-        <div class="md:col-span-7 p-7 md:p-10 flex flex-col justify-center bg-white">
-            <div class="mb-5">
-                <h2 class="text-xl font-extrabold text-slate-800 tracking-tight">Masukkan Kode OTP</h2>
-                <p class="text-xs text-slate-500 mt-1">
-                    Kode 6 digit telah dikirim ke <strong class="text-slate-800 font-semibold">{{ $email }}</strong>.
-                </p>
+        <!-- Static 3D Smooth Frosted Torus (Bottom-Left) -->
+        <div class="absolute -bottom-16 -left-16 sm:-bottom-20 sm:-left-20 w-80 h-80 sm:w-96 sm:h-96 opacity-70">
+            <svg class="w-full h-full" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="torusGrad" cx="38%" cy="32%" r="65%">
+                        <stop offset="0%" stop-color="#FFFFFF" />
+                        <stop offset="25%" stop-color="#E0F2FE" />
+                        <stop offset="60%" stop-color="#7DD3FC" />
+                        <stop offset="85%" stop-color="#0284C7" />
+                        <stop offset="100%" stop-color="#0369A1" />
+                    </radialGradient>
+                    <filter id="torusShadow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="12" dy="16" stdDeviation="22" flood-color="#0284C7" flood-opacity="0.10" />
+                    </filter>
+                </defs>
+                <path d="M 200,60 A 140,140 0 1,0 200,340 A 140,140 0 1,0 200,60 Z M 200,120 A 80,80 0 1,1 200,280 A 80,80 0 1,1 200,120 Z" 
+                      fill="url(#torusGrad)" 
+                      filter="url(#torusShadow)" />
+            </svg>
+        </div>
+
+        <!-- Subtle Ambient Dot Matrix (Faint & Clean) -->
+        <svg class="absolute inset-0 w-full h-full text-blue-900/10 opacity-20" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="studioDots" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1" fill="currentColor" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#studioDots)" />
+        </svg>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MAIN AUTH CARD (Static, Perfectly Balanced, High Whitespace)              -->
+    <!-- ========================================================================= -->
+    <div class="relative w-full max-w-4xl max-h-[92vh] sm:max-h-[560px] bg-white rounded-3xl border border-blue-100/90 shadow-[0_20px_60px_-15px_rgba(37,99,235,0.12)] overflow-hidden grid grid-cols-1 md:grid-cols-12 z-10">
+
+        <!-- ===================================================================== -->
+        <!-- LEFT HERO (5 Cols): Clean, Elegan, Banyak Whitespace & Mini Ilustrasi  -->
+        <!-- ===================================================================== -->
+        <div class="hidden md:flex md:col-span-5 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-8 sm:p-10 lg:p-12 text-white flex-col justify-center relative overflow-hidden select-none">
+            
+            <!-- Soft Internal Ambient Light -->
+            <div class="absolute -top-16 -left-16 w-56 h-56 bg-sky-300/25 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-16 -right-16 w-56 h-56 bg-indigo-400/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- Content Area with Generous Whitespace -->
+            <div class="relative z-10 space-y-5">
+                
+                <!-- Top Brand Capsule -->
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 p-2.5 shadow-sm inline-flex items-center justify-center">
+                        <img src="{{ asset('images/logo-white.png') }}" alt="Edubank Logo" class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-bold text-base tracking-wide text-white">Edubank</span>
+                            <span class="px-2 py-0.5 rounded-full bg-white/20 border border-white/30 text-[9px] font-semibold text-white">Bank Mini</span>
+                        </div>
+                        <p class="text-xs text-blue-100 font-medium mt-0.5">SMKN 1 Bantul</p>
+                    </div>
+                </div>
+
+                <!-- Clean Typography Heading & Description -->
+                <div class="pt-2">
+                    <h1 class="text-2xl lg:text-3xl font-bold tracking-tight text-white leading-snug">
+                        Kelola Layanan <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-blue-200">Bank Mini</span> Lebih Cepat & Terintegrasi
+                    </h1>
+                    
+                    <p class="text-xs sm:text-sm text-blue-100/90 mt-3 leading-relaxed font-normal">
+                        Satu portal cerdas untuk layanan transaksi loket Teller, pengawasan kas harian Administrator, dan kemudahan pemantauan saldo tabungan siswa.
+                    </p>
+                </div>
+
+                <!-- Sedikit Ilustrasi Kecil (Compact, Clean & Elegan) -->
+                <div class="pt-2">
+                    <div class="relative w-36 h-22 rounded-2xl bg-gradient-to-tr from-white/15 via-white/10 to-white/5 border border-white/20 p-3 shadow-lg shadow-black/10 backdrop-blur-md overflow-hidden">
+                        <!-- Diagonal Sheen Accent -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent pointer-events-none rounded-2xl"></div>
+                        <div class="absolute -right-4 -bottom-4 w-16 h-16 rounded-full bg-sky-300/20 blur-xl pointer-events-none"></div>
+
+                        <!-- Top Bar: Mini Gold Chip & Wireless Wave -->
+                        <div class="flex items-center justify-between mb-2 relative z-10">
+                            <div class="w-5.5 h-4 rounded bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 p-[1px] shadow-2xs border border-amber-300/60">
+                                <div class="w-full h-full border border-amber-800/20 rounded-[1px] flex items-center justify-center">
+                                    <div class="w-1.5 h-full border-x border-amber-800/30"></div>
+                                </div>
+                            </div>
+                            <svg class="w-3.5 h-3.5 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 16.5a5 5 0 010-9M12 19a8.5 8.5 0 000-14m3.5 16.5a12 12 0 000-19" />
+                            </svg>
+                        </div>
+
+                        <!-- Middle: Masked Account Number -->
+                        <div class="text-[10px] font-mono tracking-wider text-slate-100 font-semibold mb-1 relative z-10">
+                            •••• •••• 2026
+                        </div>
+
+                        <!-- Bottom: Small Bank Tag -->
+                        <div class="flex items-center justify-between text-[8px] text-blue-100/90 font-medium relative z-10">
+                            <span>EDUBANK</span>
+                            <span class="text-emerald-300 flex items-center gap-0.5 font-bold">
+                                <span class="w-1 h-1 rounded-full bg-emerald-400 inline-block"></span> AKTIF
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-            @if(session('error'))
-                <div class="mb-4 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
-                    <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span>{{ session('error') }}</span>
-                </div>
-            @endif
+        </div>
 
-            @if(session('success'))
-                <div class="mb-4 p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-2">
-                    <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                    <span>{{ session('success') }}</span>
-                </div>
-            @endif
-
-            <form method="POST" action="{{ route('password.otp.verify') }}" class="space-y-4">
-                @csrf
-                <input type="hidden" name="email" value="{{ $email }}">
-
-                <!-- OTP Input Field -->
-                <div>
-                    <label for="otp" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5 text-center">
-                        6 Digit Kode OTP
-                    </label>
-                    <div class="relative max-w-xs mx-auto">
-                        <input type="text" 
-                               id="otp" 
-                               name="otp" 
-                               maxlength="6" 
-                               pattern="[0-9]{6}" 
-                               inputmode="numeric" 
-                               required 
-                               autofocus 
-                               autocomplete="one-time-code"
-                               placeholder="000000"
-                               class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-center font-mono text-2xl font-extrabold text-blue-700 tracking-[0.45em] placeholder-slate-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-inner">
+        <!-- ===================================================================== -->
+        <!-- RIGHT FORM (7 Cols): Form Verifikasi Kode OTP                         -->
+        <!-- ===================================================================== -->
+        <div class="col-span-1 md:col-span-7 p-6 sm:p-8 lg:p-12 flex flex-col justify-center bg-white relative overflow-y-auto md:overflow-hidden">
+            
+            <div class="w-full max-w-sm mx-auto">
+                
+                <!-- Mobile Header Brand (Visible only on small screens) -->
+                <div class="flex md:hidden items-center gap-2.5 mb-6">
+                    <div class="w-9 h-9 rounded-xl bg-blue-600/10 p-1.5 flex items-center justify-center">
+                        <img src="{{ asset('images/logo-blue.png') }}" alt="Edubank Logo" class="w-full h-full object-contain">
                     </div>
-                    @error('otp')
-                        <p class="text-[11px] text-rose-600 font-semibold mt-1.5 text-center">{{ $message }}</p>
-                    @enderror
+                    <div>
+                        <h2 class="font-bold text-sm text-slate-900 leading-none">Edubank</h2>
+                        <span class="text-[10px] text-slate-500">SMKN 1 Bantul</span>
+                    </div>
                 </div>
 
-                <!-- Submit Button (Terang Sesuai Tema Minibank) -->
-                <button type="submit" 
-                        class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs py-3.5 rounded-xl shadow-md shadow-blue-600/30 hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer">
-                    <span>Verifikasi Kode OTP</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                </button>
-            </form>
+                <!-- Form Heading -->
+                <div class="mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Verifikasi Kode OTP</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                        Kode 6 digit telah dikirim ke <strong class="text-slate-800 font-semibold">{{ $email }}</strong>.
+                    </p>
+                </div>
 
-            <!-- Resend OTP & Navigation -->
-            <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                <!-- Resend Form -->
-                <form method="POST" action="{{ route('password.otp.resend') }}" class="inline">
+                <!-- Session Flash Messages -->
+                @if(session('error'))
+                    <div class="mb-5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span class="font-medium">{{ session('error') }}</span>
+                    </div>
+                @endif
+
+                @if(session('success'))
+                    <div class="mb-5 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <span class="font-medium">{{ session('success') }}</span>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('password.otp.verify') }}" class="space-y-4">
                     @csrf
                     <input type="hidden" name="email" value="{{ $email }}">
-                    <span>Belum terima kode?</span>
-                    <button type="submit" class="font-bold text-blue-600 hover:text-blue-700 hover:underline cursor-pointer ml-1">
-                        Kirim Ulang OTP
+
+                    <!-- OTP Input Field -->
+                    <div>
+                        <label for="otp" class="block text-xs font-semibold text-slate-700 mb-2 text-center">
+                            6 Digit Kode OTP
+                        </label>
+                        <div class="relative max-w-xs mx-auto">
+                            <input type="text" 
+                                   id="otp" 
+                                   name="otp" 
+                                   maxlength="6" 
+                                   pattern="[0-9]{6}" 
+                                   inputmode="numeric" 
+                                   required 
+                                   autofocus 
+                                   autocomplete="one-time-code"
+                                   placeholder="000000"
+                                   class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-center font-mono text-2xl font-bold text-blue-600 tracking-[0.45em] placeholder-slate-300 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-3 focus:ring-blue-500/15 transition-all shadow-inner">
+                        </div>
+                        @error('otp')
+                            <p class="text-[11px] text-rose-600 font-semibold mt-1.5 text-center">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" 
+                            class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-xs sm:text-sm py-2.5 sm:py-3 rounded-xl shadow-sm transition-all hover:shadow active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-2">
+                        <span>Verifikasi Kode OTP</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </button>
                 </form>
 
-                <a href="{{ route('password.request') }}" class="text-slate-400 hover:text-slate-700 transition-colors">
-                    Ganti Email
-                </a>
+                <!-- Resend OTP & Change Email Navigation -->
+                <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                    <form method="POST" action="{{ route('password.otp.resend') }}" class="inline">
+                        @csrf
+                        <input type="hidden" name="email" value="{{ $email }}">
+                        <span>Belum terima kode?</span>
+                        <button type="submit" class="font-bold text-blue-600 hover:text-blue-700 hover:underline cursor-pointer ml-1">
+                            Kirim Ulang OTP
+                        </button>
+                    </form>
+
+                    <a href="{{ route('password.request') }}" class="text-slate-400 hover:text-slate-700 transition-colors">
+                        Ganti Email
+                    </a>
+                </div>
+
             </div>
         </div>
 
