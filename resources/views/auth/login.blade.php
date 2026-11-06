@@ -85,18 +85,18 @@
     <!-- ========================================================================= -->
     <div class="relative w-full max-w-5xl my-auto z-10">
 
-        <!-- 3D TORUS ILLUSTRATION LAYER (Tucked Directly Behind Card, Subtly Peeking Out) -->
+        <!-- 3D TORUS ILLUSTRATION LAYER (Tucked Directly Behind Card, ~50% Visible Emerging from Corners) -->
         <div class="absolute inset-0 -z-10 pointer-events-none select-none">
-            <!-- TOP-LEFT 3D TORUS & HALO (Tucked behind top-left card corner) -->
-            <div class="absolute -top-16 -left-12 sm:-top-24 sm:-left-16 w-[440px] h-[440px] sm:w-[560px] sm:h-[560px] opacity-35 anim-balance-tl">
+            <!-- TOP-LEFT 3D TORUS & HALO (~50% setengah lingkaran terlihat di luar kartu) -->
+            <div class="absolute -top-36 -left-36 md:-top-48 md:-left-48 w-[520px] h-[520px] md:w-[660px] md:h-[660px] opacity-65 anim-balance-tl">
                 <!-- Symmetrical Ambient Glow Halo -->
-                <div class="absolute inset-20 rounded-full bg-gradient-to-tr from-blue-500/20 via-sky-400/18 to-teal-400/12 blur-[80px]"></div>
+                <div class="absolute inset-20 rounded-full bg-gradient-to-tr from-blue-500/22 via-sky-400/20 to-teal-400/14 blur-[85px]"></div>
 
                 <svg class="w-full h-full" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <!-- 3D Drop Shadow -->
                         <filter id="shadowTL" x="-20%" y="-20%" width="140%" height="140%">
-                            <feDropShadow dx="0" dy="20" stdDeviation="24" flood-color="#1E3A8A" flood-opacity="0.12" />
+                            <feDropShadow dx="0" dy="20" stdDeviation="24" flood-color="#1E3A8A" flood-opacity="0.14" />
                         </filter>
                         <filter id="softGlowTL" x="-30%" y="-30%" width="160%" height="160%">
                             <feGaussianBlur stdDeviation="6" />
@@ -120,9 +120,9 @@
                     </defs>
 
                     <!-- Concentric Outer Rings (Keseimbangan Lengkungan Sisi Kiri) -->
-                    <circle cx="400" cy="400" r="370" stroke="#38BDF8" stroke-opacity="0.2" stroke-width="1.2" />
-                    <circle cx="400" cy="400" r="310" stroke="#60A5FA" stroke-opacity="0.16" stroke-width="1" stroke-dasharray="8 12" />
-                    <circle cx="400" cy="400" r="250" stroke="#93C5FD" stroke-opacity="0.18" stroke-width="1.2" />
+                    <circle cx="400" cy="400" r="370" stroke="#38BDF8" stroke-opacity="0.22" stroke-width="1.2" />
+                    <circle cx="400" cy="400" r="310" stroke="#60A5FA" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="8 12" />
+                    <circle cx="400" cy="400" r="250" stroke="#93C5FD" stroke-opacity="0.2" stroke-width="1.2" />
 
                     <!-- The 3D Volumetric Torus Body -->
                     <path d="M 400,150 A 250,250 0 1,0 400,650 A 250,250 0 1,0 400,150 Z M 400,235 A 165,165 0 1,1 400,565 A 165,165 0 1,1 400,235 Z" 
@@ -143,15 +143,15 @@
                 </svg>
             </div>
 
-            <!-- BOTTOM-RIGHT 3D TORUS & HALO (Tucked behind bottom-right card corner) -->
-            <div class="absolute -bottom-16 -right-12 sm:-bottom-24 sm:-right-16 w-[440px] h-[440px] sm:w-[560px] sm:h-[560px] opacity-35 anim-balance-br">
+            <!-- BOTTOM-RIGHT 3D TORUS & HALO (~50% setengah lingkaran terlihat di luar kartu) -->
+            <div class="absolute -bottom-36 -right-36 md:-bottom-48 md:-right-48 w-[520px] h-[520px] md:w-[660px] md:h-[660px] opacity-65 anim-balance-br">
                 <!-- Symmetrical Ambient Glow Halo -->
-                <div class="absolute inset-20 rounded-full bg-gradient-to-br from-emerald-500/20 via-teal-400/18 to-blue-500/14 blur-[80px]"></div>
+                <div class="absolute inset-20 rounded-full bg-gradient-to-br from-emerald-500/22 via-teal-400/20 to-blue-500/16 blur-[85px]"></div>
 
                 <svg class="w-full h-full" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <filter id="shadowBR" x="-20%" y="-20%" width="140%" height="140%">
-                            <feDropShadow dx="0" dy="-18" stdDeviation="24" flood-color="#047857" flood-opacity="0.12" />
+                            <feDropShadow dx="0" dy="-18" stdDeviation="24" flood-color="#047857" flood-opacity="0.14" />
                         </filter>
                         <filter id="softGlowBR" x="-30%" y="-30%" width="160%" height="160%">
                             <feGaussianBlur stdDeviation="6" />
@@ -174,9 +174,9 @@
                     </defs>
 
                     <!-- Concentric Outer Rings (Keseimbangan Lengkungan Sisi Kanan) -->
-                    <circle cx="400" cy="400" r="370" stroke="#10B981" stroke-opacity="0.2" stroke-width="1.2" />
-                    <circle cx="400" cy="400" r="310" stroke="#14B8A6" stroke-opacity="0.16" stroke-width="1" stroke-dasharray="8 12" />
-                    <circle cx="400" cy="400" r="250" stroke="#38BDF8" stroke-opacity="0.18" stroke-width="1.2" />
+                    <circle cx="400" cy="400" r="370" stroke="#10B981" stroke-opacity="0.22" stroke-width="1.2" />
+                    <circle cx="400" cy="400" r="310" stroke="#14B8A6" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="8 12" />
+                    <circle cx="400" cy="400" r="250" stroke="#38BDF8" stroke-opacity="0.2" stroke-width="1.2" />
 
                     <!-- The 3D Volumetric Torus Body -->
                     <path d="M 400,150 A 250,250 0 1,0 400,650 A 250,250 0 1,0 400,150 Z M 400,235 A 165,165 0 1,1 400,565 A 165,165 0 1,1 400,235 Z" 
@@ -232,7 +232,7 @@
                         <div>
                             <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-[10px] font-semibold text-emerald-300">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                <span>E-Teller & Mini Bank</span>
+                                <span>Edubank</span>
                             </div>
                             <h2 class="text-xs font-medium text-slate-300 tracking-wide mt-1">SMKN 1 Bantul</h2>
                         </div>
