@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo-blue.png') }}">
 
+    <!-- Google Fonts: Nunito (Friendly Rounded) & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -15,343 +16,302 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #F8FAFC;
             color: #0F172A;
             -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
         }
 
-        /* Dedicated Monospace for Account Numbers & Code Verification */
         .font-mono {
             font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
             font-feature-settings: "tnum" 1, "zero" 1;
         }
 
-        /* Subtle 3D Ambient Float Tucked Behind Card */
-        @keyframes balance-float-tl {
+        /* Subtle smooth float for realistic credit card */
+        @keyframes float-card {
             0%, 100% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0.8;
+                transform: translateY(0px) rotate(0deg);
             }
             50% {
-                transform: translate(4px, -6px) scale(1.02);
-                opacity: 1;
+                transform: translateY(-5px) rotate(0.4deg);
             }
         }
-        @keyframes balance-float-br {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0.8;
-            }
-            50% {
-                transform: translate(-4px, 6px) scale(1.02);
-                opacity: 1;
-            }
-        }
-        .anim-balance-tl {
-            animation: balance-float-tl 16s ease-in-out infinite;
-            transform-origin: center;
-        }
-        .anim-balance-br {
-            animation: balance-float-br 16s ease-in-out infinite;
-            transform-origin: center;
+
+        .animate-card-float {
+            animation: float-card 8s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="min-h-screen p-4 sm:p-6 md:p-8 lg:p-12 flex items-center justify-center bg-[#F8FAFC] relative selection:bg-blue-600 selection:text-white">
+<body class="h-screen w-screen overflow-hidden flex items-center justify-center bg-slate-50 selection:bg-blue-600 selection:text-white p-4 sm:p-6 lg:p-8">
 
     <!-- ========================================================================= -->
-    <!-- CANVAS BACKDROP (Delicate Dot Matrix & Ambient Wash)                      -->
+    <!-- CLEAN AMBIENT BACKDROP (Minimalist & Static)                              -->
     <!-- ========================================================================= -->
     <div class="fixed inset-0 pointer-events-none select-none overflow-hidden z-0">
-        <!-- Subtle Ambient Light Wash on Canvas -->
-        <div class="absolute inset-0 bg-radial-at-c from-blue-50/40 via-transparent to-transparent"></div>
-
-        <!-- Delicate dot matrix canvas background -->
-        <svg class="absolute inset-0 w-full h-full text-slate-300/30 opacity-35" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="bgDots" x="0" y="0" width="36" height="36" patternUnits="userSpaceOnUse">
-                    <circle cx="2" cy="2" r="1.1" fill="currentColor" />
-                </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#bgDots)" />
-        </svg>
+        <!-- Soft top-left ambient light -->
+        <div class="absolute -top-32 -left-32 w-96 h-96 bg-blue-100/60 rounded-full blur-3xl"></div>
+        <!-- Soft bottom-right ambient light -->
+        <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-slate-200/50 rounded-full blur-3xl"></div>
     </div>
 
     <!-- ========================================================================= -->
-    <!-- MAIN LOGIN CARD WRAPPER WITH TUCKED 3D BACKGROUND (Lebih Masuk & Halus)   -->
+    <!-- MAIN LOGIN CARD (Static, Perfectly Balanced, High Whitespace)             -->
     <!-- ========================================================================= -->
-    <div class="relative w-full max-w-5xl my-auto z-10">
-
-        <!-- 3D TORUS ILLUSTRATION LAYER (Tucked Directly Behind Card, ~50% Visible Emerging from Corners) -->
-        <div class="absolute inset-0 -z-10 pointer-events-none select-none">
-            <!-- TOP-LEFT 3D TORUS & HALO (~50% setengah lingkaran terlihat di luar kartu) -->
-            <div class="absolute -top-36 -left-36 md:-top-48 md:-left-48 w-[520px] h-[520px] md:w-[660px] md:h-[660px] opacity-65 anim-balance-tl">
-                <!-- Symmetrical Ambient Glow Halo -->
-                <div class="absolute inset-20 rounded-full bg-gradient-to-tr from-blue-500/22 via-sky-400/20 to-teal-400/14 blur-[85px]"></div>
-
-                <svg class="w-full h-full" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <!-- 3D Drop Shadow -->
-                        <filter id="shadowTL" x="-20%" y="-20%" width="140%" height="140%">
-                            <feDropShadow dx="0" dy="20" stdDeviation="24" flood-color="#1E3A8A" flood-opacity="0.14" />
-                        </filter>
-                        <filter id="softGlowTL" x="-30%" y="-30%" width="160%" height="160%">
-                            <feGaussianBlur stdDeviation="6" />
-                        </filter>
-
-                        <!-- Volumetric Torus Gradient -->
-                        <radialGradient id="torusGradTL" cx="42%" cy="34%" r="66%">
-                            <stop offset="0%" stop-color="#7DD3FC" />
-                            <stop offset="25%" stop-color="#38BDF8" />
-                            <stop offset="55%" stop-color="#2563EB" />
-                            <stop offset="85%" stop-color="#1D4ED8" />
-                            <stop offset="100%" stop-color="#0B2349" />
-                        </radialGradient>
-
-                        <!-- Specular Highlight Gradient -->
-                        <linearGradient id="specularGradTL" x1="10%" y1="0%" x2="90%" y2="80%">
-                            <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
-                            <stop offset="40%" stop-color="#BAE6FD" stop-opacity="0.4" />
-                            <stop offset="100%" stop-color="#38BDF8" stop-opacity="0" />
-                        </linearGradient>
-                    </defs>
-
-                    <!-- Concentric Outer Rings (Keseimbangan Lengkungan Sisi Kiri) -->
-                    <circle cx="400" cy="400" r="370" stroke="#38BDF8" stroke-opacity="0.22" stroke-width="1.2" />
-                    <circle cx="400" cy="400" r="310" stroke="#60A5FA" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="8 12" />
-                    <circle cx="400" cy="400" r="250" stroke="#93C5FD" stroke-opacity="0.2" stroke-width="1.2" />
-
-                    <!-- The 3D Volumetric Torus Body -->
-                    <path d="M 400,150 A 250,250 0 1,0 400,650 A 250,250 0 1,0 400,150 Z M 400,235 A 165,165 0 1,1 400,565 A 165,165 0 1,1 400,235 Z" 
-                          fill="url(#torusGradTL)" 
-                          filter="url(#shadowTL)" />
-
-                    <!-- 3D Specular Highlight Ridge -->
-                    <path d="M 230,280 A 210,210 0 0,1 540,240" 
-                          stroke="url(#specularGradTL)" 
-                          stroke-width="11" 
-                          stroke-linecap="round" 
-                          filter="url(#softGlowTL)" />
-                    <path d="M 265,270 A 210,210 0 0,1 505,245" 
-                          stroke="#FFFFFF" 
-                          stroke-width="3.5" 
-                          stroke-linecap="round" 
-                          opacity="0.85" />
-                </svg>
-            </div>
-
-            <!-- BOTTOM-RIGHT 3D TORUS & HALO (~50% setengah lingkaran terlihat di luar kartu) -->
-            <div class="absolute -bottom-36 -right-36 md:-bottom-48 md:-right-48 w-[520px] h-[520px] md:w-[660px] md:h-[660px] opacity-65 anim-balance-br">
-                <!-- Symmetrical Ambient Glow Halo -->
-                <div class="absolute inset-20 rounded-full bg-gradient-to-br from-emerald-500/22 via-teal-400/20 to-blue-500/16 blur-[85px]"></div>
-
-                <svg class="w-full h-full" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <filter id="shadowBR" x="-20%" y="-20%" width="140%" height="140%">
-                            <feDropShadow dx="0" dy="-18" stdDeviation="24" flood-color="#047857" flood-opacity="0.14" />
-                        </filter>
-                        <filter id="softGlowBR" x="-30%" y="-30%" width="160%" height="160%">
-                            <feGaussianBlur stdDeviation="6" />
-                        </filter>
-
-                        <!-- Volumetric Emerald to Sapphire Torus Gradient -->
-                        <radialGradient id="torusGradBR" cx="58%" cy="66%" r="66%">
-                            <stop offset="0%" stop-color="#6EE7B7" />
-                            <stop offset="25%" stop-color="#10B981" />
-                            <stop offset="55%" stop-color="#0D9488" />
-                            <stop offset="85%" stop-color="#2563EB" />
-                            <stop offset="100%" stop-color="#0B2349" />
-                        </radialGradient>
-
-                        <linearGradient id="specularGradBR" x1="10%" y1="100%" x2="90%" y2="20%">
-                            <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
-                            <stop offset="40%" stop-color="#A7F3D0" stop-opacity="0.4" />
-                            <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
-                        </linearGradient>
-                    </defs>
-
-                    <!-- Concentric Outer Rings (Keseimbangan Lengkungan Sisi Kanan) -->
-                    <circle cx="400" cy="400" r="370" stroke="#10B981" stroke-opacity="0.22" stroke-width="1.2" />
-                    <circle cx="400" cy="400" r="310" stroke="#14B8A6" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="8 12" />
-                    <circle cx="400" cy="400" r="250" stroke="#38BDF8" stroke-opacity="0.2" stroke-width="1.2" />
-
-                    <!-- The 3D Volumetric Torus Body -->
-                    <path d="M 400,150 A 250,250 0 1,0 400,650 A 250,250 0 1,0 400,150 Z M 400,235 A 165,165 0 1,1 400,565 A 165,165 0 1,1 400,235 Z" 
-                          fill="url(#torusGradBR)" 
-                          filter="url(#shadowBR)" />
-
-                    <!-- 3D Specular Highlight Ridge -->
-                    <path d="M 260,560 A 210,210 0 0,0 570,520" 
-                          stroke="url(#specularGradBR)" 
-                          stroke-width="11" 
-                          stroke-linecap="round" 
-                          filter="url(#softGlowBR)" />
-                    <path d="M 295,555 A 210,210 0 0,0 535,530" 
-                          stroke="#FFFFFF" 
-                          stroke-width="3.5" 
-                          stroke-linecap="round" 
-                          opacity="0.85" />
-                </svg>
-            </div>
-        </div>
+    <div class="relative w-full max-w-4xl max-h-[92vh] sm:max-h-[600px] bg-white rounded-3xl border border-slate-200/80 shadow-[0_20px_50px_-15px_rgba(15,23,42,0.07)] overflow-hidden grid grid-cols-1 md:grid-cols-12 z-10">
 
         <!-- ===================================================================== -->
-        <!-- MAIN LOGIN CARD CONTAINER (Floating, Rounded 36px, High Elevation)     -->
+        <!-- LEFT HERO (5 Cols): Clean, Tasteful Mini-Bank Card Illustration        -->
         <!-- ===================================================================== -->
-        <div class="w-full min-h-[640px] sm:min-h-[660px] bg-white rounded-[36px] border border-slate-200/80 shadow-[0_25px_70px_-15px_rgba(15,23,42,0.12),0_0_1px_1px_rgba(15,23,42,0.04)] overflow-hidden grid grid-cols-1 md:grid-cols-12 relative z-10">
+        <div class="hidden md:flex md:col-span-5 bg-gradient-to-br from-[#0B1528] via-[#0F1E38] to-[#14284B] p-8 lg:p-10 text-white flex-col justify-between relative overflow-hidden select-none">
             
-            <!-- ================================================================= -->
-            <!-- LEFT HERO (5 Cols): Sapphire & Emerald Fintech Branding           -->
-            <!-- ================================================================= -->
-            <div class="md:col-span-5 bg-gradient-to-br from-[#061224] via-[#0B2349] to-[#0E356A] p-8 sm:p-10 md:p-12 lg:p-14 text-white flex flex-col justify-center relative overflow-hidden">
-                
-                <!-- Internal Ambient Mesh & Graphic Accents -->
-                <div class="absolute inset-0 overflow-hidden pointer-events-none select-none">
-                    <div class="absolute -top-20 -left-20 w-64 h-64 bg-blue-500/25 rounded-full blur-3xl"></div>
-                    <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl"></div>
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-600/15 rounded-full blur-3xl"></div>
+            <!-- Subtle geometric background lines -->
+            <div class="absolute inset-0 pointer-events-none opacity-20">
+                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="cleanGrid" width="32" height="32" patternUnits="userSpaceOnUse">
+                            <path d="M 32 0 L 0 0 0 32" fill="none" stroke="white" stroke-width="0.5" stroke-opacity="0.2" />
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#cleanGrid)" />
+                </svg>
+            </div>
 
-                    <!-- Subtle Guilloche / Security Pattern Rings Inside Left Card -->
-                    <svg class="absolute -right-12 top-10 w-72 h-72 text-white/10" viewBox="0 0 300 300" fill="none">
-                        <circle cx="150" cy="150" r="140" stroke="currentColor" stroke-width="1" stroke-dasharray="4 6" />
-                        <circle cx="150" cy="150" r="105" stroke="currentColor" stroke-width="1" />
-                        <circle cx="150" cy="150" r="70" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" />
-                    </svg>
+            <!-- Soft localized ambient glow -->
+            <div class="absolute -top-16 -left-16 w-48 h-48 bg-blue-500/20 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-16 -right-16 w-48 h-48 bg-emerald-500/15 rounded-full blur-2xl pointer-events-none"></div>
+
+            <!-- TOP BRAND HEADER -->
+            <div class="relative z-10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 p-2 shadow-sm inline-flex items-center justify-center">
+                        <img src="{{ asset('images/logo-white.png') }}" alt="Edubank Logo" class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-bold text-sm tracking-wide text-white">Edubank</span>
+                            <span class="px-1.5 py-0.2 rounded bg-emerald-500/20 border border-emerald-400/30 text-[9px] font-semibold text-emerald-300">Siswa</span>
+                        </div>
+                        <p class="text-[11px] text-slate-300 font-medium">SMKN 1 Bantul</p>
+                    </div>
                 </div>
 
-                <!-- Content Area -->
-                <div class="relative z-10">
-                    <!-- Top Brand Capsule -->
-                    <div class="flex items-center gap-3 mb-8">
-                        <div class="w-13 h-13 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-2.5 shadow-lg inline-flex items-center justify-center">
-                            <img src="{{ asset('images/logo-white.png') }}" alt="Edubank Logo" class="w-full h-full object-contain drop-shadow">
-                        </div>
-                        <div>
-                            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-[10px] font-semibold text-emerald-300">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                <span>Edubank</span>
-                            </div>
-                            <h2 class="text-xs font-medium text-slate-300 tracking-wide mt-1">SMKN 1 Bantul</h2>
-                        </div>
-                    </div>
-
-                    <!-- Big Main Typography (Relaxed, Friendly & Balanced) -->
-                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-normal leading-[1.3] text-white">
-                        Kelola Layanan <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-sky-200 to-emerald-300">Bank Mini</span> Lebih Cepat & Terintegrasi.
+                <div class="mt-6">
+                    <h1 class="text-xl lg:text-2xl font-bold tracking-tight text-white leading-snug">
+                        Layanan Bank Mini <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-sky-200">Modern & Terintegrasi</span>
                     </h1>
-
-                    <p class="text-xs sm:text-sm text-slate-300/85 mt-4 leading-relaxed font-normal">
-                        Satu portal cerdas untuk layanan transaksi loket Teller, pengawasan kas harian Administrator, dan kemudahan pemantauan saldo tabungan siswa.
+                    <p class="text-xs text-slate-300/80 mt-2 leading-relaxed">
+                        Platform operasional teller, pembukuan kas sekolah, dan tabungan siswa yang aman serta transparan.
                     </p>
                 </div>
             </div>
 
-            <!-- ================================================================= -->
-            <!-- RIGHT FORM (7 Cols): Spacious Whitespace & Elegant Layout         -->
-            <!-- ================================================================= -->
-            <div class="md:col-span-7 p-8 sm:p-12 md:p-14 lg:p-16 xl:p-20 flex flex-col justify-center bg-white relative">
-                
-                <div class="w-full max-w-md mx-auto">
-                    <div class="mb-8 sm:mb-9">
-                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-normal">Selamat Datang Kembali</h2>
-                        <p class="text-xs sm:text-sm text-slate-500 mt-2">Masuk ke dashboard operasional Edubank SMKN 1 Bantul.</p>
+            <!-- CENTER/BOTTOM: TASTEFUL FINTECH CARD ILLUSTRATION (Tidak Alay, Bersih & Profesional) -->
+            <div class="relative z-10 my-auto py-4">
+                <div class="relative w-full max-w-[270px] lg:max-w-[290px] mx-auto animate-card-float">
+                    
+                    <!-- The Digital Smart Card -->
+                    <div class="relative rounded-2xl p-4 lg:p-5 bg-gradient-to-tr from-slate-900/90 via-[#0B2349]/90 to-blue-900/80 border border-white/20 shadow-2xl shadow-black/40 text-white backdrop-blur-md">
+                        <!-- Diagonal Sheen Accent -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/15 via-transparent to-transparent pointer-events-none rounded-2xl"></div>
+
+                        <!-- Card Header: EMV Chip & Contactless Wave -->
+                        <div class="flex items-center justify-between mb-5 relative z-10">
+                            <div class="flex items-center gap-2">
+                                <!-- Realistic Metallic Chip -->
+                                <div class="w-8 h-6 rounded bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 p-[1px] shadow-sm border border-amber-300/50">
+                                    <div class="w-full h-full border border-amber-800/25 rounded-[1px] flex items-center justify-center">
+                                        <div class="w-2.5 h-full border-x border-amber-800/30"></div>
+                                    </div>
+                                </div>
+                                <!-- Contactless wave -->
+                                <svg class="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 16.5a5 5 0 010-9M12 19a8.5 8.5 0 000-14m3.5 16.5a12 12 0 000-19" />
+                                </svg>
+                            </div>
+                            <span class="text-[10px] font-bold tracking-widest text-white/80">EDUBANK</span>
+                        </div>
+
+                        <!-- Card Number (Monospace) -->
+                        <div class="mb-4 relative z-10">
+                            <div class="text-xs lg:text-sm font-mono tracking-widest text-slate-100">
+                                •••• •••• •••• 2026
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="flex items-end justify-between relative z-10 text-[9px]">
+                            <div>
+                                <span class="text-[8px] uppercase tracking-wider text-slate-400 block">Nama Nasabah</span>
+                                <span class="font-semibold text-white tracking-wide">SISWA SMKN 1 BANTUL</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[8px] uppercase tracking-wider text-slate-400 block">Valid Thru</span>
+                                <span class="font-mono text-white/90">12/28</span>
+                            </div>
+                        </div>
                     </div>
 
-                    @if(session('error'))
-                        <div class="mb-6 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm flex items-center gap-3">
-                            <svg class="w-5 h-5 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <span class="font-medium">{{ session('error') }}</span>
+                    <!-- Clean Floating Status Pill (Top-Right) -->
+                    <div class="absolute -top-2.5 -right-2 bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-full px-2.5 py-1 shadow-md flex items-center gap-1.5 z-20">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-[9px] font-bold text-slate-700">Loket Teller Aktif</span>
+                    </div>
+
+                    <!-- Clean Floating Transaction Pill (Bottom-Left) -->
+                    <div class="absolute -bottom-2.5 -left-2 bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-xl px-2.5 py-1.5 shadow-md flex items-center gap-2 z-20">
+                        <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
                         </div>
-                    @endif
-
-                    @if(session('success'))
-                        <div class="mb-6 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs sm:text-sm flex items-center gap-3">
-                            <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                            <span class="font-medium">{{ session('success') }}</span>
-                        </div>
-                    @endif
-
-                    <form method="POST" action="{{ route('login.post') }}" class="space-y-5 sm:space-y-6">
-                        @csrf
-
-                        <!-- Email / Account Number Input -->
                         <div>
-                            <label for="email" class="block text-xs font-semibold text-slate-700 mb-2">
-                                Username, Email, atau No. Rekening
-                            </label>
-                            <div class="relative group">
-                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
-                                    <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                                </div>
-                                <input type="text" 
-                                       id="email" 
-                                       name="email" 
-                                       value="{{ old('email') }}" 
-                                       required 
-                                       autofocus
-                                       class="w-full bg-slate-50 border border-slate-200/90 rounded-xl pl-11 pr-4 py-3 sm:py-3.5 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-3 focus:ring-blue-500/15 focus:border-blue-600 transition-all shadow-xs"
-                                       placeholder="nama@email.com atau RPL-29-0001">
-                            </div>
-                            @error('email')
-                                <p class="text-[11px] text-rose-600 font-semibold mt-1">{{ $message }}</p>
-                            @enderror
+                            <span class="text-[8px] text-slate-400 block font-medium leading-none">Tabungan</span>
+                            <span class="text-[10px] font-bold text-slate-800 font-mono leading-none">+ Rp 50.000</span>
                         </div>
+                    </div>
 
-                        <!-- Password Input with Eye Toggle -->
-                        <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <label for="password" class="block text-xs font-semibold text-slate-700">Kata Sandi (Password)</label>
-                                <a href="{{ route('password.request') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700 hover:underline">Lupa password?</a>
-                            </div>
-                            <div class="relative group">
-                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
-                                    <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                                </div>
-                                <input type="password" 
-                                       id="password" 
-                                       name="password" 
-                                       required
-                                       class="w-full bg-slate-50 border border-slate-200/90 rounded-xl pl-11 pr-11 py-3 sm:py-3.5 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-3 focus:ring-blue-500/15 focus:border-blue-600 transition-all shadow-xs"
-                                       placeholder="••••••••">
-                                <button type="button" 
-                                        onclick="togglePasswordVisibility()" 
-                                        class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer focus:outline-none"
-                                        title="Lihat/Sembunyikan Kata Sandi">
-                                    <svg id="eyeIconOpen" class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                    <svg id="eyeIconClosed" class="w-4.5 h-4.5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>
-                                </button>
-                            </div>
-                            @error('password')
-                                <p class="text-[11px] text-rose-600 font-semibold mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Remember Me -->
-                        <div class="flex items-center justify-between pt-1">
-                            <label class="flex items-center gap-2.5 cursor-pointer select-none">
-                                <input type="checkbox" name="remember" class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer">
-                                <span class="text-xs text-slate-600 font-normal">Ingat saya di perangkat ini</span>
-                            </label>
-                        </div>
-
-                        <!-- Action Button -->
-                        <button type="submit" 
-                                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm py-3.5 sm:py-4 rounded-xl shadow-sm transition-all hover:shadow-md active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-4">
-                            <span>Masuk ke Dashboard</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                        </button>
-                    </form>
                 </div>
             </div>
 
+            <!-- BOTTOM FOOTER NOTE -->
+            <div class="relative z-10 text-[11px] text-slate-400 flex items-center justify-between">
+                <span>© 2026 Edubank</span>
+                <span class="flex items-center gap-1 text-[10px] text-slate-400">
+                    <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    Sistem Terenkripsi
+                </span>
+            </div>
+
         </div>
-    </div>
+
+        <!-- ===================================================================== -->
+        <!-- RIGHT FORM (7 Cols): Clear, Clean, Static & High Readability          -->
+        <!-- ===================================================================== -->
+        <div class="col-span-1 md:col-span-7 p-6 sm:p-8 lg:p-12 flex flex-col justify-center bg-white relative overflow-y-auto md:overflow-hidden">
+            
+            <div class="w-full max-w-sm mx-auto">
+                
+                <!-- Mobile Header Brand (Visible only on small screens) -->
+                <div class="flex md:hidden items-center gap-2.5 mb-6">
+                    <div class="w-9 h-9 rounded-xl bg-blue-600/10 p-1.5 flex items-center justify-center">
+                        <img src="{{ asset('images/logo-blue.png') }}" alt="Edubank Logo" class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-sm text-slate-900 leading-none">Edubank</h2>
+                        <span class="text-[10px] text-slate-500">SMKN 1 Bantul</span>
+                    </div>
+                </div>
+
+                <!-- Form Heading -->
+                <div class="mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Selamat Datang</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">Masukkan kredensial Anda untuk mengakses dashboard.</p>
+                </div>
+
+                <!-- Session Flash Messages -->
+                @if(session('error'))
+                    <div class="mb-5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span class="font-medium">{{ session('error') }}</span>
+                    </div>
+                @endif
+
+                @if(session('success'))
+                    <div class="mb-5 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <span class="font-medium">{{ session('success') }}</span>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('login.post') }}" class="space-y-4">
+                    @csrf
+
+                    <!-- Identifier Field (Email / Username / No. Rekening) -->
+                    <div>
+                        <label for="email" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                            Username, Email, atau No. Rekening
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            </div>
+                            <input type="text" 
+                                   id="email" 
+                                   name="email" 
+                                   value="{{ old('email') }}" 
+                                   required 
+                                   autofocus
+                                   class="w-full bg-slate-50/80 border border-slate-200 rounded-xl pl-10 pr-3.5 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-3 focus:ring-blue-500/15 transition-all"
+                                   placeholder="nama@email.com atau RPL-29-0001">
+                        </div>
+                        @error('email')
+                            <p class="text-[11px] text-rose-600 font-semibold mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Password Field -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="password" class="block text-xs font-semibold text-slate-700">Kata Sandi</label>
+                            <a href="{{ route('password.request') }}" class="text-[11px] font-medium text-blue-600 hover:text-blue-700 hover:underline">Lupa password?</a>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            </div>
+                            <input type="password" 
+                                   id="password" 
+                                   name="password" 
+                                   required
+                                   class="w-full bg-slate-50/80 border border-slate-200 rounded-xl pl-10 pr-10 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-3 focus:ring-blue-500/15 transition-all"
+                                   placeholder="••••••••">
+                            <button type="button" 
+                                    onclick="togglePasswordVisibility()" 
+                                    class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer focus:outline-none"
+                                    title="Lihat / Sembunyikan Sandi">
+                                <svg id="eyeIconOpen" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                <svg id="eyeIconClosed" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>
+                            </button>
+                        </div>
+                        @error('password')
+                            <p class="text-[11px] text-rose-600 font-semibold mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Remember Me Option -->
+                    <div class="flex items-center pt-0.5">
+                        <label class="flex items-center gap-2 cursor-pointer select-none">
+                            <input type="checkbox" name="remember" class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer">
+                            <span class="text-xs text-slate-600">Ingat saya di perangkat ini</span>
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" 
+                            class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-xs sm:text-sm py-2.5 sm:py-3 rounded-xl shadow-sm transition-all hover:shadow active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer mt-2">
+                        <span>Masuk ke Dashboard</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </button>
+                </form>
+
+                <!-- Help / Support Note -->
+                <div class="mt-6 text-center">
+                    <p class="text-[11px] text-slate-400">
+                        Butuh bantuan login? Hubungi Administrator Bank Mini.
+                    </p>
+                </div>
+
+            </div>
+        </div>
 
     </div>
 
+    <!-- Password visibility toggle script -->
     <script>
         function togglePasswordVisibility() {
             const passwordInput = document.getElementById('password');
