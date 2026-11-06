@@ -68,45 +68,18 @@
 <body class="h-screen w-screen p-0 flex overflow-hidden bg-[#F8FAFC] relative selection:bg-blue-600 selection:text-white">
 
     <!-- ========================================================================= -->
-    <!-- AMBIENT BLURRED BACKGROUND ILLUSTRATION LAYER (Admin & Teller Pages)      -->
+    <!-- AMBIENT SOFT & ELEGANT BLUE GRADIENT BACKGROUND (Admin & Teller Pages)     -->
     <!-- ========================================================================= -->
     <div class="fixed inset-0 pointer-events-none select-none overflow-hidden z-0">
-        <!-- Soft Radial Aurora Glow Orbs (Subtle Blur Effect) -->
-        <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-400/20 via-sky-300/15 to-transparent blur-[120px]"></div>
-        <div class="absolute top-1/4 -right-36 w-[550px] h-[550px] rounded-full bg-gradient-to-bl from-indigo-400/15 via-purple-300/12 to-transparent blur-[130px]"></div>
-        <div class="absolute -bottom-36 left-1/3 w-[650px] h-[650px] rounded-full bg-gradient-to-tr from-emerald-400/16 via-teal-300/12 to-transparent blur-[140px]"></div>
-
-        <!-- Concentric Orbital Geometric Rings with Soft Blur (Top Left) -->
-        <div class="absolute -top-28 -left-28 w-[720px] h-[720px] opacity-45 blur-[1px]">
-            <svg class="w-full h-full text-blue-500/20" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="400" cy="400" r="375" stroke="currentColor" stroke-width="1.2" stroke-dasharray="8 12" />
-                <circle cx="400" cy="400" r="305" stroke="currentColor" stroke-width="1.8" />
-                <circle cx="400" cy="400" r="235" stroke="currentColor" stroke-width="1" stroke-dasharray="4 6" />
-                <circle cx="400" cy="400" r="165" stroke="currentColor" stroke-width="2.2" />
-                <circle cx="400" cy="400" r="95" stroke="currentColor" stroke-width="1.5" />
-                <circle cx="400" cy="95" r="5" fill="#3B82F6" opacity="0.7" />
-                <circle cx="705" cy="400" r="4" fill="#10B981" opacity="0.7" />
-                <circle cx="400" cy="635" r="5" fill="#0EA5E9" opacity="0.7" />
-                <circle cx="165" cy="400" r="4" fill="#6366F1" opacity="0.7" />
-            </svg>
-        </div>
-
-        <!-- Concentric Orbital Geometric Rings with Soft Blur (Bottom Right) -->
-        <div class="absolute -bottom-32 -right-32 w-[760px] h-[760px] opacity-45 blur-[1px]">
-            <svg class="w-full h-full text-emerald-500/20" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="400" cy="400" r="365" stroke="currentColor" stroke-width="1.2" />
-                <circle cx="400" cy="400" r="290" stroke="currentColor" stroke-width="1.8" stroke-dasharray="6 10" />
-                <circle cx="400" cy="400" r="215" stroke="currentColor" stroke-width="1" />
-                <circle cx="400" cy="400" r="140" stroke="currentColor" stroke-width="2" stroke-dasharray="4 6" />
-                <circle cx="400" cy="400" r="70" stroke="currentColor" stroke-width="1.5" />
-                <circle cx="400" cy="110" r="4.5" fill="#10B981" opacity="0.7" />
-                <circle cx="615" cy="400" r="4" fill="#14B8A6" opacity="0.7" />
-                <circle cx="400" cy="690" r="5" fill="#3B82F6" opacity="0.7" />
-            </svg>
-        </div>
+        <!-- Soft Ambient Atmospheric Blue Gradient Glows -->
+        <div class="absolute -top-40 -left-40 w-[780px] h-[780px] rounded-full bg-gradient-to-br from-blue-500/14 via-sky-400/10 to-transparent blur-[140px]"></div>
+        <div class="absolute top-1/4 -right-36 w-[650px] h-[650px] rounded-full bg-gradient-to-bl from-sky-400/12 via-blue-400/8 to-transparent blur-[150px]"></div>
+        <div class="absolute -bottom-48 -right-32 w-[850px] h-[850px] rounded-full bg-gradient-to-tl from-blue-600/12 via-indigo-500/8 to-transparent blur-[160px]"></div>
+        <div class="absolute -bottom-40 left-1/4 w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-sky-400/10 via-blue-500/8 to-transparent blur-[150px]"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] rounded-full bg-radial from-blue-200/20 via-sky-100/10 to-transparent blur-[160px]"></div>
 
         <!-- Subtle Dot Matrix Pattern -->
-        <svg class="absolute inset-0 w-full h-full text-slate-400/25 opacity-35" xmlns="http://www.w3.org/2000/svg">
+        <svg class="absolute inset-0 w-full h-full text-slate-400/20 opacity-25" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <pattern id="appBgDots" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
                     <circle cx="2" cy="2" r="1" fill="currentColor" />

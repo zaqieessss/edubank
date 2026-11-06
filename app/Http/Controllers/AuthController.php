@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -34,6 +35,18 @@ class AuthController extends Controller
         ]);
 
         $loginInput = trim($request->input('email'));
+        $throttleKey = Str::transliterate(Str::lower($loginInput) . '|' . $request->ip());
+
+        // Cek proteksi bruteforce: maksimal 5 kali percobaan salah, lockout 30 detik
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            return back()
+                ->withErrors([
+                    'email' => "Terlalu banyak percobaan login yang gagal. Demi keamanan dari serangan bruteforce, silakan tunggu {$seconds} detik sebelum mencoba kembali.",
+                ])
+                ->with('lockout_seconds', $seconds)
+                ->onlyInput('email');
+        }
 
         // Cek login via email atau nomor rekening nasabah
         $user = User::where('email', $loginInput)->first();
@@ -49,14 +62,26 @@ class AuthController extends Controller
                 return back()->withErrors(['email' => 'Akun Anda sedang dinonaktifkan oleh administrator.']);
             }
 
+            // Bersihkan limiter saat login berhasil
+            RateLimiter::clear($throttleKey);
+
             Auth::login($user, $request->boolean('remember'));
             $request->session()->regenerate();
 
             return $this->redirectBasedOnRole($user->role);
         }
 
+        // Tambahkan 1 kegagalan ke limiter (lockout period 30 detik)
+        RateLimiter::hit($throttleKey, 30);
+        $attemptsLeft = RateLimiter::remaining($throttleKey, 5);
+
+        $errorMessage = 'Email/Nomor Rekening atau password yang Anda masukkan salah.';
+        if ($attemptsLeft > 0 && $attemptsLeft <= 2) {
+            $errorMessage .= " (Sisa percobaan: {$attemptsLeft} kali lagi sebelum diblokir 30 detik)";
+        }
+
         return back()->withErrors([
-            'email' => 'Email/Nomor Rekening atau password yang Anda masukkan salah.',
+            'email' => $errorMessage,
         ])->onlyInput('email');
     }
 

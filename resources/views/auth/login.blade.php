@@ -269,6 +269,37 @@
                     </div>
 
                     <!-- Session Flash Messages -->
+                    @if(session('lockout_seconds'))
+                        <div id="lockoutBanner" class="mb-5 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2.5">
+                            <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            <span class="font-medium">Proteksi Bruteforce Aktif: Tunggu <span id="lockoutTimer" class="font-bold underline">{{ session('lockout_seconds') }}</span> detik sebelum mencoba kembali.</span>
+                        </div>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                let remainingSecs = {{ (int)session('lockout_seconds') }};
+                                const timerEl = document.getElementById('lockoutTimer');
+                                const bannerEl = document.getElementById('lockoutBanner');
+                                const submitBtn = document.querySelector('button[type="submit"]');
+                                if (submitBtn) {
+                                    submitBtn.disabled = true;
+                                    submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
+                                }
+                                const interval = setInterval(() => {
+                                    remainingSecs--;
+                                    if (timerEl) timerEl.textContent = remainingSecs;
+                                    if (remainingSecs <= 0) {
+                                        clearInterval(interval);
+                                        if (bannerEl) bannerEl.style.display = 'none';
+                                        if (submitBtn) {
+                                            submitBtn.disabled = false;
+                                            submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+                                        }
+                                    }
+                                }, 1000);
+                            });
+                        </script>
+                    @endif
+
                     @if(session('error'))
                         <div class="mb-5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2.5">
                             <svg class="w-4 h-4 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
