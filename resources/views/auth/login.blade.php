@@ -33,58 +33,123 @@
             font-feature-settings: "tnum" 1, "zero" 1;
         }
 
-        /* Subtle smooth float for realistic credit card */
-        @keyframes float-card {
+        /* Subtle smooth float for realistic 3D elements */
+        @keyframes float-gentle {
             0%, 100% {
-                transform: translateY(0px) rotate(0deg);
+                transform: translateY(0px);
             }
             50% {
-                transform: translateY(-5px) rotate(0.4deg);
+                transform: translateY(-8px);
             }
         }
 
-        .animate-card-float {
-            animation: float-card 8s ease-in-out infinite;
+        @keyframes float-gentle-reverse {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(8px);
+            }
+        }
+
+        .anim-3d-float {
+            animation: float-gentle 10s ease-in-out infinite;
+        }
+
+        .anim-3d-float-rev {
+            animation: float-gentle-reverse 12s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="h-screen w-screen overflow-hidden flex items-center justify-center bg-slate-50 selection:bg-blue-600 selection:text-white p-4 sm:p-6 lg:p-8">
+<body class="h-screen w-screen overflow-hidden flex items-center justify-center bg-[#F8FAFC] selection:bg-blue-600 selection:text-white p-4 sm:p-6 lg:p-8 relative">
 
     <!-- ========================================================================= -->
-    <!-- CLEAN AMBIENT BACKDROP (Minimalist & Static)                              -->
+    <!-- 3D BACKGROUND (Studio Lighting, Frosted Pearl & Sapphire 3D Geometry)      -->
     <!-- ========================================================================= -->
     <div class="fixed inset-0 pointer-events-none select-none overflow-hidden z-0">
-        <!-- Soft top-left ambient light -->
-        <div class="absolute -top-32 -left-32 w-96 h-96 bg-blue-100/60 rounded-full blur-3xl"></div>
-        <!-- Soft bottom-right ambient light -->
-        <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-slate-200/50 rounded-full blur-3xl"></div>
+        
+        <!-- Subtle studio backdrop vignette -->
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50/70 via-slate-100/40 to-slate-200/30"></div>
+
+        <!-- TOP-RIGHT: 3D Frosted Sapphire & Pearl Sphere (Elegan & Soft) -->
+        <div class="absolute -top-20 -right-20 sm:-top-28 sm:-right-28 w-[380px] h-[380px] sm:w-[500px] sm:h-[500px] opacity-75 anim-3d-float">
+            <!-- Ambient Glow Halo -->
+            <div class="absolute inset-16 rounded-full bg-blue-400/20 blur-[80px]"></div>
+
+            <svg class="w-full h-full" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- Realistic Volumetric 3D Sphere Gradient -->
+                    <radialGradient id="sphere3DGrad" cx="32%" cy="28%" r="68%">
+                        <stop offset="0%" stop-color="#FFFFFF" />
+                        <stop offset="20%" stop-color="#E0F2FE" />
+                        <stop offset="48%" stop-color="#BAE6FD" />
+                        <stop offset="72%" stop-color="#60A5FA" />
+                        <stop offset="92%" stop-color="#2563EB" />
+                        <stop offset="100%" stop-color="#1E3A8A" />
+                    </radialGradient>
+
+                    <!-- Studio Contact Drop Shadow -->
+                    <filter id="studioShadow" x="-25%" y="-25%" width="150%" height="150%">
+                        <feDropShadow dx="-15" dy="25" stdDeviation="30" flood-color="#0F172A" flood-opacity="0.10" />
+                    </filter>
+
+                    <!-- Specular Light Reflection -->
+                    <linearGradient id="specular3D" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85" />
+                        <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0.25" />
+                        <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+                    </linearGradient>
+                </defs>
+
+                <!-- The 3D Sphere Body -->
+                <circle cx="300" cy="300" r="220" fill="url(#sphere3DGrad)" filter="url(#studioShadow)" />
+
+                <!-- Curved Specular Key Light -->
+                <ellipse cx="230" cy="200" rx="90" ry="55" transform="rotate(-30 230 200)" fill="url(#specular3D)" />
+            </svg>
+        </div>
+
+        <!-- BOTTOM-LEFT: 3D Smooth Ceramic Torus / Disc (Clean & Calming) -->
+        <div class="absolute -bottom-24 -left-24 sm:-bottom-32 sm:-left-32 w-[380px] h-[380px] sm:w-[480px] sm:h-[480px] opacity-65 anim-3d-float-rev">
+            <!-- Ambient Glow Halo -->
+            <div class="absolute inset-16 rounded-full bg-slate-400/20 blur-[80px]"></div>
+
+            <svg class="w-full h-full" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="ring3DGrad" cx="38%" cy="32%" r="65%">
+                        <stop offset="0%" stop-color="#FFFFFF" />
+                        <stop offset="25%" stop-color="#F1F5F9" />
+                        <stop offset="55%" stop-color="#CBD5E1" />
+                        <stop offset="85%" stop-color="#64748B" />
+                        <stop offset="100%" stop-color="#334155" />
+                    </radialGradient>
+                    <filter id="ring3DShadow" x="-25%" y="-25%" width="150%" height="150%">
+                        <feDropShadow dx="15" dy="25" stdDeviation="28" flood-color="#0F172A" flood-opacity="0.08" />
+                    </filter>
+                </defs>
+
+                <!-- Smooth 3D Torus Ring -->
+                <path d="M 300,100 A 200,200 0 1,0 300,500 A 200,200 0 1,0 300,100 Z M 300,190 A 110,110 0 1,1 300,410 A 110,110 0 1,1 300,190 Z" 
+                      fill="url(#ring3DGrad)" 
+                      filter="url(#ring3DShadow)" />
+            </svg>
+        </div>
+
     </div>
 
     <!-- ========================================================================= -->
     <!-- MAIN LOGIN CARD (Static, Perfectly Balanced, High Whitespace)             -->
     <!-- ========================================================================= -->
-    <div class="relative w-full max-w-4xl max-h-[92vh] sm:max-h-[600px] bg-white rounded-3xl border border-slate-200/80 shadow-[0_20px_50px_-15px_rgba(15,23,42,0.07)] overflow-hidden grid grid-cols-1 md:grid-cols-12 z-10">
+    <div class="relative w-full max-w-4xl max-h-[92vh] sm:max-h-[580px] bg-white rounded-3xl border border-slate-200/90 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.08)] overflow-hidden grid grid-cols-1 md:grid-cols-12 z-10">
 
         <!-- ===================================================================== -->
-        <!-- LEFT HERO (5 Cols): Clean, Tasteful Mini-Bank Card Illustration        -->
+        <!-- LEFT HERO (5 Cols): Clean, Elegan & Minimalist Card                    -->
         <!-- ===================================================================== -->
-        <div class="hidden md:flex md:col-span-5 bg-gradient-to-br from-[#0B1528] via-[#0F1E38] to-[#14284B] p-8 lg:p-10 text-white flex-col justify-between relative overflow-hidden select-none">
+        <div class="hidden md:flex md:col-span-5 bg-gradient-to-b from-[#0B1528] via-[#0F1E38] to-[#0A1222] p-8 lg:p-10 text-white flex-col justify-between relative overflow-hidden select-none">
             
-            <!-- Subtle geometric background lines -->
-            <div class="absolute inset-0 pointer-events-none opacity-20">
-                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <pattern id="cleanGrid" width="32" height="32" patternUnits="userSpaceOnUse">
-                            <path d="M 32 0 L 0 0 0 32" fill="none" stroke="white" stroke-width="0.5" stroke-opacity="0.2" />
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#cleanGrid)" />
-                </svg>
-            </div>
-
             <!-- Soft localized ambient glow -->
-            <div class="absolute -top-16 -left-16 w-48 h-48 bg-blue-500/20 rounded-full blur-2xl pointer-events-none"></div>
-            <div class="absolute -bottom-16 -right-16 w-48 h-48 bg-emerald-500/15 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -top-12 -left-12 w-48 h-48 bg-blue-500/15 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -right-12 w-48 h-48 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
             <!-- TOP BRAND HEADER -->
             <div class="relative z-10">
@@ -95,7 +160,7 @@
                     <div>
                         <div class="flex items-center gap-1.5">
                             <span class="font-bold text-sm tracking-wide text-white">Edubank</span>
-                            <span class="px-1.5 py-0.2 rounded bg-emerald-500/20 border border-emerald-400/30 text-[9px] font-semibold text-emerald-300">Siswa</span>
+                            <span class="px-1.5 py-0.2 rounded bg-blue-500/20 border border-blue-400/30 text-[9px] font-semibold text-blue-300">Bank Mini</span>
                         </div>
                         <p class="text-[11px] text-slate-300 font-medium">SMKN 1 Bantul</p>
                     </div>
@@ -104,74 +169,57 @@
                 <div class="mt-6">
                     <h1 class="text-xl lg:text-2xl font-bold tracking-tight text-white leading-snug">
                         Layanan Bank Mini <br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-sky-200">Modern & Terintegrasi</span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-sky-200">Siswa & Sekolah</span>
                     </h1>
                     <p class="text-xs text-slate-300/80 mt-2 leading-relaxed">
-                        Platform operasional teller, pembukuan kas sekolah, dan tabungan siswa yang aman serta transparan.
+                        Satu portal cerdas untuk transaksi loket teller, rekapitulasi kas harian, dan tabungan siswa.
                     </p>
                 </div>
             </div>
 
-            <!-- CENTER/BOTTOM: TASTEFUL FINTECH CARD ILLUSTRATION (Tidak Alay, Bersih & Profesional) -->
-            <div class="relative z-10 my-auto py-4">
-                <div class="relative w-full max-w-[270px] lg:max-w-[290px] mx-auto animate-card-float">
+            <!-- CENTER: SEDERHANA, CLEAN & ELEGAN SMART CARD -->
+            <div class="relative z-10 my-auto py-2">
+                <div class="relative w-full max-w-[260px] mx-auto">
                     
-                    <!-- The Digital Smart Card -->
-                    <div class="relative rounded-2xl p-4 lg:p-5 bg-gradient-to-tr from-slate-900/90 via-[#0B2349]/90 to-blue-900/80 border border-white/20 shadow-2xl shadow-black/40 text-white backdrop-blur-md">
-                        <!-- Diagonal Sheen Accent -->
+                    <!-- Sleek Minimalist Metal/Glass Card -->
+                    <div class="relative rounded-2xl p-5 bg-gradient-to-tr from-white/10 via-white/5 to-transparent border border-white/20 shadow-xl shadow-black/30 text-white backdrop-blur-xl">
+                        <!-- Diagonal Glass Sheen -->
                         <div class="absolute inset-0 bg-gradient-to-br from-white/15 via-transparent to-transparent pointer-events-none rounded-2xl"></div>
 
-                        <!-- Card Header: EMV Chip & Contactless Wave -->
-                        <div class="flex items-center justify-between mb-5 relative z-10">
-                            <div class="flex items-center gap-2">
-                                <!-- Realistic Metallic Chip -->
-                                <div class="w-8 h-6 rounded bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 p-[1px] shadow-sm border border-amber-300/50">
-                                    <div class="w-full h-full border border-amber-800/25 rounded-[1px] flex items-center justify-center">
-                                        <div class="w-2.5 h-full border-x border-amber-800/30"></div>
-                                    </div>
+                        <!-- Card Top: Microchip & Contactless Wave -->
+                        <div class="flex items-center justify-between mb-6 relative z-10">
+                            <!-- Clean Platinum/Gold Chip -->
+                            <div class="w-7 h-5.5 rounded bg-gradient-to-br from-amber-100 via-amber-300 to-amber-500 p-[1px] shadow-xs border border-amber-200/50">
+                                <div class="w-full h-full border border-amber-700/20 rounded-[1px] flex items-center justify-center">
+                                    <div class="w-2 h-full border-x border-amber-700/25"></div>
                                 </div>
-                                <!-- Contactless wave -->
-                                <svg class="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 16.5a5 5 0 010-9M12 19a8.5 8.5 0 000-14m3.5 16.5a12 12 0 000-19" />
-                                </svg>
                             </div>
-                            <span class="text-[10px] font-bold tracking-widest text-white/80">EDUBANK</span>
+
+                            <!-- Contactless symbol -->
+                            <svg class="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 16.5a5 5 0 010-9M12 19a8.5 8.5 0 000-14m3.5 16.5a12 12 0 000-19" />
+                            </svg>
                         </div>
 
-                        <!-- Card Number (Monospace) -->
-                        <div class="mb-4 relative z-10">
-                            <div class="text-xs lg:text-sm font-mono tracking-widest text-slate-100">
+                        <!-- Card Middle: Masked Account Number -->
+                        <div class="mb-5 relative z-10">
+                            <span class="text-xs font-mono tracking-widest text-slate-100">
                                 •••• •••• •••• 2026
-                            </div>
+                            </span>
                         </div>
 
-                        <!-- Card Footer -->
+                        <!-- Card Bottom: Clean Metadata -->
                         <div class="flex items-end justify-between relative z-10 text-[9px]">
                             <div>
-                                <span class="text-[8px] uppercase tracking-wider text-slate-400 block">Nama Nasabah</span>
-                                <span class="font-semibold text-white tracking-wide">SISWA SMKN 1 BANTUL</span>
+                                <span class="text-[8px] uppercase tracking-wider text-slate-400 block font-medium">Nasabah</span>
+                                <span class="font-semibold text-white tracking-wide">EDUBANK SISWA</span>
                             </div>
                             <div class="text-right">
-                                <span class="text-[8px] uppercase tracking-wider text-slate-400 block">Valid Thru</span>
-                                <span class="font-mono text-white/90">12/28</span>
+                                <span class="text-[8px] uppercase tracking-wider text-slate-400 block font-medium">Status</span>
+                                <span class="font-semibold text-emerald-300 flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span> Aktif
+                                </span>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Clean Floating Status Pill (Top-Right) -->
-                    <div class="absolute -top-2.5 -right-2 bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-full px-2.5 py-1 shadow-md flex items-center gap-1.5 z-20">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-[9px] font-bold text-slate-700">Loket Teller Aktif</span>
-                    </div>
-
-                    <!-- Clean Floating Transaction Pill (Bottom-Left) -->
-                    <div class="absolute -bottom-2.5 -left-2 bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-xl px-2.5 py-1.5 shadow-md flex items-center gap-2 z-20">
-                        <div class="w-5 h-5 rounded-md bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-                        </div>
-                        <div>
-                            <span class="text-[8px] text-slate-400 block font-medium leading-none">Tabungan</span>
-                            <span class="text-[10px] font-bold text-slate-800 font-mono leading-none">+ Rp 50.000</span>
                         </div>
                     </div>
 
@@ -181,9 +229,9 @@
             <!-- BOTTOM FOOTER NOTE -->
             <div class="relative z-10 text-[11px] text-slate-400 flex items-center justify-between">
                 <span>© 2026 Edubank</span>
-                <span class="flex items-center gap-1 text-[10px] text-slate-400">
+                <span class="flex items-center gap-1.5 text-[10px] text-slate-400">
                     <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                    Sistem Terenkripsi
+                    Terkoneksi Aman
                 </span>
             </div>
 
