@@ -190,7 +190,7 @@
                 </div>
             </div>
 
-            <!-- BOTTOM FOOTER NOTE (Tanpa 'Terkoneksi Aman') -->
+            <!-- BOTTOM FOOTER NOTE -->
             <div class="relative z-10 text-xs text-blue-200/90 font-medium">
                 © 2026 Edubank SMKN 1 Bantul
             </div>
