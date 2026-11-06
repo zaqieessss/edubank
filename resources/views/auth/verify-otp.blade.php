@@ -191,12 +191,12 @@
                     <!-- Clean Typography Heading & Description -->
                     <div class="pt-2">
                         <h1 class="text-2xl lg:text-3xl font-bold tracking-tight text-white leading-snug">
-                            Kelola Layanan <br>
-                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-blue-200">Bank Mini</span> Lebih Cepat & Terintegrasi
+                            Layanan Bank Mini <br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-blue-200">Modern, Cepat & Tepercaya</span>
                         </h1>
                         
                         <p class="text-xs sm:text-sm text-blue-100/90 mt-3 leading-relaxed font-normal">
-                            Satu portal cerdas untuk layanan transaksi loket Teller, pengawasan kas harian Administrator, dan kemudahan pemantauan saldo tabungan siswa.
+                            Platform finansial sekolah terintegrasi untuk layanan loket teller, rekapitulasi kas harian, dan kemudahan pemantauan tabungan siswa.
                         </p>
                     </div>
 
