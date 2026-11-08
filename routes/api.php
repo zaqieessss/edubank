@@ -45,6 +45,11 @@ Route::prefix('v1')->group(function () {
         Route::get('/saver/transactions', [TransactionController::class, 'index']);
         Route::get('/saver/transactions/{id}', [TransactionController::class, 'show']);
 
+        // Pengajuan Penarikan Dana H-1 (> Rp 1.000.000)
+        Route::get('/saver/withdrawal-requests', [\App\Http\Controllers\Api\V1\WithdrawalRequestController::class, 'index']);
+        Route::post('/saver/withdrawal-requests', [\App\Http\Controllers\Api\V1\WithdrawalRequestController::class, 'store']);
+        Route::post('/saver/withdrawal-requests/{id}/cancel', [\App\Http\Controllers\Api\V1\WithdrawalRequestController::class, 'cancel']);
+
         // Real-Time Push In-App PIN Authorization for Teller Withdrawal
         Route::get('/saver/pin-authorization/pending', [PinAuthorizationController::class, 'checkPending']);
         Route::post('/saver/pin-authorization/{id}/verify', [PinAuthorizationController::class, 'verify']);

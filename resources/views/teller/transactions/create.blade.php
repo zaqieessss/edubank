@@ -207,6 +207,28 @@
                             <span>Penarikan tunai wajib otorisasi 6 digit PIN Siswa dan saldo sisa tidak boleh kurang dari Rp 10.000.</span>
                         </div>
 
+                        @if($todayApprovedRequest)
+                            <div class="bg-blue-50/90 border border-blue-200 rounded-2xl p-4 text-xs text-blue-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+                                <div class="flex items-start gap-2.5">
+                                    <div class="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0 mt-0.5">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </div>
+                                    <div>
+                                        <span class="font-bold text-blue-950 block">Otorisasi Penarikan H-1 Disetujui</span>
+                                        <p class="text-blue-700 text-[11px] mt-0.5">
+                                            Nominal: <strong class="font-mono text-blue-900">Rp {{ number_format($todayApprovedRequest->amount, 0, ',', '.') }}</strong> &bull; 
+                                            Keperluan: "{{ $todayApprovedRequest->reason }}"
+                                        </p>
+                                    </div>
+                                </div>
+                                <button type="button" 
+                                        onclick="setAmount('withdraw', {{ $todayApprovedRequest->amount }})" 
+                                        class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-[11px] font-bold shadow-xs shrink-0 transition-all cursor-pointer">
+                                    Gunakan Nominal Ini
+                                </button>
+                            </div>
+                        @endif
+
                         <div>
                             <div class="flex items-center justify-between mb-1.5">
                                 <label class="text-xs font-bold text-slate-800">
@@ -1001,6 +1023,25 @@
             modal.classList.remove('flex');
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        @if(session('error'))
+            const errorMsg = @json(session('error'));
+            const isLimitError = errorMsg.includes('Batas penarikan harian');
+            showTellerAlert(
+                isLimitError ? 'Batas Penarikan Harian Terlampaui' : 'Transaksi Ditolak', 
+                errorMsg, 
+                null, 
+                'error'
+            );
+            switchTab('withdraw');
+        @endif
+
+        @if(!empty($prefilledAmount))
+            setAmount('withdraw', {{ (int) $prefilledAmount }});
+            switchTab('withdraw');
+        @endif
+    });
 </script>
 @endpush
 @endsection

@@ -156,6 +156,25 @@
                         </span>
                     </a>
 
+                    <!-- 5. Pengajuan Penarikan H-1 -->
+                    @php
+                        $pendingWithdrawalsCount = \App\Models\WithdrawalRequest::where('status', 'pending')->count();
+                    @endphp
+                    <a href="{{ route('admin.withdrawal-requests.index') }}" 
+                       class="relative group w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 {{ request()->routeIs('admin.withdrawal-requests.*') ? 'bg-slate-900 text-white shadow-md shadow-slate-900/20' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100/80' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        @if($pendingWithdrawalsCount > 0)
+                            <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] font-bold flex items-center justify-center shadow-xs">
+                                {{ $pendingWithdrawalsCount > 9 ? '9+' : $pendingWithdrawalsCount }}
+                            </span>
+                        @endif
+                        <span class="absolute left-16 bg-slate-900 text-white text-[11px] font-semibold px-2.5 py-1 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg z-50">
+                            Pengajuan Penarikan H-1
+                        </span>
+                    </a>
+
                     <!-- 5. Users (Pengguna Sistem) -->
                     <a href="{{ route('admin.users.index') }}" 
                        class="relative group w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 {{ request()->routeIs('admin.users.*') ? 'bg-slate-900 text-white shadow-md shadow-slate-900/20' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100/80' }}">
@@ -231,6 +250,25 @@
                         </svg>
                         <span class="absolute left-16 bg-slate-900 text-white text-[11px] font-semibold px-2.5 py-1 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg z-50">
                             Transaksi
+                        </span>
+                    </a>
+
+                    <!-- 3. Pengajuan Penarikan H-1 Hari Ini -->
+                    @php
+                        $todayApprovedWithdrawals = \App\Models\WithdrawalRequest::whereDate('pickup_date', today())->where('status', 'approved')->count();
+                    @endphp
+                    <a href="{{ route('teller.withdrawal-requests.index') }}" 
+                       class="relative group w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 {{ request()->routeIs('teller.withdrawal-requests.*') ? 'bg-slate-900 text-white shadow-md shadow-slate-900/20' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100/80' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        @if($todayApprovedWithdrawals > 0)
+                            <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-blue-600 text-white text-[9px] font-bold flex items-center justify-center shadow-xs">
+                                {{ $todayApprovedWithdrawals }}
+                            </span>
+                        @endif
+                        <span class="absolute left-16 bg-slate-900 text-white text-[11px] font-semibold px-2.5 py-1 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg z-50">
+                            Antrean Penarikan H-1
                         </span>
                     </a>
 

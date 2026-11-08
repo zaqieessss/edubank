@@ -135,36 +135,45 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- 3. QUICK ACTION SHORTCUTS (3 Elegan Buttons: Setor, Tarik, Mutasi)        -->
+    <!-- 3. QUICK ACTION SHORTCUTS (4 Elegan Buttons: Setor, Tarik, Tarik H-1, Mutasi)-->
     <!-- ========================================================================= -->
-    <div class="grid grid-cols-3 gap-3">
+    <div class="grid grid-cols-4 gap-2 md:gap-3">
         <!-- Shortcut 1: Setor -->
         <button type="button" 
                 onclick="openSetorModal()" 
-                class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs flex flex-col items-center gap-2 hover:bg-emerald-50/50 hover:border-emerald-200 active:scale-95 transition-all cursor-pointer">
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                class="bg-white rounded-2xl p-2.5 md:p-3.5 border border-slate-200/80 shadow-xs flex flex-col items-center gap-1.5 hover:bg-emerald-50/50 hover:border-emerald-200 active:scale-95 transition-all cursor-pointer">
+            <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
             </div>
-            <span class="text-xs font-bold text-slate-700">Setor</span>
+            <span class="text-[11px] md:text-xs font-bold text-slate-700">Setor</span>
         </button>
 
         <!-- Shortcut 2: Tarik -->
         <button type="button" 
                 onclick="openTarikModal()" 
-                class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs flex flex-col items-center gap-2 hover:bg-rose-50/50 hover:border-rose-200 active:scale-95 transition-all cursor-pointer">
-            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+                class="bg-white rounded-2xl p-2.5 md:p-3.5 border border-slate-200/80 shadow-xs flex flex-col items-center gap-1.5 hover:bg-rose-50/50 hover:border-rose-200 active:scale-95 transition-all cursor-pointer">
+            <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
             </div>
-            <span class="text-xs font-bold text-slate-700">Tarik</span>
+            <span class="text-[11px] md:text-xs font-bold text-slate-700">Tarik</span>
         </button>
 
-        <!-- Shortcut 3: Mutasi -->
-        <a href="{{ route('saver.mutation') }}" 
-           class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs flex flex-col items-center gap-2 hover:bg-amber-50/50 hover:border-amber-200 active:scale-95 transition-all">
-            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+        <!-- Shortcut 3: Tarik H-1 (> 1 Juta) -->
+        <a href="{{ route('saver.withdrawal-requests.index') }}" 
+           class="bg-white rounded-2xl p-2.5 md:p-3.5 border border-slate-200/80 shadow-xs flex flex-col items-center gap-1.5 hover:bg-blue-50/50 hover:border-blue-200 active:scale-95 transition-all text-center">
+            <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             </div>
-            <span class="text-xs font-bold text-slate-700">Mutasi</span>
+            <span class="text-[11px] md:text-xs font-bold text-slate-700">Tarik H-1</span>
+        </a>
+
+        <!-- Shortcut 4: Mutasi -->
+        <a href="{{ route('saver.mutation') }}" 
+           class="bg-white rounded-2xl p-2.5 md:p-3.5 border border-slate-200/80 shadow-xs flex flex-col items-center gap-1.5 hover:bg-amber-50/50 hover:border-amber-200 active:scale-95 transition-all">
+            <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+            </div>
+            <span class="text-[11px] md:text-xs font-bold text-slate-700">Mutasi</span>
         </a>
     </div>
 

@@ -156,6 +156,18 @@
                 @endif
             </a>
 
+            <!-- 2. Pengajuan Tarik H-1 (> 1 Juta) -->
+            <a href="{{ route('saver.withdrawal-requests.index') }}" 
+               class="flex-1 flex flex-col items-center gap-0.5 py-1 px-2 rounded-2xl transition-all {{ request()->routeIs('saver.withdrawal-requests.*') ? 'text-blue-600 font-bold' : 'text-slate-400 hover:text-slate-600 font-medium' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="{{ request()->routeIs('saver.withdrawal-requests.*') ? '2.4' : '1.8' }}" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span class="text-[10px] tracking-tight">Tarik H-1</span>
+                @if(request()->routeIs('saver.withdrawal-requests.*'))
+                    <span class="w-1 h-1 rounded-full bg-blue-600"></span>
+                @endif
+            </a>
+
             <!-- 2. Mutasi (Riwayat Transaksi) -->
             <a href="{{ route('saver.mutation') }}" 
                class="flex-1 flex flex-col items-center gap-0.5 py-1 px-2 rounded-2xl transition-all {{ request()->routeIs('saver.mutation') ? 'text-blue-600 font-bold' : 'text-slate-400 hover:text-slate-600 font-medium' }}">

@@ -5,12 +5,15 @@ use App\Http\Controllers\Admin\DailyClosingController as AdminClosingController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\MemberController as AdminMemberController;
 use App\Http\Controllers\Admin\SaverController as AdminSaverController;
+use App\Http\Controllers\Admin\WithdrawalRequestController as AdminWithdrawalRequestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Saver\DashboardController as SaverDashboardController;
+use App\Http\Controllers\Saver\WithdrawalRequestController as SaverWithdrawalRequestController;
 use App\Http\Controllers\Teller\DailyClosingController as TellerClosingController;
 use App\Http\Controllers\Teller\DashboardController as TellerDashboardController;
 use App\Http\Controllers\Teller\SaverController as TellerSaverController;
 use App\Http\Controllers\Teller\TransactionController as TellerTransactionController;
+use App\Http\Controllers\Teller\WithdrawalRequestController as TellerWithdrawalRequestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -82,6 +85,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // System Settings (Setting)
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
+
+    // Advance Withdrawal Requests H-1 (Pengajuan Penarikan Dana)
+    Route::get('/withdrawal-requests', [AdminWithdrawalRequestController::class, 'index'])->name('withdrawal-requests.index');
+    Route::post('/withdrawal-requests/{withdrawalRequest}/approve', [AdminWithdrawalRequestController::class, 'approve'])->name('withdrawal-requests.approve');
+    Route::post('/withdrawal-requests/{withdrawalRequest}/reject', [AdminWithdrawalRequestController::class, 'reject'])->name('withdrawal-requests.reject');
 });
 
 /*
@@ -121,6 +129,9 @@ Route::middleware(['auth', 'role:teller'])->prefix('teller')->name('teller.')->g
     Route::get('/daily-closings/create', [TellerClosingController::class, 'create'])->name('daily-closings.create');
     Route::post('/daily-closings', [TellerClosingController::class, 'store'])->name('daily-closings.store');
     Route::post('/daily-closings/opening-balance', [TellerClosingController::class, 'setOpeningBalance'])->name('daily-closings.opening-balance');
+
+    // Advance Withdrawal Requests H-1 (Monitoring Penarikan Terencana Hari Ini)
+    Route::get('/withdrawal-requests', [TellerWithdrawalRequestController::class, 'index'])->name('withdrawal-requests.index');
 });
 
 /*
@@ -134,6 +145,11 @@ Route::middleware(['auth', 'role:saver'])->prefix('saver')->name('saver.')->grou
     Route::get('/profile', [SaverDashboardController::class, 'profile'])->name('profile');
     Route::post('/pin', [SaverDashboardController::class, 'updatePin'])->name('pin.update');
     Route::post('/password', [SaverDashboardController::class, 'updatePassword'])->name('password.update');
+
+    // Advance Withdrawal Requests H-1 (Pengajuan Penarikan Dana Mandiri)
+    Route::get('/withdrawal-requests', [SaverWithdrawalRequestController::class, 'index'])->name('withdrawal-requests.index');
+    Route::post('/withdrawal-requests', [SaverWithdrawalRequestController::class, 'store'])->name('withdrawal-requests.store');
+    Route::post('/withdrawal-requests/{id}/cancel', [SaverWithdrawalRequestController::class, 'cancel'])->name('withdrawal-requests.cancel');
 
     // Self-Service Reset via OTP Email (Lupa PIN & Lupa Password Web Portal)
     Route::post('/pin/request-otp', [SaverDashboardController::class, 'requestPinResetOtp'])->name('pin.request-otp');

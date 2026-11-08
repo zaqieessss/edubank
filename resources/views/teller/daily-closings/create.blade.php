@@ -119,6 +119,23 @@
                 <span><strong>Rumus Rekonsiliasi:</strong> Modal Awal + Total Setoran - Total Penarikan = Total Uang Fisik yang Wajib Ada di Laci Teller.</span>
             </div>
 
+            @if(($summary['planned_withdrawals_today'] ?? 0) > 0)
+                <div class="p-3.5 rounded-2xl bg-blue-50/80 border border-blue-200/80 text-blue-900 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <span class="font-bold text-blue-950">Info Penarikan Terencana H-1:</span>
+                            <span class="text-blue-800">Hari ini terdapat {{ $summary['planned_withdrawals_count'] }} penarikan disetujui sebesar <strong class="font-mono text-blue-900">Rp {{ number_format($summary['planned_withdrawals_today'], 0, ',', '.') }}</strong>.</span>
+                        </div>
+                    </div>
+                    <a href="{{ route('teller.withdrawal-requests.index') }}" class="px-3 py-1 bg-white hover:bg-blue-100 border border-blue-200 text-blue-700 rounded-xl text-[11px] font-bold shadow-2xs shrink-0 transition-all self-start sm:self-auto">
+                        Lihat Antrean
+                    </a>
+                </div>
+            @endif
+
             <!-- Input Form -->
             <form method="POST" action="{{ route('teller.daily-closings.store') }}" class="space-y-4">
                 @csrf

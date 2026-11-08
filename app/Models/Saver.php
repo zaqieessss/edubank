@@ -62,4 +62,9 @@ class Saver extends Model
     {
         return $this->hasMany(Transaction::class)->orderBy('transaction_date', 'desc');
     }
+
+    public function withdrawalRequests(): HasMany
+    {
+        return $this->hasMany(WithdrawalRequest::class)->orderBy('pickup_date', 'desc');
+    }
 }

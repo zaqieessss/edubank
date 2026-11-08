@@ -73,12 +73,19 @@ class TransactionController extends Controller
         return redirect()->route('teller.transactions.create', $saver);
     }
 
-    public function create(Saver $saver)
+    public function create(Request $request, Saver $saver)
     {
         $maxWithdrawable = max(0, $saver->balance - 10000);
         $recentTransactions = $saver->transactions()->take(5)->get();
 
-        return view('teller.transactions.create', compact('saver', 'maxWithdrawable', 'recentTransactions'));
+        $todayApprovedRequest = \App\Models\WithdrawalRequest::where('saver_id', $saver->id)
+            ->whereDate('pickup_date', today())
+            ->where('status', 'approved')
+            ->first();
+
+        $prefilledAmount = $request->query('amount');
+
+        return view('teller.transactions.create', compact('saver', 'maxWithdrawable', 'recentTransactions', 'todayApprovedRequest', 'prefilledAmount'));
     }
 
     public function deposit(Request $request, Saver $saver)

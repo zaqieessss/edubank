@@ -62,17 +62,28 @@ class CashClosingService
             ->where('transaction_type', 'withdrawal')
             ->count();
 
+        // 6. Planned withdrawals approved for today across the system
+        $plannedWithdrawalsToday = (int) \App\Models\WithdrawalRequest::whereDate('pickup_date', $targetDate)
+            ->where('status', 'approved')
+            ->sum('amount');
+
+        $plannedWithdrawalsCount = \App\Models\WithdrawalRequest::whereDate('pickup_date', $targetDate)
+            ->where('status', 'approved')
+            ->count();
+
         return [
-            'date'              => $targetDate,
-            'opening_balance'   => $openingBalance,
-            'has_set_opening'   => $hasSetOpening,
-            'total_deposits'    => $totalDeposits,
-            'total_withdrawals' => $totalWithdrawals,
-            'system_balance'    => $systemBalance,
-            'deposit_count'     => $depositCount,
-            'withdrawal_count'  => $withdrawalCount,
-            'transaction_count' => $depositCount + $withdrawalCount,
-            'closing_cash'      => $systemBalance,
+            'date'                      => $targetDate,
+            'opening_balance'           => $openingBalance,
+            'has_set_opening'           => $hasSetOpening,
+            'total_deposits'            => $totalDeposits,
+            'total_withdrawals'         => $totalWithdrawals,
+            'system_balance'            => $systemBalance,
+            'deposit_count'             => $depositCount,
+            'withdrawal_count'          => $withdrawalCount,
+            'transaction_count'         => $depositCount + $withdrawalCount,
+            'closing_cash'              => $systemBalance,
+            'planned_withdrawals_today' => $plannedWithdrawalsToday,
+            'planned_withdrawals_count' => $plannedWithdrawalsCount,
         ];
     }
 

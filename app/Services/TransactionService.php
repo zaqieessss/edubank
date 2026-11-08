@@ -23,6 +23,11 @@ class TransactionService
     public const MINIMUM_TRANSACTION_AMOUNT = 10000;
 
     /**
+     * Maximum daily withdrawal limit without prior H-1 advance request (Rp 1.000.000).
+     */
+    public const MAX_DAILY_UNPLANNED_WITHDRAWAL = 1000000;
+
+    /**
      * Process cash deposit at teller counter.
      *
      * @param Saver $saver
@@ -165,6 +170,29 @@ class TransactionService
 
                 $balanceBefore = $lockedSaver->balance;
 
+                // Check Daily Limit Rule (Rp 1.000.000 per day without approved H-1 request)
+                $todayWithdrawn = (int) Transaction::where('saver_id', $lockedSaver->id)
+                    ->whereDate('transaction_date', now()->toDateString())
+                    ->where('transaction_type', 'withdrawal')
+                    ->sum('amount');
+
+                $approvedWithdrawalRequest = null;
+                if (($todayWithdrawn + $amount) > self::MAX_DAILY_UNPLANNED_WITHDRAWAL) {
+                    $approvedWithdrawalRequest = \App\Models\WithdrawalRequest::where('saver_id', $lockedSaver->id)
+                        ->whereDate('pickup_date', now()->toDateString())
+                        ->where('status', 'approved')
+                        ->where('amount', '>=', $amount)
+                        ->first();
+
+                    if (!$approvedWithdrawalRequest) {
+                        throw new Exception(
+                            "Batas penarikan harian tanpa konfirmasi (maksimal Rp " . number_format(self::MAX_DAILY_UNPLANNED_WITHDRAWAL, 0, ',', '.') . ") terlampaui. " .
+                            "Total penarikan hari ini: Rp " . number_format($todayWithdrawn, 0, ',', '.') . ". " .
+                            "Untuk penarikan tunai di atas batas limit harian, nasabah diwajibkan mengajukan permohonan penarikan H-1 melalui aplikasi Edubank."
+                        );
+                    }
+                }
+
                 // Check Minimum Holding Balance Rule (Rp 10.000)
                 if (($balanceBefore - $amount) < self::MINIMUM_HOLDING_BALANCE) {
                     $maxWithdrawable = max(0, $balanceBefore - self::MINIMUM_HOLDING_BALANCE);
@@ -204,6 +232,14 @@ class TransactionService
                 // If an authorization request was used, mark it as completed
                 if ($authRequest) {
                     $authRequest->update(['status' => 'completed']);
+                }
+
+                // If an advance withdrawal request was used, mark it as completed
+                if ($approvedWithdrawalRequest) {
+                    $approvedWithdrawalRequest->update([
+                        'status' => 'completed',
+                        'transaction_id' => $transaction->id,
+                    ]);
                 }
 
                 // 3. Double-Entry Accounting Journal
