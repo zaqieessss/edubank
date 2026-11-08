@@ -4,10 +4,10 @@
 @section('page_title', 'Buka Rekening Baru')
 
 @section('content')
-<div class="h-full flex flex-col justify-between gap-4 pb-0.5">
+<div class="h-full flex flex-col justify-between gap-3 pb-0.5 min-h-0 overflow-hidden">
 
     <!-- Top Navigation Card (Tombol Kembali Dibungkus Card Rapi) -->
-    <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex items-center justify-between gap-3">
+    <div class="bg-white rounded-[22px] px-5 py-3 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex items-center justify-between gap-3">
         <div class="flex items-center gap-3">
             <a href="{{ route('admin.savers.index') }}" 
                class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors shrink-0"
@@ -24,17 +24,17 @@
         <span class="text-xs text-slate-400 font-mono hidden sm:inline">Bank Mini SMKN 1 Bantul</span>
     </div>
 
-    <!-- Bento Form Card (Memenuhi Layar Sejajar Sidebar) -->
-    <div class="bg-white rounded-[24px] p-6 md:p-8 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between min-h-[420px]">
-        <form method="POST" action="{{ route('admin.savers.store') }}" class="flex-1 flex flex-col justify-between">
+    <!-- Bento Form Card (Memenuhi Layar Sejajar Sidebar, Auto-Fit Tanpa Offside) -->
+    <div class="bg-white rounded-[24px] p-5 sm:p-6 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between min-h-0 overflow-hidden">
+        <form method="POST" action="{{ route('admin.savers.store') }}" class="flex-1 flex flex-col justify-between min-h-0 overflow-hidden">
             @csrf
 
-            <div class="space-y-4">
+            <div class="flex-1 overflow-y-auto pr-1.5 space-y-3.5 min-h-0">
                 <!-- Header Info -->
-                <div class="border-b border-slate-100 pb-3">
-                    <h2 class="text-base font-extrabold text-slate-900 tracking-tight">Form Pembukaan Rekening Tabungan Baru</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">
-                        Pilih siswa dari database master (600 siswa). Sistem akan otomatis membuatkan Nomor Rekening berformat <span class="font-mono font-bold text-slate-800">[JURUSAN]-[ANGKATAN]-[0001]</span>, mengaktifkan akun login, membuat QR Code, dan membukukan mutasi setoran awal.
+                <div class="border-b border-slate-100 pb-2.5">
+                    <h2 class="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">Form Pembukaan Rekening Tabungan Baru</h2>
+                    <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">
+                        Pilih siswa dari database master. Sistem akan otomatis membuatkan Nomor Rekening resmi, mengaktifkan akun login, membuat QR Code, dan membukukan mutasi setoran awal.
                     </p>
                 </div>
 
@@ -302,8 +302,8 @@
             </div>
 
             <!-- Submit Button (Pinned at Bottom) -->
-            <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3 shrink-0 mt-4">
-                <a href="{{ route('admin.savers.index') }}" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-all">
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-3 shrink-0 mt-2 bg-white">
+                <a href="{{ route('admin.savers.index') }}" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:bg-slate-200 transition-all cursor-pointer">
                     Batal
                 </a>
                 <button type="button" 

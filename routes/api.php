@@ -149,6 +149,15 @@ Route::get('deploy-migrate-{secret}', function (\Illuminate\Http\Request $reques
             \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         } catch (\Throwable $e) {}
 
+        $stats = [
+            'transactions' => \Illuminate\Support\Facades\DB::table('transactions')->count(),
+            'daily_closings' => \Illuminate\Support\Facades\DB::table('daily_closings')->count(),
+            'accounting_journals' => \Illuminate\Support\Facades\DB::table('accounting_journals')->count(),
+            'pin_authorization_requests' => \Illuminate\Support\Facades\DB::table('pin_authorization_requests')->count(),
+            'savers' => \Illuminate\Support\Facades\DB::table('savers')->count(),
+            'members' => \Illuminate\Support\Facades\DB::table('members')->count(),
+        ];
+
         return response()->json([
             'status'         => 'success',
             'message'        => 'Migrasi dan inisialisasi database berhasil!',
@@ -158,6 +167,7 @@ Route::get('deploy-migrate-{secret}', function (\Illuminate\Http\Request $reques
             'purge_output'   => $purgeOutput,
             'import_output'  => $importOutput,
             'cohort_output'  => $cohortOutput,
+            'stats'          => $stats,
         ]);
     } catch (\Throwable $e) {
         return response()->json([
