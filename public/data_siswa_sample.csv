@@ -1,0 +1,6 @@
+student_id_number,full_name,grade_level,class_name,major,cohort,gender,email,phone_number,address
+10001,"Budi Santoso",10,"X RPL 1",RPL,29,male,budi.santoso@edubank.test,081234567801,"Bantul, D.I. Yogyakarta"
+10002,"Siti Aminah",10,"X AKL 1",AKL,29,female,siti.aminah@edubank.test,081234567802,"Bantul, D.I. Yogyakarta"
+10003,"Rian Pratama",11,"XI MP 1",MP,28,male,rian.pratama@edubank.test,081234567803,"Bantul, D.I. Yogyakarta"
+10004,"Dewi Lestari",11,"XI BDP 1",BDP,28,female,dewi.lestari@edubank.test,081234567804,"Bantul, D.I. Yogyakarta"
+10005,"Ahmad Fauzi",12,"XII DKV 1",DKV,27,male,ahmad.fauzi@edubank.test,081234567805,"Bantul, D.I. Yogyakarta"

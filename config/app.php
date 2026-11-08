@@ -123,6 +123,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    'deploy_secret' => env('DEPLOY_SECRET', 'skansaba_super_secret_token_12345'),
+    'deploy_secret' => env('DEPLOY_SECRET'),
+    'allow_remote_db_purge' => env('ALLOW_REMOTE_DB_PURGE', false),
 
 ];

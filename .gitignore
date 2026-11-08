@@ -25,3 +25,7 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Real student personal data protection (UU PDP)
+/public/data_siswa_real.*
+*.xlsx

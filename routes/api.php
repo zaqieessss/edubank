@@ -64,9 +64,18 @@ Route::prefix('v1')->group(function () {
 
 // --- Webhook Migrasi & Inisialisasi Otomatis (Shared Hosting No-SSH) ---
 Route::get('deploy-migrate-{secret}', function (\Illuminate\Http\Request $request, $secret) {
-    $expectedSecret = config('app.deploy_secret') ?: env('DEPLOY_SECRET') ?: 'skansaba_super_secret_token_12345';
-    if ($secret !== $expectedSecret && $secret !== 'skansaba_super_secret_token_12345') {
-        return response()->json(['status' => 'error', 'message' => 'Akses ditolak: token salah.'], 403);
+    $expectedSecret = config('app.deploy_secret') ?: env('DEPLOY_SECRET');
+    if (empty($expectedSecret) || !hash_equals((string) $expectedSecret, (string) $secret)) {
+        return response()->json(['status' => 'error', 'message' => 'Akses ditolak: token salah atau tidak terkonfigurasi.'], 403);
+    }
+
+    // Proteksi Keamanan: Tindakan destruktif (reset/purge database) dinonaktifkan di level production
+    $allowPurge = config('app.allow_remote_db_purge', env('ALLOW_REMOTE_DB_PURGE', false));
+    if (($request->has('reset_transactions') || $request->has('purge_students')) && !$allowPurge) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Tindakan destruktif pembersihan database dinonaktifkan di lingkungan produksi demi keamanan.'
+        ], 403);
     }
     try {
         // 1. Jalankan migrasi database
