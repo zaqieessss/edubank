@@ -4,7 +4,7 @@
 @section('page_title', 'Loket Transaksi Nasabah')
 
 @section('content')
-<div class="min-h-full flex flex-col gap-4 pb-6">
+<div class="min-h-full flex-1 flex flex-col justify-between gap-4 pb-2">
 
     <!-- Top Navigation Card (Konsisten & Rapi Terbungkus Card) -->
     <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">

@@ -4,7 +4,7 @@
 @section('page_title', 'Edit Siswa')
 
 @section('content')
-<div class="h-full flex flex-col justify-between gap-4 pb-0.5">
+<div class="min-h-full flex-1 flex flex-col justify-between gap-4 pb-2">
 
     <!-- Top Navigation Card (Tombol Kembali Dibungkus Card Rapi) -->
     <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex items-center justify-between gap-3">

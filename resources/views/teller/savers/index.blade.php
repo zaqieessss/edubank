@@ -4,7 +4,7 @@
 @section('page_title', 'Nasabah & Rekening')
 
 @section('content')
-<div class="h-full flex flex-col justify-between gap-4 pb-0.5">
+<div class="min-h-full flex-1 flex flex-col justify-between gap-4 pb-2">
 
     <!-- Top Bento Stats Grid (3 Cards Minimalis & Spacious) -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 shrink-0">

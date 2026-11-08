@@ -4,7 +4,7 @@
 @section('page_title', 'Pengaturan Sistem')
 
 @section('content')
-<form method="POST" action="{{ route('admin.settings.update') }}" class="h-full flex flex-col justify-between gap-4 pb-0.5">
+<form method="POST" action="{{ route('admin.settings.update') }}" class="min-h-full flex-1 flex flex-col justify-between gap-4 pb-2">
     @csrf
 
     <!-- Top Navigation & Header Card -->

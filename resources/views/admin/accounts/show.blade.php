@@ -4,7 +4,7 @@
 @section('page_title', 'Kelola Rekening')
 
 @section('content')
-<div class="h-full flex flex-col justify-between gap-4 pb-0.5">
+<div class="min-h-full flex-1 flex flex-col justify-between gap-4 pb-2">
 
     <!-- Top Navigation Card (Tombol Kembali Dibungkus Card Rapi) -->
     <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -125,7 +125,7 @@
         </div>
 
         <!-- KOLOM KANAN (7 Kolom): Riwayat Mutasi / Transaksi (Sepanjang Sidebar) -->
-        <div class="lg:col-span-7 flex flex-col h-full">
+        <div class="lg:col-span-7 flex flex-col flex-1">
             <div class="bg-white rounded-[24px] p-5 md:p-6 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between min-h-[420px]">
                 
                 <div class="flex-1 flex flex-col min-h-0">

@@ -4,10 +4,10 @@
 @section('page_title', 'Scanner Kartu Siswa')
 
 @section('content')
-<div class="h-full flex flex-col justify-between gap-4 pb-0.5">
+<div class="min-h-full flex-1 flex flex-col justify-between gap-3.5 pb-2">
 
     <!-- Top Navigation Card (Konsisten & Rapi Bento Style) -->
-    <div class="bg-white rounded-[24px] p-5 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="bg-white rounded-[22px] px-5 py-3 border border-slate-200/70 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.03)] shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div class="flex items-center gap-3">
             <a href="{{ route('teller.dashboard') }}" 
                class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors shrink-0"
@@ -31,15 +31,15 @@
     </div>
 
     <!-- Scanner Bento Box (Sejajar & Fluid dengan Sidebar) -->
-    <div class="bg-white rounded-[24px] p-6 md:p-8 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between min-h-[460px]">
+    <div class="bg-white rounded-[24px] p-5 sm:p-6 md:p-7 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between gap-4">
         
-        <div class="space-y-4 max-w-xl mx-auto w-full">
+        <div class="space-y-3.5 max-w-xl mx-auto w-full">
             <div class="text-center space-y-1">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[11px] font-bold">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
                     Pemindai Kartu Tabungan Digital
                 </div>
-                <h2 class="text-lg font-extrabold text-slate-900">Arahkan Kamera ke QR Code Kartu Siswa</h2>
+                <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Arahkan Kamera ke QR Code Kartu Siswa</h2>
                 <p class="text-xs text-slate-500 max-w-md mx-auto">
                     Posisikan QR Code di kartu tabungan atau layar smartphone siswa di dalam area pandang kamera.
                 </p>
@@ -57,7 +57,7 @@
             </div>
 
             <!-- Camera Viewport Container (Terkunci Sempurna di dalam Card, Anti Offside) -->
-            <div class="relative w-full max-w-sm h-60 sm:h-64 mx-auto bg-slate-950 rounded-2xl overflow-hidden border-2 border-slate-800 shadow-inner flex items-center justify-center shrink-0">
+            <div class="relative w-full max-w-sm h-52 sm:h-56 mx-auto bg-slate-950 rounded-2xl overflow-hidden border-2 border-slate-800 shadow-inner flex items-center justify-center shrink-0">
                 <!-- Video target element -->
                 <div id="reader" class="w-full h-full overflow-hidden flex items-center justify-center"></div>
 
@@ -110,9 +110,9 @@
             </div>
         </div>
 
-        <!-- Fallback Manual Input -->
-        <div class="pt-4 border-t border-slate-100 max-w-xl mx-auto w-full">
-            <div class="text-center mb-2.5">
+        <!-- Fallback Manual Input (Tertata Rapi & 100% di Dalam Card, Anti-Offside) -->
+        <div class="pt-3 border-t border-slate-100 max-w-xl mx-auto w-full shrink-0">
+            <div class="text-center mb-2">
                 <p class="text-[11px] font-bold text-slate-600 uppercase tracking-wider">
                     Atau Masukkan Nomor Rekening / NIS Siswa Secara Manual
                 </p>
@@ -128,9 +128,9 @@
                            name="query" 
                            placeholder="Contoh: RPL-29-0001 atau NIS: 18910" 
                            required 
-                           class="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs text-slate-800 font-mono font-bold focus:bg-white focus:ring-2 focus:ring-blue-500/20 uppercase tracking-wide">
+                           class="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-4 py-2 text-xs text-slate-800 font-mono font-bold focus:bg-white focus:ring-2 focus:ring-blue-500/20 uppercase tracking-wide">
                 </div>
-                <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all hover:shadow shrink-0">
+                <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all hover:shadow shrink-0 cursor-pointer">
                     Buka Loket
                 </button>
             </form>

@@ -369,7 +369,7 @@
             @endif
 
             <!-- CONTENT SLOT (Bento Grid Halaman) -->
-            <div class="flex-1 overflow-y-auto pr-1">
+            <div class="flex-1 overflow-y-auto pr-1 flex flex-col">
                 @yield('content')
             </div>
 

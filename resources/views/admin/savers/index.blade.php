@@ -4,7 +4,7 @@
 @section('page_title', 'Savers / Nasabah')
 
 @section('content')
-<div class="h-full flex flex-col justify-between gap-4 pb-0.5">
+<div class="min-h-full flex-1 flex flex-col justify-between gap-4 pb-2">
 
     <!-- Top Bento Stats Grid (2 Cards Minimalis & Spacious) -->
     <!-- Top Bento Stats Grid (3 Cards Minimalis & Spacious) -->

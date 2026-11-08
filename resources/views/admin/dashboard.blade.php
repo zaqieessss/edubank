@@ -4,7 +4,7 @@
 @section('page_title', 'Dashboard')
 
 @section('content')
-<div class="min-h-full flex flex-col gap-4 pb-4">
+<div class="min-h-full flex-1 flex flex-col justify-between gap-4 pb-2">
 
     <!-- ========================================================================= -->
     <!-- 1. WELCOME CARD (Minimalis, Simpel & Elegan)                               -->
@@ -115,7 +115,7 @@
     <!-- ========================================================================= -->
     <!-- 3. TABEL TRANSAKSI TERAKHIR (Rapi, Terstruktur, Anti-Mbleber)              -->
     <!-- ========================================================================= -->
-    <div class="bg-white rounded-[24px] p-5 md:p-6 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex flex-col justify-between">
+    <div class="bg-white rounded-[24px] p-5 md:p-6 border border-slate-200/70 shadow-[0_4px_25px_-5px_rgba(15,23,42,0.03)] flex-1 flex flex-col justify-between">
         
         <div>
             <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
