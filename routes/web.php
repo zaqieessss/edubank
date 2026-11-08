@@ -135,6 +135,12 @@ Route::middleware(['auth', 'role:saver'])->prefix('saver')->name('saver.')->grou
     Route::post('/pin', [SaverDashboardController::class, 'updatePin'])->name('pin.update');
     Route::post('/password', [SaverDashboardController::class, 'updatePassword'])->name('password.update');
 
+    // Self-Service Reset via OTP Email (Lupa PIN & Lupa Password Web Portal)
+    Route::post('/pin/request-otp', [SaverDashboardController::class, 'requestPinResetOtp'])->name('pin.request-otp');
+    Route::post('/pin/reset-otp', [SaverDashboardController::class, 'resetPinWithOtp'])->name('pin.reset-otp');
+    Route::post('/password/request-otp', [SaverDashboardController::class, 'requestPasswordResetOtp'])->name('password.request-otp');
+    Route::post('/password/reset-otp', [SaverDashboardController::class, 'resetPasswordWithOtp'])->name('password.reset-otp');
+
     // In-App Realtime PIN Authorization (Push Notification for Teller Withdrawal)
     Route::get('/pin-authorization/pending', [SaverDashboardController::class, 'checkPendingPin'])->name('pin.pending');
     Route::post('/pin-authorization/{id}/verify', [SaverDashboardController::class, 'verifyPinAuthorization'])->name('pin.verify');

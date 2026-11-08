@@ -148,6 +148,12 @@
             <div>
                 <label class="block font-semibold text-slate-700 mb-1">PIN Saat Ini</label>
                 <input type="password" name="current_pin" maxlength="6" pattern="\d{6}" inputmode="numeric" required placeholder="••••••" class="w-full text-center tracking-widest font-mono text-base bg-slate-50 border border-slate-200 rounded-xl py-2 focus:bg-white">
+                <div class="flex items-center justify-between mt-1.5">
+                    <span class="text-[10px] text-slate-400">Verifikasi PIN lama Anda</span>
+                    <button type="button" onclick="switchToForgotPin()" class="text-[10px] font-bold text-amber-600 hover:text-amber-700 hover:underline cursor-pointer">
+                        Lupa PIN? Reset via OTP Email &rarr;
+                    </button>
+                </div>
             </div>
             <div>
                 <label class="block font-semibold text-slate-700 mb-1">PIN Baru (6 Digit Angka)</label>
@@ -159,8 +165,63 @@
             </div>
 
             <div class="pt-2 flex items-center justify-end gap-2">
-                <button type="button" onclick="closeUpdatePinModal()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold">Batal</button>
-                <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-xs">Simpan PIN</button>
+                <button type="button" onclick="closeUpdatePinModal()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold cursor-pointer">Batal</button>
+                <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-xs cursor-pointer">Simpan PIN</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Lupa PIN (Reset via OTP Email) -->
+<div id="forgotPinModal" class="hidden fixed inset-0 z-50 items-end md:items-center justify-center bg-slate-900/60 backdrop-blur-xs p-0 md:p-4" onclick="if(event.target === this) closeForgotPinModal()">
+    <div class="w-full max-w-[400px] bg-white rounded-t-[32px] md:rounded-[28px] p-6 shadow-2xl space-y-4 border border-slate-100">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                <h3 class="text-sm font-bold text-slate-800">Reset PIN via OTP Email</h3>
+            </div>
+            <button type="button" onclick="closeForgotPinModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold">&times;</button>
+        </div>
+
+        <!-- Alert Notification Box in Modal -->
+        <div id="pinOtpAlert" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+
+        <!-- Step 1: Info & Kirim OTP -->
+        <div class="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/70 text-xs text-amber-900 space-y-2">
+            <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-amber-700">Email Terdaftar:</span>
+                <span class="font-semibold text-slate-800 truncate max-w-[200px]">{{ $user->email }}</span>
+            </div>
+            <p class="text-[11px] text-amber-800/90 leading-relaxed">
+                Kode OTP 6 digit akan dikirimkan ke email di atas untuk memverifikasi kepemilikan rekening tabungan.
+            </p>
+            <button type="button" 
+                    id="btnRequestPinOtp" 
+                    onclick="handleRequestPinOtp()" 
+                    class="w-full py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>Kirim Kode OTP ke Email</span>
+            </button>
+        </div>
+
+        <!-- Step 2: Form Input OTP & PIN Baru -->
+        <form id="formResetPinOtp" onsubmit="handleResetPinOtp(event)" class="space-y-3 text-xs">
+            <div>
+                <label class="block font-semibold text-slate-700 mb-1">Kode OTP (6 Digit)</label>
+                <input type="text" id="pin_otp_code" maxlength="6" pattern="\d{6}" inputmode="numeric" required placeholder="123456" class="w-full text-center tracking-widest font-mono text-base font-bold bg-slate-50 border border-slate-200 rounded-xl py-2 focus:bg-white">
+                <span class="text-[10px] text-slate-400 mt-1 block">Cek inbox atau folder spam email Anda</span>
+            </div>
+            <div>
+                <label class="block font-semibold text-slate-700 mb-1">PIN Baru (6 Digit Angka)</label>
+                <input type="password" id="pin_new_pin" maxlength="6" pattern="\d{6}" inputmode="numeric" required placeholder="••••••" class="w-full text-center tracking-widest font-mono text-base bg-slate-50 border border-slate-200 rounded-xl py-2 focus:bg-white">
+            </div>
+            <div>
+                <label class="block font-semibold text-slate-700 mb-1">Konfirmasi PIN Baru</label>
+                <input type="password" id="pin_new_pin_confirmation" maxlength="6" pattern="\d{6}" inputmode="numeric" required placeholder="••••••" class="w-full text-center tracking-widest font-mono text-base bg-slate-50 border border-slate-200 rounded-xl py-2 focus:bg-white">
+            </div>
+
+            <div class="pt-2 flex items-center justify-end gap-2">
+                <button type="button" onclick="closeForgotPinModal()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold cursor-pointer">Tutup</button>
+                <button type="submit" id="btnSubmitResetPin" class="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-semibold shadow-xs cursor-pointer">Simpan PIN Baru</button>
             </div>
         </form>
     </div>
@@ -179,6 +240,12 @@
             <div>
                 <label class="block font-semibold text-slate-700 mb-1">Kata Sandi Saat Ini</label>
                 <input type="password" name="current_password" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:bg-white">
+                <div class="flex items-center justify-between mt-1.5">
+                    <span class="text-[10px] text-slate-400">Verifikasi kata sandi lama Anda</span>
+                    <button type="button" onclick="switchToForgotPassword()" class="text-[10px] font-bold text-blue-600 hover:text-blue-700 hover:underline cursor-pointer">
+                        Lupa Sandi? Reset via OTP Email &rarr;
+                    </button>
+                </div>
             </div>
             <div>
                 <label class="block font-semibold text-slate-700 mb-1">Kata Sandi Baru (Min. 6 Karakter)</label>
@@ -190,8 +257,63 @@
             </div>
 
             <div class="pt-2 flex items-center justify-end gap-2">
-                <button type="button" onclick="closeUpdatePasswordModal()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold">Batal</button>
-                <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-xs">Simpan Sandi</button>
+                <button type="button" onclick="closeUpdatePasswordModal()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold cursor-pointer">Batal</button>
+                <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-xs cursor-pointer">Simpan Sandi</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Lupa Kata Sandi (Reset via OTP Email) -->
+<div id="forgotPasswordModal" class="hidden fixed inset-0 z-50 items-end md:items-center justify-center bg-slate-900/60 backdrop-blur-xs p-0 md:p-4" onclick="if(event.target === this) closeForgotPasswordModal()">
+    <div class="w-full max-w-[400px] bg-white rounded-t-[32px] md:rounded-[28px] p-6 shadow-2xl space-y-4 border border-slate-100">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                <h3 class="text-sm font-bold text-slate-800">Reset Sandi via OTP Email</h3>
+            </div>
+            <button type="button" onclick="closeForgotPasswordModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold">&times;</button>
+        </div>
+
+        <!-- Alert Notification Box in Modal -->
+        <div id="pwdOtpAlert" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+
+        <!-- Step 1: Info & Kirim OTP -->
+        <div class="p-3.5 rounded-2xl bg-blue-50/80 border border-blue-200/70 text-xs text-blue-900 space-y-2">
+            <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700">Email Terdaftar:</span>
+                <span class="font-semibold text-slate-800 truncate max-w-[200px]">{{ $user->email }}</span>
+            </div>
+            <p class="text-[11px] text-blue-800/90 leading-relaxed">
+                Kode OTP 6 digit akan dikirimkan ke email di atas untuk memverifikasi akun Anda.
+            </p>
+            <button type="button" 
+                    id="btnRequestPwdOtp" 
+                    onclick="handleRequestPwdOtp()" 
+                    class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>Kirim Kode OTP ke Email</span>
+            </button>
+        </div>
+
+        <!-- Step 2: Form Input OTP & Sandi Baru -->
+        <form id="formResetPwdOtp" onsubmit="handleResetPwdOtp(event)" class="space-y-3 text-xs">
+            <div>
+                <label class="block font-semibold text-slate-700 mb-1">Kode OTP (6 Digit)</label>
+                <input type="text" id="pwd_otp_code" maxlength="6" pattern="\d{6}" inputmode="numeric" required placeholder="123456" class="w-full text-center tracking-widest font-mono text-base font-bold bg-slate-50 border border-slate-200 rounded-xl py-2 focus:bg-white">
+                <span class="text-[10px] text-slate-400 mt-1 block">Cek inbox atau folder spam email Anda</span>
+            </div>
+            <div>
+                <label class="block font-semibold text-slate-700 mb-1">Kata Sandi Baru (Min. 6 Karakter)</label>
+                <input type="password" id="pwd_new_password" minlength="6" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:bg-white">
+            </div>
+            <div>
+                <label class="block font-semibold text-slate-700 mb-1">Konfirmasi Kata Sandi Baru</label>
+                <input type="password" id="pwd_new_password_confirmation" minlength="6" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:bg-white">
+            </div>
+
+            <div class="pt-2 flex items-center justify-end gap-2">
+                <button type="button" onclick="closeForgotPasswordModal()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold cursor-pointer">Tutup</button>
+                <button type="submit" id="btnSubmitResetPwd" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-xs cursor-pointer">Simpan Sandi Baru</button>
             </div>
         </form>
     </div>
@@ -199,6 +321,8 @@
 
 @push('scripts')
 <script>
+    const csrfToken = '{{ csrf_token() }}';
+
     function openUpdatePinModal() {
         const m = document.getElementById('updatePinModal');
         m.classList.remove('hidden');
@@ -210,6 +334,21 @@
         m.classList.remove('flex');
     }
 
+    function openForgotPinModal() {
+        const m = document.getElementById('forgotPinModal');
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+    }
+    function closeForgotPinModal() {
+        const m = document.getElementById('forgotPinModal');
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+    }
+    function switchToForgotPin() {
+        closeUpdatePinModal();
+        openForgotPinModal();
+    }
+
     function openUpdatePasswordModal() {
         const m = document.getElementById('updatePasswordModal');
         m.classList.remove('hidden');
@@ -219,6 +358,217 @@
         const m = document.getElementById('updatePasswordModal');
         m.classList.add('hidden');
         m.classList.remove('flex');
+    }
+
+    function openForgotPasswordModal() {
+        const m = document.getElementById('forgotPasswordModal');
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+    }
+    function closeForgotPasswordModal() {
+        const m = document.getElementById('forgotPasswordModal');
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+    }
+    function switchToForgotPassword() {
+        closeUpdatePasswordModal();
+        openForgotPasswordModal();
+    }
+
+    // --- OTP Handlers for PIN ---
+    async function handleRequestPinOtp() {
+        const btn = document.getElementById('btnRequestPinOtp');
+        const alertBox = document.getElementById('pinOtpAlert');
+        btn.disabled = true;
+        btn.innerHTML = `<svg class="w-4 h-4 animate-spin inline mr-1 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Mengirim OTP...`;
+
+        try {
+            const resp = await fetch('{{ route("saver.pin.request-otp") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            });
+            const data = await resp.json();
+            alertBox.classList.remove('hidden', 'bg-rose-50', 'text-rose-700', 'border-rose-200');
+            if (resp.ok && data.success) {
+                alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200';
+                alertBox.innerText = data.message;
+                startResendTimer(btn, 'handleRequestPinOtp');
+            } else {
+                alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+                alertBox.innerText = data.message || 'Gagal mengirim OTP.';
+                btn.disabled = false;
+                btn.innerText = 'Kirim Ulang Kode OTP';
+            }
+        } catch (e) {
+            alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+            alertBox.innerText = 'Koneksi gagal. Silakan coba lagi.';
+            btn.disabled = false;
+            btn.innerText = 'Kirim Ulang Kode OTP';
+        }
+    }
+
+    async function handleResetPinOtp(e) {
+        e.preventDefault();
+        const otp = document.getElementById('pin_otp_code').value.trim();
+        const newPin = document.getElementById('pin_new_pin').value.trim();
+        const confPin = document.getElementById('pin_new_pin_confirmation').value.trim();
+        const alertBox = document.getElementById('pinOtpAlert');
+        const submitBtn = document.getElementById('btnSubmitResetPin');
+
+        if (newPin !== confPin) {
+            alertBox.classList.remove('hidden');
+            alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+            alertBox.innerText = 'Konfirmasi PIN baru tidak cocok.';
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Menyimpan PIN...';
+
+        try {
+            const resp = await fetch('{{ route("saver.pin.reset-otp") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    otp: otp,
+                    new_pin: newPin,
+                    new_pin_confirmation: confPin
+                })
+            });
+            const data = await resp.json();
+            alertBox.classList.remove('hidden');
+            if (resp.ok && data.success) {
+                alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200';
+                alertBox.innerText = data.message;
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1200);
+            } else {
+                alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+                alertBox.innerText = data.message || 'Verifikasi gagal. Pastikan OTP benar.';
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Simpan PIN Baru';
+            }
+        } catch (err) {
+            alertBox.classList.remove('hidden');
+            alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+            alertBox.innerText = 'Terjadi kesalahan sistem. Coba lagi.';
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Simpan PIN Baru';
+        }
+    }
+
+    // --- OTP Handlers for Password ---
+    async function handleRequestPwdOtp() {
+        const btn = document.getElementById('btnRequestPwdOtp');
+        const alertBox = document.getElementById('pwdOtpAlert');
+        btn.disabled = true;
+        btn.innerHTML = `<svg class="w-4 h-4 animate-spin inline mr-1 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Mengirim OTP...`;
+
+        try {
+            const resp = await fetch('{{ route("saver.password.request-otp") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            });
+            const data = await resp.json();
+            alertBox.classList.remove('hidden', 'bg-rose-50', 'text-rose-700', 'border-rose-200');
+            if (resp.ok && data.success) {
+                alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200';
+                alertBox.innerText = data.message;
+                startResendTimer(btn, 'handleRequestPwdOtp');
+            } else {
+                alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+                alertBox.innerText = data.message || 'Gagal mengirim OTP.';
+                btn.disabled = false;
+                btn.innerText = 'Kirim Ulang Kode OTP';
+            }
+        } catch (e) {
+            alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+            alertBox.innerText = 'Koneksi gagal. Silakan coba lagi.';
+            btn.disabled = false;
+            btn.innerText = 'Kirim Ulang Kode OTP';
+        }
+    }
+
+    async function handleResetPwdOtp(e) {
+        e.preventDefault();
+        const otp = document.getElementById('pwd_otp_code').value.trim();
+        const newPwd = document.getElementById('pwd_new_password').value;
+        const confPwd = document.getElementById('pwd_new_password_confirmation').value;
+        const alertBox = document.getElementById('pwdOtpAlert');
+        const submitBtn = document.getElementById('btnSubmitResetPwd');
+
+        if (newPwd !== confPwd) {
+            alertBox.classList.remove('hidden');
+            alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+            alertBox.innerText = 'Konfirmasi kata sandi tidak cocok.';
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Menyimpan Kata Sandi...';
+
+        try {
+            const resp = await fetch('{{ route("saver.password.reset-otp") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    otp: otp,
+                    password: newPwd,
+                    password_confirmation: confPwd
+                })
+            });
+            const data = await resp.json();
+            alertBox.classList.remove('hidden');
+            if (resp.ok && data.success) {
+                alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200';
+                alertBox.innerText = data.message;
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1200);
+            } else {
+                alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+                alertBox.innerText = data.message || 'Verifikasi gagal. Pastikan OTP benar.';
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Simpan Sandi Baru';
+            }
+        } catch (err) {
+            alertBox.classList.remove('hidden');
+            alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+            alertBox.innerText = 'Terjadi kesalahan sistem. Coba lagi.';
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Simpan Sandi Baru';
+        }
+    }
+
+    function startResendTimer(btnElement, handlerFnName) {
+        let count = 60;
+        btnElement.disabled = true;
+        const timer = setInterval(() => {
+            count--;
+            btnElement.innerText = `Kirim Ulang Kode (${count}d)`;
+            if (count <= 0) {
+                clearInterval(timer);
+                btnElement.disabled = false;
+                btnElement.innerText = 'Kirim Ulang Kode OTP';
+            }
+        }, 1000);
     }
 </script>
 @endpush

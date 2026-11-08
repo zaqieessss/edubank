@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Saver;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PasswordResetOtpMail;
+use App\Mail\PinResetOtpMail;
 use App\Models\PinAuthorizationRequest;
 use App\Models\Saver;
 use App\Services\QrCodeService;
@@ -10,7 +12,9 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class DashboardController extends Controller
 {
@@ -209,6 +213,195 @@ class DashboardController extends Controller
         ]);
 
         return back()->with('success', 'Kata sandi akun berhasil diperbarui!');
+    }
+
+    /**
+     * Kirim OTP Lupa PIN ke Email Siswa (Web Portal)
+     */
+    public function requestPinResetOtp(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        $saver = $user->saver;
+
+        if (!$saver) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data rekening nasabah tidak ditemukan.',
+            ], 404);
+        }
+
+        $otp = str_pad((string) random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+        $cacheKey = "pin_reset_{$user->email}";
+
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $cacheKey],
+            [
+                'token'      => Hash::make($otp),
+                'created_at' => now(),
+            ]
+        );
+
+        try {
+            Mail::to($user->email)->send(new PinResetOtpMail($user, $otp));
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengirim email OTP: ' . $e->getMessage(),
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Kode OTP reset PIN telah dikirim ke email {$user->email}.",
+        ]);
+    }
+
+    /**
+     * Verifikasi OTP & Pasang PIN Baru (Lupa PIN Web Portal)
+     */
+    public function resetPinWithOtp(Request $request): JsonResponse
+    {
+        $request->validate([
+            'otp'                  => ['required', 'digits:6'],
+            'new_pin'              => ['required', 'digits:6'],
+            'new_pin_confirmation' => ['required', 'same:new_pin'],
+        ], [
+            'otp.required'                  => 'Kode OTP wajib diisi.',
+            'otp.digits'                    => 'Kode OTP harus berupa 6 digit angka.',
+            'new_pin.required'              => 'PIN baru wajib diisi.',
+            'new_pin.digits'                => 'PIN baru harus berupa 6 digit angka.',
+            'new_pin_confirmation.required' => 'Konfirmasi PIN baru wajib diisi.',
+            'new_pin_confirmation.same'     => 'Konfirmasi PIN baru tidak cocok.',
+        ]);
+
+        $user = Auth::user();
+        $saver = $user->saver;
+        $cacheKey = "pin_reset_{$user->email}";
+
+        $record = DB::table('password_reset_tokens')->where('email', $cacheKey)->first();
+
+        if (!$record) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Permintaan reset PIN tidak valid atau belum meminta kode OTP.',
+            ], 400);
+        }
+
+        if (now()->diffInMinutes($record->created_at) > 15) {
+            DB::table('password_reset_tokens')->where('email', $cacheKey)->delete();
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode OTP telah kadaluarsa (lebih dari 15 menit). Silakan minta kode baru.',
+            ], 400);
+        }
+
+        if (!Hash::check($request->otp, $record->token)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode OTP yang Anda masukkan salah.',
+            ], 400);
+        }
+
+        $saver->update([
+            'security_pin' => Hash::make($request->new_pin),
+        ]);
+
+        DB::table('password_reset_tokens')->where('email', $cacheKey)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'PIN transaksi 6 digit baru berhasil disimpan!',
+        ]);
+    }
+
+    /**
+     * Kirim OTP Ganti Password ke Email Nasabah (Web Portal)
+     */
+    public function requestPasswordResetOtp(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+
+        $otp = str_pad((string) random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+        $cacheKey = "password_change_{$user->email}";
+
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $cacheKey],
+            [
+                'token'      => Hash::make($otp),
+                'created_at' => now(),
+            ]
+        );
+
+        try {
+            Mail::to($user->email)->send(new PasswordResetOtpMail($user, $otp));
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengirim email OTP: ' . $e->getMessage(),
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Kode OTP ganti kata sandi telah dikirim ke email {$user->email}.",
+        ]);
+    }
+
+    /**
+     * Verifikasi OTP & Simpan Password Baru (Web Portal)
+     */
+    public function resetPasswordWithOtp(Request $request): JsonResponse
+    {
+        $request->validate([
+            'otp'                   => ['required', 'digits:6'],
+            'password'              => ['required', 'string', 'min:6'],
+            'password_confirmation' => ['required', 'same:password'],
+        ], [
+            'otp.required'                   => 'Kode OTP wajib diisi.',
+            'otp.digits'                     => 'Kode OTP harus berupa 6 digit angka.',
+            'password.required'              => 'Kata sandi baru wajib diisi.',
+            'password.min'                   => 'Kata sandi baru minimal 6 karakter.',
+            'password_confirmation.required' => 'Konfirmasi kata sandi baru wajib diisi.',
+            'password_confirmation.same'     => 'Konfirmasi kata sandi baru tidak cocok.',
+        ]);
+
+        $user = Auth::user();
+        $cacheKey = "password_change_{$user->email}";
+
+        $record = DB::table('password_reset_tokens')->where('email', $cacheKey)->first();
+
+        if (!$record) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Permintaan ganti kata sandi tidak valid atau belum meminta kode OTP.',
+            ], 400);
+        }
+
+        if (now()->diffInMinutes($record->created_at) > 15) {
+            DB::table('password_reset_tokens')->where('email', $cacheKey)->delete();
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode OTP telah kadaluarsa (lebih dari 15 menit). Silakan minta kode baru.',
+            ], 400);
+        }
+
+        if (!Hash::check($request->otp, $record->token)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode OTP yang Anda masukkan salah.',
+            ], 400);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        DB::table('password_reset_tokens')->where('email', $cacheKey)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Kata sandi baru berhasil disimpan!',
+        ]);
     }
 
     /**
