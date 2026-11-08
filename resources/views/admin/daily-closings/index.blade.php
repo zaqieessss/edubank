@@ -146,13 +146,13 @@
                                             <span>Periksa</span>
                                         </a>
                                         @if($c->status !== 'approved')
-                                            <form method="POST" action="{{ route('admin.daily-closings.approve', $c->id) }}" onsubmit="return confirm('Verifikasi & setujui laporan penutupan kas teller {{ addslashes($c->teller?->name ?? 'Teller') }} senilai Rp {{ number_format($c->physical_cash ?? $c->system_balance, 0, ',', '.') }}?')">
-                                                @csrf
-                                                <button type="submit" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-semibold transition-all shadow-xs flex items-center gap-1 cursor-pointer">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                                    <span>Setujui</span>
-                                                </button>
-                                            </form>
+                                            <button type="button" 
+                                                    onclick="triggerApproveModal('{{ route('admin.daily-closings.approve', $c->id) }}', '{{ addslashes($c->teller?->name ?? 'Teller') }}', 'Rp {{ number_format($c->physical_cash ?? $c->system_balance, 0, ',', '.') }}')"
+                                                    class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-semibold transition-all shadow-xs flex items-center gap-1 cursor-pointer"
+                                                    title="Terima laporan dan masukkan ke brankas">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                                <span>Terima Laporan</span>
+                                            </button>
                                         @endif
                                     </div>
                                 </td>
@@ -183,4 +183,74 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Approve Laporan (Centered Backdrop Blur Sesuai Halaman Periksa) -->
+<div id="approveModal" 
+     class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs"
+     onclick="if(event.target === this) closeApproveModal()">
+    
+    <div class="bg-white rounded-[24px] max-w-md w-full p-6 border border-slate-200/80 shadow-2xl space-y-4 relative">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <h3 class="text-sm font-bold text-slate-800">Verifikasi & Masukkan ke Brankas</h3>
+            </div>
+            <button type="button" onclick="closeApproveModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors font-bold text-sm cursor-pointer">
+                &times;
+            </button>
+        </div>
+
+        <p class="text-xs text-slate-500 leading-relaxed">
+            Apakah Anda yakin telah menerima dan menghitung fisik uang tunai sebesar <strong class="text-slate-800 font-mono" id="modalCashAmount">Rp 0</strong> dari teller <strong class="text-slate-800" id="modalTellerName">Teller</strong> untuk dimasukkan ke Brankas Utama (Vault)?
+        </p>
+
+        <form id="modalApproveForm" method="POST" action="" class="pt-2">
+            @csrf
+            <div class="flex items-center justify-end gap-2">
+                <button type="button" onclick="closeApproveModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+                    Periksa Lagi
+                </button>
+                <button type="submit" class="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer">
+                    Ya, Verifikasi & Terima Uang
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    function triggerApproveModal(actionUrl, tellerName, amountText) {
+        const modal = document.getElementById('approveModal');
+        const form = document.getElementById('modalApproveForm');
+        const nameEl = document.getElementById('modalTellerName');
+        const amountEl = document.getElementById('modalCashAmount');
+
+        if (form) form.action = actionUrl;
+        if (nameEl) nameEl.textContent = tellerName;
+        if (amountEl) amountEl.textContent = amountText;
+
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    }
+
+    function closeApproveModal() {
+        const modal = document.getElementById('approveModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeApproveModal();
+        }
+    });
+</script>
+@endpush
 @endsection
